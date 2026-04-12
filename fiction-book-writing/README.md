@@ -74,6 +74,11 @@ See the [Spec Kit Prerequisites](https://github.com/github/spec-kit#-prerequisit
 # 1. Install Spec Kit and apply the preset
 specify init --preset fiction-book-writing
 
+NOTE: The preset is in development and not officially in catalog of SpecKit. You need to clone it via git or from archive:
+
+specify preset add --dev /path/to/your-preset
+specify preset add --from https://github.com/adaumann/speckit-preset-fiction-book-writing/archive/refs/tags/v1.3.0.zip
+
 # 2. Create your story bible first
 /speckit.constitution
 
