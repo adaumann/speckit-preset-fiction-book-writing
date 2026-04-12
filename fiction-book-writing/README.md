@@ -70,6 +70,8 @@ See the [Spec Kit Prerequisites](https://github.com/github/spec-kit#-prerequisit
 
 ## Quick Start
 
+NOTE: The model works best with advanced LLM, Claude 4.6 is recommended.
+
 ```bash
 # 1. Install Spec Kit and apply the preset
 specify init --preset fiction-book-writing
