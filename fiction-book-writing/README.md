@@ -1,9 +1,7 @@
 # Spec Kit Fiction Book Writing Preset
 
-**Version 1.3.0** 
+**Version 1.3.0** · Part of [Spec Kit](https://github.com/adaumann/speckit-preset-fiction-book-writing)
 
-
-Spec Kit Version: >= 0.5.0 : (https://github.com/github/spec-kit)
 
 A Spec-Driven Development preset purpose-built for novel and long-form fiction writing with single POV or multi POV. It replaces software engineering terminology with storytelling craft: features become story elements, specs become story briefs, plans become story structures, and tasks become scene-by-scene writing tasks.
 
@@ -14,7 +12,6 @@ Can write full prose or stays with book story outlines in order to write your ow
 ## Table of Contents
 
 - [Overview](#overview)
-- [Prerequisites](#prerequisites)
 - [Quick Start](#quick-start)
 - [Project Structure](#project-structure)
 - [Commands Reference](#commands-reference)
@@ -51,35 +48,11 @@ The central philosophy: the **story bible** (`constitution.md`) is the governing
 
 ---
 
-## Prerequisites
-
-Before using this preset, ensure you have the following installed and configured:
-
-| Requirement | Version | Notes |
-|---|---|---|
-| [Spec Kit](https://github.com/github/spec-kit) | >= 0.5.0 | Core tooling — install via `uv tool install specify-cli` |
-| A supported AI coding agent | — | GitHub Copilot, Claude Code, Cursor, Gemini CLI, or [any other supported agent](https://github.com/github/spec-kit#-supported-ai-agents) |
-| [Python](https://www.python.org/downloads/) | 3.11+ | Required by the Specify CLI |
-| [uv](https://docs.astral.sh/uv/) | latest | Package manager used to install Specify CLI |
-| [Git](https://git-scm.com/downloads) | any | Required by Spec Kit for branch and feature management |
-| [pandoc](https://pandoc.org/installing.html) | >= 2.11 | Required only for `speckit.export` (DOCX, EPUB, LaTeX output) |
-
-See the [Spec Kit Prerequisites](https://github.com/github/spec-kit#-prerequisites) for full details on installing and configuring the core toolkit.
-
----
-
 ## Quick Start
-
-NOTE: The model works best with advanced LLM, Claude 4.6 is recommended.
 
 ```bash
 # 1. Install Spec Kit and apply the preset
 specify init --preset fiction-book-writing
-
-NOTE: The preset is in development and not officially in catalog of SpecKit. You need to clone it via git or from archive:
-
-specify preset add --dev /path/to/your-preset
-specify preset add --from https://github.com/adaumann/speckit-preset-fiction-book-writing/archive/refs/tags/v1.3.0.zip
 
 # 2. Create your story bible first
 /speckit.constitution
@@ -643,6 +616,175 @@ Chapter assembly logic:
 
 ---
 
+## Workflow Sequence Diagram
+
+The following diagram shows the full lifecycle from initial idea to submission-ready manuscript, including the pre-draft quality gates, the per-chapter quality loop, and the post-draft feedback cycle.
+
+```plantuml
+@startuml fiction-book-writing-workflow
+
+skinparam backgroundColor #FAFAFA
+skinparam sequenceArrowThickness 2
+skinparam roundcorner 8
+skinparam sequenceParticipantBorderColor #555555
+skinparam sequenceParticipantBackgroundColor #FFFFFF
+skinparam noteBorderColor #AAAAAA
+skinparam noteBackgroundColor #FFFFF0
+
+actor Author
+participant "speckit.constitution" as C #LightSkyBlue
+participant "speckit.specify" as SP #LightSkyBlue
+participant "speckit.clarify" as CL #LightSkyBlue
+participant "speckit.plan" as PL #LightGreen
+participant "speckit.pov" as POV #LightGreen
+participant "speckit.tasks" as TK #LightGreen
+participant "speckit.analyze" as AN #LightYellow
+participant "speckit.outline" as OL #LightGoldenRodYellow
+participant "speckit.implement" as IM #LightCoral
+participant "speckit.checklist" as CH #LightSalmon
+participant "speckit.continuity" as CO #LightSalmon
+participant "speckit.revise" as RV #LightSalmon
+participant "speckit.polish" as PO #Thistle
+participant "speckit.feedback" as FB #PeachPuff
+participant "speckit.query" as QR #Lavender
+participant "speckit.export" as EX #Lavender
+
+== Setup ==
+
+Author -> C: style mode + plot structure
+C --> Author: constitution.md (Story Bible)
+
+== Concept ==
+
+Author -> SP: free-text story idea
+SP --> Author: spec.md (brief, arcs, beats)
+
+Author -> CL: (implicit)
+CL -> CL: scan for [NEEDS CLARIFICATION]
+CL --> Author: resolved spec.md
+
+note right of CL
+  Resolve ALL ambiguities
+  before planning. Gaps here
+  become structural holes.
+end note
+
+== Story Structure ==
+
+Author -> PL: (reads spec.md + constitution.md)
+PL --> Author: plan.md (act breakdown, chapter map)
+
+opt Multi-POV Novel
+  Author -> POV: draft
+  POV --> Author: pov-structure.md (schedule, voices, asymmetry map)
+  Author -> POV: audit / schedule / asymmetry / relay
+  POV --> Author: updated pov-structure.md
+end
+
+Author -> TK: (reads plan.md + spec.md)
+TK --> Author: tasks.md (scene tasks ordered by act + arc)
+
+== Pre-Draft Gate ==
+
+Author -> AN: (reads spec.md + plan.md + tasks.md)
+AN --> Author: structural alignment report (read-only)
+
+note right of AN
+  Gaps flagged here must be
+  fixed before drafting.
+  No file modifications made.
+end note
+
+alt Gaps found
+  Author -> PL: fix plan
+  Author -> TK: regenerate tasks
+  Author -> AN: re-analyze
+end
+
+== Outline Review ==
+
+Author -> OL: all (or chapter range)
+OL --> Author: outlines/<CHAPTER_ID>-outline.md (status: DRAFT)
+
+note right of OL
+  Author edits beat sequence,
+  sensory anchors, dialogue reqs.
+  Set APPROVED to allow AI drafting.
+  Set SKIP to write chapter themselves.
+end note
+
+== Drafting Loop (per chapter) ==
+
+loop for each chapter in tasks.md
+
+  alt Outline APPROVED (AI drafts)
+    Author -> IM: execute next task
+    IM --> Author: draft/<CHAPTER_ID>.md
+  else Outline SKIP (author writes)
+    Author -> IM: --outline-only (optional)
+    IM --> Author: outline file only (no prose)
+    note right of IM
+      Author writes draft/<CHAPTER_ID>.md
+      manually, then runs checklist.
+    end note
+  end
+
+  Author -> CH: (on draft chapter)
+  CH --> Author: checklists/<CHAPTER_ID>-checklist.md
+
+  alt Checklist FAIL
+    Author -> RV: <CHAPTER_ID> [failure codes]
+    RV --> Author: <CHAPTER_ID>_v2.md + diff summary
+    Author -> CH: re-run checklist
+  end
+
+  Author -> PO: (after checklist PASS)
+  PO --> Author: <CHAPTER_ID>_polished.md
+
+end
+
+== Post-Draft Review ==
+
+Author -> CO: (full manuscript or chapter range)
+CO --> Author: continuity report (read-only)
+
+note right of CO
+  Story bible violations =
+  automatic CRITICAL.
+  No file modifications made.
+end note
+
+alt Continuity issues found
+  Author -> RV: targeted chapter revision
+  Author -> CO: re-run continuity
+end
+
+== Feedback Cycle (optional) ==
+
+Author -> FB: feedback notes + reader type
+FB --> Author: feedback.md + revision tasks appended to tasks.md
+
+loop for each CRITICAL revision task
+  Author -> RV: targeted revision
+  Author -> CO: verify fix
+end
+
+== Submission ==
+
+Author -> QR: draft
+QR --> Author: query-letter.md (250–350 words)
+
+Author -> QR: update / track / comp-titles
+QR --> Author: submission tracker updated
+
+Author -> EX: docx / epub / latex
+EX --> Author: submission-ready manuscript file
+
+@enduml
+```
+
+---
+
 ## POV Modes Reference
 
 | Mode | POV Count | Rotation Pattern | When to Use |
@@ -738,12 +880,6 @@ Set the profile using `speckit.constitution` — it will prompt for the choice w
 | **LaTeX** | Professional typesetting, print-on-demand | pandoc ≥ 2.11 + LaTeX distribution |
 
 Install pandoc: [pandoc.org/installing.html](https://pandoc.org/installing.html)
-
----
-
-## Workflow Sequence Diagram
-
-![Spec Kit Fiction Book Writing workflow sequence diagram](SPEC%20KIT%20Fictional%20Book%20Writing.svg)
 
 ---
 

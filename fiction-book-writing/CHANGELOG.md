@@ -6,7 +6,27 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ---
 
-## [1.3.0] - Current
+## [1.4.1] - Current
+
+### Changed
+- `speckit.brainstorm` — significant improvements to the interactive loop:
+  - **Session length modes**: `quick` (~5 Qs), `standard` (~10 Qs, default), `deep` (unlimited); depth gate surfaces a stopping point when the limit is reached
+  - **Resume support**: detects prior `brainstorm-[topic].md` notes and offers to load them as additional context or start fresh
+  - **Challenge mode**: `challenge` argument inverts question priority to stress-test existing file decisions rather than fill gaps
+  - **Secondary context loading**: each topic silently loads related files (e.g. `characters` brainstorm also loads `spec.md` and `themes.md`) to prevent redundant questions and surface cross-topic conflicts
+  - **`!skip` command**: skip any question without answering; skipped questions do not count toward the depth limit
+  - **Expanded question banks**: `pov` (5→10 questions), `research` (4→9), `glossary` (3→8)
+  - **Wildcard bank**: 8 topic-agnostic generative questions drawn once core gaps are covered
+  - **Specific synthesis guidance** in Step 4b: acknowledgements must name a narrative function, a tension, or an affected scene beat — generic filler is explicitly prohibited
+  - **Merge output option**: after a multi-topic session (`switch` used), produces a single cross-topic file with a `Cross-Topic Connections` section
+  - **Change Candidates Status column**: `PENDING` → `APPLIED` / `SKIPPED` / `EDITED` tracked during Step 6 review
+  - **Blank-slate template population**: when creating a topic file from a template, replaces `[NEEDS CLARIFICATION]` tokens with brainstorm insights; leaves all other placeholders intact
+  - **New handoffs**: `speckit.clarify` and `speckit.pov` added to frontmatter
+  - **Operating Rules**: three new rules — depth is binding, acknowledgements must be specific, prior session data is read-only
+
+---
+
+## [1.4.0]
 
 ### Added
 - `speckit.outline` command — generates editable per-scene outline files with opening hook, causal beat sequence, character beats, dialogue requirements, sensory anchors, and thematic work
