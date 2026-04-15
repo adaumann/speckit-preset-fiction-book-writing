@@ -96,6 +96,15 @@ Identify story bible violations, continuity errors, and untracked narrative thre
    - For each `SY-NNN` symbol: verify the object's physical state and ownership are consistent across all draft files where it appears.
    - Append any detected issues to the **Thematic Drift Log** table in `themes.md` (date, chapter ID, issue, severity). This is the only write this command performs on `themes.md`.
 
+   **F. Series Canon Compliance** *(skip entirely if `spec.md` Series Position is `standalone`)*
+   - Load `series/series-bible.md`. If not found: CRITICAL — a non-standalone book must have an active series bible at `series/series-bible.md`.
+   - For each `SC-NNN` world rule in `## Series Canon`: does any drafted chapter explicitly contradict it? → CRITICAL.
+   - For each `STC-NNN` constraint in `## Series Continuity Constraints` whose `Must hold from` value ≤ this book's position: does any drafted chapter portray a character knowledge state, relationship status, or world fact that violates the constraint? → CRITICAL.
+   - For each named entity in `## Named Entity Registry`: does any drafted chapter portray that entity in a state that contradicts the registry's canonical value at the opening of this book? → CRITICAL.
+   - Does any drafted chapter reference a named entity from a prior book but portray it with properties that contradict its series-canonical state or world rule? → WARNING.
+   - Does any `OPEN` row in `## Known Contradictions` reference this book? → CRITICAL — cite the `SX-NNN` code; must be resolved before continuing to draft.
+   - After analysis: for each character in scope, update or confirm the latest row in their `## X. Series Arc State` table in `characters/[name].md` to reflect the furthest drafted scene's closing state. This is the only write this dimension performs on character profile files.
+
 5. **Output structured report**:
 
    ```
@@ -122,7 +131,7 @@ Identify story bible violations, continuity errors, and untracked narrative thre
    - [dimension]: OK
 
    ### Summary
-   CRITICAL: N | WARNINGS: N | PASS: N | Malformed drafts: N | Orphan drafts: N | Missing drafts: N | Stale constitution: N | Thematic drift: N
+   CRITICAL: N | WARNINGS: N | PASS: N | Malformed drafts: N | Orphan drafts: N | Missing drafts: N | Stale constitution: N | Thematic drift: N | Series violations: N
    Recommended action: [continue drafting / revise flagged chapters (`speckit.revise <chapter_id>`) / run retroactive change protocol / update series-bible.md]
    ```
 

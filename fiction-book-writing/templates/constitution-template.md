@@ -313,6 +313,53 @@ The following phrases are PROHIBITED — they mark prose as AI-generated:
 
 ---
 
+## IX. Series Context
+<!-- ACTIVE only when Series Position is non-standalone.
+     Skip this section entirely if Series Position is `standalone`.
+     This section is a per-book read-out of the series-level constraints that directly govern THIS book.
+     Populated by speckit.constitution from series/series-bible.md.
+     Do NOT edit these values manually — update series/series-bible.md instead,
+     then re-run speckit.constitution to refresh this section. -->
+
+**Series title**: [SERIES_TITLE]
+**Series position**: [SERIES_POSITION]
+**Series bible**: `series/series-bible.md`
+**Series POV strategy**: [consistent with series / departs — variance documented below]
+**Series tense**: [consistent with series / departs — variance documented below]
+
+### Active Series Canon Constraints (this book)
+<!-- World rules and facts from series/series-bible.md ## Series Canon that are already established
+     and cannot be contradicted by this book's drafts.
+     Populated from SC-NNN entries. speckit.continuity enforces these at draft time. -->
+
+| Canon ID | Rule | Source |
+|---|---|---|
+| SC-001 | [Propagated from series-bible.md] | [Book N, Chapter ID] |
+<!-- Add rows for all SC-NNN entries relevant to this book's time period and cast. -->
+
+### Open Series Continuity Constraints (entering this book)
+<!-- Character facts, relationship states, and knowledge disclosures established in prior books
+     that MUST be honored at the opening of this book.
+     Populated from STC-NNN entries with "Must hold from: Book N" ≤ this book.
+     speckit.analyze cross-references character ## X. Series Arc State tables against these. -->
+
+| Constraint ID | Rule | Established at | Characters affected |
+|---|---|---|---|
+| STC-001 | [Propagated from series-bible.md] | [Book N, chapter ID] | [Names] |
+<!-- Add rows for all STC-NNN entries that apply at the opening of this book. -->
+
+### Series Variance Log
+<!-- Document any intentional departures from series-level style parameters.
+     A departure requires explicit justification — it does not change the series default.
+     Leave empty if no variances apply. -->
+
+| Parameter | Series default | This book's value | Justification |
+|---|---|---|---|
+| POV strategy | [from series-bible.md] | [this book's value] | [reason] |
+| Tense | [from series-bible.md] | [this book's value] | [reason] |
+
+---
+
 ## Governance
 
 This Story Bible overrides all writing prompts and templates.

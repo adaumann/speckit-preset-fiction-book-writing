@@ -60,6 +60,9 @@ You **MUST** consider the user input before proceeding (if not empty).
    - `[THEME]` — stated as a question, not an answer
    - `[POV_STRATEGY]` and `[TENSE]` — from style mode or user input
    - `[WORD_COUNT_TARGET]`, `[GENRE]`, `[TARGET_AUDIENCE]`, `[SERIES_POSITION]`
+   - If `[SERIES_POSITION]` is anything other than `standalone`: check whether `series/series-bible.md` exists.
+     - If it **exists**: load it, populate `## IX. Series Context` — copy the active SC-NNN and STC-NNN rows relevant to this book, confirm `Series title` and `Series POV strategy`/`Series tense`, and compare against this constitution's `[POV_STRATEGY]`/`[TENSE]`. Any mismatch → log in the Series Variance Log with a `[reason]` placeholder for the author to fill.
+     - If it **does not exist yet**: emit `⚠️ series/series-bible.md not found — it will be created by speckit.plan. Populate ## IX. Series Context with [TBD] placeholder values for now.`
    - `[DRY_IRONY_CHARACTERS]` — which characters (if any) are permitted situational irony
    - `[STORY_SPECIFIC_PRINCIPLES]` — 3–5 rules unique to this story
    - `[ADDITIONAL_PROHIBITED_PHRASES]` — story/genre-specific additions to the Anti-AI filter
@@ -91,5 +94,6 @@ You **MUST** consider the user input before proceeding (if not empty).
    - Plot structure is one of the 7 supported values
    - Theme is stated as a question, not an answer
    - If `author-sample` mode: all 8 Extracted Style Markers have values (not `[NEEDS CLARIFICATION]`)
+   - If Series Position is non-standalone: `## IX. Series Context` is present and has at least one populated SC-NNN or STC-NNN row, or is explicitly marked `[TBD pending series-bible.md creation]`. Any Series Variance Log row that is present but has an empty Justification column → WARNING.
 
 8. **Report**: Summarize all resolved fields, the new version number, and any remaining items requiring attention.

@@ -1,6 +1,6 @@
 # Spec Kit Fiction Book Writing Preset
 
-**Version 1.3.0** · Part of [Spec Kit](https://github.com/adaumann/speckit-preset-fiction-book-writing)
+**Version 1.5.0** · Part of [Spec Kit](https://github.com/adaumann/speckit-preset-fiction-book-writing)
 
 
 A Spec-Driven Development preset purpose-built for novel and long-form fiction writing with single POV or multi POV. It replaces software engineering terminology with storytelling craft: features become story elements, specs become story briefs, plans become story structures, and tasks become scene-by-scene writing tasks.
@@ -24,7 +24,8 @@ Can write full prose or stays with book story outlines in order to write your ow
   - [Drafting Scenes with Tasks](#drafting-scenes-with-tasks)
   - [Checklist, Polish & Revise](#checklist-polish--revise)
   - [Processing Feedback](#processing-feedback)
-  - [Query Letter & Export](#query-letter--export)
+  - [Synopsis & Query Letter](#synopsis--query-letter)
+  - [Export](#export)
 - [Workflow Sequence Diagram](#workflow-sequence-diagram)
 - [POV Modes Reference](#pov-modes-reference)
 - [Plot Structure Support](#plot-structure-support)
@@ -37,7 +38,7 @@ Can write full prose or stays with book story outlines in order to write your ow
 
 The Fiction Book Writing preset applies the Spec-Driven Development methodology to creative fiction. It provides:
 
-- **17 AI commands** covering every stage from idea to submission-ready manuscript
+- **25 AI commands** covering every stage from idea to submission-ready manuscript
 - **21 templates** for all supporting story documents
 - **1 export script** (pandoc-based) for DOCX, EPUB, and LaTeX output
 - Support for **8 POV modes** (single, alternating, dual, braided, ensemble, mosaic, frame, chorus, first-person-multiple)
@@ -136,6 +137,7 @@ After initialization, your project will have this layout:
 
 | Command | Phase | What It Does |
 |---|---|---|
+| `speckit.brainstorm` | Ideation | Interactive brainstorming session for any story topic — spec, characters, themes, world-building, research, or timeline. Produces a notes file or a patch to the topic file |
 | `speckit.constitution` | Setup | Create or update the story bible: style mode, plot structure, craft principles |
 | `speckit.specify` | Concept | Turn a free-text idea into a structured story brief with logline, character arcs, and scene beats |
 | `speckit.clarify` | Concept | Detect and resolve ambiguities in `spec.md` (motivation gaps, timeline issues, POV holes) |
@@ -154,6 +156,7 @@ After initialization, your project will have this layout:
 | `speckit.continuity` | Quality | Post-draft analysis: story bible compliance, character arc consistency, timeline coherence |
 | `speckit.revise` | Revision | Surgically rewrite only the failing passages identified by checklist or continuity |
 | `speckit.polish` | Polish | Final line-edit pass: rhythm, filter words, adverb density, voice register, repetition |
+| `speckit.roleplay` | Exploration | Interactive multi-role play-through of an outline or draft chapter; AI and author take on scene roles beat by beat; accumulated insights committed back as revision notes |
 
 ### Post-Draft
 
@@ -161,6 +164,16 @@ After initialization, your project will have this layout:
 |---|---|---|
 | `speckit.feedback` | Revision | Ingest beta reader or editor notes, categorize issues, generate prioritized revision tasks |
 | `speckit.status` | Monitoring | Read-only project dashboard: word counts, chapter status, outstanding quality gates |
+| `speckit.versions` | Monitoring | Version timeline, narrative diff between two chapter versions, revision log, and milestone tagging |
+| `speckit.glossary` | Consistency | Add terms, check drafts for glossary violations, audit unregistered terms, view coverage dashboard |
+| `speckit.subplot` | Consistency | Add P2/P3 arcs mid-draft, check beat gaps and arc absence streaks, rebuild Convergence Map, resolve dramatic questions |
+| `speckit.pacing` | Quality | Tension arc audit per chapter (1–10 score), plateau/peak/valley detection, act-band calibration, Mermaid xychart output. Flags sagging middles, undersold climaxes, and premature peaks |
+| `speckit.sensitivity` | Quality | Cultural representation, harmful tropes, anachronism review (historical fiction), identity portrayal, trauma depictions. CRITICAL/WARNING/NOTE tiers. Scoped by chapter, category, or full manuscript |
+| `speckit.research` | Research | Log knowledge gaps, resolve findings, check factual claims in drafts, view open-item dashboard |
+| `speckit.series` | Series | Init/audit/update the series bible and run cross-book continuity checks |
+| `speckit.interview` | Character | Interactive one-on-one conversation with a character voiced by AI; export as notes |
+| `speckit.help` | Navigation | Workflow advisor: scans project state, identifies blockers, recommends next steps |
+| `speckit.synopsis` | Submission | Generate a one-page (250–350 words) and full (1,000–2,000 words) synopsis; reveals the ending; present tense, third person |
 | `speckit.query` | Submission | Generate a 250–350 word query letter with hook, body, comp titles, and submission tracker |
 | `speckit.export` | Submission | Export manuscript to DOCX (Word), EPUB (KDP/IngramSpark), or LaTeX via pandoc |
 
@@ -183,7 +196,7 @@ After initialization, your project will have this layout:
 | `series-bible-template.md` | Series canon: world rules, character state registry per book, series arc |
 | `synopsis-template.md` | One-page (250–350 words) and full (1,000–2,000 words) synopsis in present tense |
 | `glossary-template.md` | Invented terms, proper nouns, capitalization rules, consistency log |
-| `subplots-template.md` | Subplot beat sheets: inciting incident through resolution, main plot intersection map |
+| `subplots-template.md` | Subplot beat sheets: inciting incident through resolution, main plot intersection map, Convergence Map, Arc Absence Log — managed by `speckit.subplot` |
 | `research-template.md` | Open questions, source notes, world-building facts, resolved findings |
 | `timeline-template.md` | Chapter-by-chapter chronology, elapsed time, scene durations, continuity cross-refs |
 | `world-building-template.md` | Setting rules, geography, culture, history, in-world systems |
@@ -573,11 +586,97 @@ After feedback ingestion:
 
 ---
 
-### Query Letter & Export
+### Glossary, Research & Versions
+
+#### Maintaining the Glossary
+
+`glossary.md` is generated by `speckit.plan` and seeded from `spec.md` and `constitution.md`. Use `speckit.glossary` to keep it current throughout drafting:
+
+```
+/speckit.glossary add "the Shatter"          ← register a new invented term
+/speckit.glossary audit                       ← find unregistered terms in draft chapters
+/speckit.glossary check                       ← scan drafts for spelling/capitalisation violations
+/speckit.glossary                             ← status dashboard (coverage, open violations)
+```
+
+`speckit.polish` and `speckit.continuity` both enforce the glossary passively. Run `speckit.glossary check` proactively before polishing a chapter to resolve violations before they get flagged.
+
+#### Tracking Research
+
+`research.md` is generated by `speckit.plan` to log all domain knowledge gaps. Use `speckit.research` to close the loop:
+
+```
+/speckit.research add "Victorian-era telegraph protocols"
+/speckit.research resolve R-003 --finding "..." --source "..."
+/speckit.research check A1.101          ← check one chapter for unsupported claims
+/speckit.research status                ← dashboard sorted by authenticity risk
+```
+
+Unresolved HIGH-priority research items before drafting those chapters are flagged as blockers by `speckit.help`.
+
+#### Managing Draft Versions
+
+Each `speckit.revise` and `speckit.polish` run produces a versioned file (`_v2.md`, `_v3.md`, …). Use `speckit.versions` to navigate the history:
+
+```
+/speckit.versions list A1.101           ← version timeline for one chapter
+/speckit.versions diff A1.101           ← narrative diff: latest vs. previous version
+/speckit.versions diff A1.101 v1 v3     ← diff two specific versions
+/speckit.versions log                   ← cross-chapter revision history by date
+/speckit.versions tag A1.101 v2 beta-reader-1   ← milestone tag for the sent version
+```
+
+#### Series Management
+
+For multi-book projects, use `speckit.series` to manage the series bible:
+
+```
+/speckit.series init                    ← scaffold series/series-bible.md (before Book 1)
+/speckit.series audit                   ← cross-book canon, arc chains, unresolved threads
+/speckit.series update 1                ← sync bible after completing Book 1
+/speckit.series status                  ← series-wide dashboard
+```
+
+#### Workflow Navigation
+
+Start every session with `speckit.help` if you are unsure what to do next:
+
+```
+/speckit.help                           ← full guidance report for current project state
+/speckit.help "Is my spec ready to plan?"
+/speckit.help "I'm stuck after chapter 3"
+/speckit.help --chapter A2.201         ← focused advice for one chapter
+```
+
+---
+
+### Synopsis & Query Letter
+
+#### Writing the Synopsis
+
+Run `speckit.synopsis` after `speckit.plan` to get an outline-based synopsis, or after drafting for post-draft accuracy.
+
+```
+/speckit.synopsis
+```
+
+Produces `synopsis.md` with two formats:
+
+- **One-page synopsis** (250–350 words) — the compressed arc, present tense, third person, ending revealed. Required in most query packages.
+- **Full synopsis** (1,000–2,000 words) — beat-by-beat account of every major plot turn and character arc resolution. Required on partial/full manuscript requests.
+
+Both formats explicitly reveal the ending. A synopsis is not a blurb.
+
+```
+/speckit.synopsis one-page        ← regenerate only the 250–350 word version
+/speckit.synopsis full            ← regenerate only the full 1,000–2,000 word version
+/speckit.synopsis update          ← regenerate from current draft (post-draft accuracy)
+/speckit.synopsis check           ← validate existing synopsis.md against spec.md and plan.md
+```
 
 #### Writing the Query Letter
 
-Before writing the query letter, ensure `synopsis.md` exists (generate with `speckit.specify` or manually from `synopsis-template.md`).
+Run `speckit.synopsis` first — `speckit.query` reads `synopsis.md` as its story body source.
 
 ```
 /speckit.query draft
@@ -598,6 +697,8 @@ Log submissions and suggest comparable titles:
 /speckit.query comp-titles        ← generate comp title suggestions only
 /speckit.query "Sarah Jensen at Foundry Literary"  ← generate personalization paragraph
 ```
+
+### Export
 
 #### Exporting the Manuscript
 
@@ -620,168 +721,8 @@ Chapter assembly logic:
 
 The following diagram shows the full lifecycle from initial idea to submission-ready manuscript, including the pre-draft quality gates, the per-chapter quality loop, and the post-draft feedback cycle.
 
-```plantuml
-@startuml fiction-book-writing-workflow
+![Workflow]("SPEC KIT Fictional Book Writing.svg" "Workflow")
 
-skinparam backgroundColor #FAFAFA
-skinparam sequenceArrowThickness 2
-skinparam roundcorner 8
-skinparam sequenceParticipantBorderColor #555555
-skinparam sequenceParticipantBackgroundColor #FFFFFF
-skinparam noteBorderColor #AAAAAA
-skinparam noteBackgroundColor #FFFFF0
-
-actor Author
-participant "speckit.constitution" as C #LightSkyBlue
-participant "speckit.specify" as SP #LightSkyBlue
-participant "speckit.clarify" as CL #LightSkyBlue
-participant "speckit.plan" as PL #LightGreen
-participant "speckit.pov" as POV #LightGreen
-participant "speckit.tasks" as TK #LightGreen
-participant "speckit.analyze" as AN #LightYellow
-participant "speckit.outline" as OL #LightGoldenRodYellow
-participant "speckit.implement" as IM #LightCoral
-participant "speckit.checklist" as CH #LightSalmon
-participant "speckit.continuity" as CO #LightSalmon
-participant "speckit.revise" as RV #LightSalmon
-participant "speckit.polish" as PO #Thistle
-participant "speckit.feedback" as FB #PeachPuff
-participant "speckit.query" as QR #Lavender
-participant "speckit.export" as EX #Lavender
-
-== Setup ==
-
-Author -> C: style mode + plot structure
-C --> Author: constitution.md (Story Bible)
-
-== Concept ==
-
-Author -> SP: free-text story idea
-SP --> Author: spec.md (brief, arcs, beats)
-
-Author -> CL: (implicit)
-CL -> CL: scan for [NEEDS CLARIFICATION]
-CL --> Author: resolved spec.md
-
-note right of CL
-  Resolve ALL ambiguities
-  before planning. Gaps here
-  become structural holes.
-end note
-
-== Story Structure ==
-
-Author -> PL: (reads spec.md + constitution.md)
-PL --> Author: plan.md (act breakdown, chapter map)
-
-opt Multi-POV Novel
-  Author -> POV: draft
-  POV --> Author: pov-structure.md (schedule, voices, asymmetry map)
-  Author -> POV: audit / schedule / asymmetry / relay
-  POV --> Author: updated pov-structure.md
-end
-
-Author -> TK: (reads plan.md + spec.md)
-TK --> Author: tasks.md (scene tasks ordered by act + arc)
-
-== Pre-Draft Gate ==
-
-Author -> AN: (reads spec.md + plan.md + tasks.md)
-AN --> Author: structural alignment report (read-only)
-
-note right of AN
-  Gaps flagged here must be
-  fixed before drafting.
-  No file modifications made.
-end note
-
-alt Gaps found
-  Author -> PL: fix plan
-  Author -> TK: regenerate tasks
-  Author -> AN: re-analyze
-end
-
-== Outline Review ==
-
-Author -> OL: all (or chapter range)
-OL --> Author: outlines/<CHAPTER_ID>-outline.md (status: DRAFT)
-
-note right of OL
-  Author edits beat sequence,
-  sensory anchors, dialogue reqs.
-  Set APPROVED to allow AI drafting.
-  Set SKIP to write chapter themselves.
-end note
-
-== Drafting Loop (per chapter) ==
-
-loop for each chapter in tasks.md
-
-  alt Outline APPROVED (AI drafts)
-    Author -> IM: execute next task
-    IM --> Author: draft/<CHAPTER_ID>.md
-  else Outline SKIP (author writes)
-    Author -> IM: --outline-only (optional)
-    IM --> Author: outline file only (no prose)
-    note right of IM
-      Author writes draft/<CHAPTER_ID>.md
-      manually, then runs checklist.
-    end note
-  end
-
-  Author -> CH: (on draft chapter)
-  CH --> Author: checklists/<CHAPTER_ID>-checklist.md
-
-  alt Checklist FAIL
-    Author -> RV: <CHAPTER_ID> [failure codes]
-    RV --> Author: <CHAPTER_ID>_v2.md + diff summary
-    Author -> CH: re-run checklist
-  end
-
-  Author -> PO: (after checklist PASS)
-  PO --> Author: <CHAPTER_ID>_polished.md
-
-end
-
-== Post-Draft Review ==
-
-Author -> CO: (full manuscript or chapter range)
-CO --> Author: continuity report (read-only)
-
-note right of CO
-  Story bible violations =
-  automatic CRITICAL.
-  No file modifications made.
-end note
-
-alt Continuity issues found
-  Author -> RV: targeted chapter revision
-  Author -> CO: re-run continuity
-end
-
-== Feedback Cycle (optional) ==
-
-Author -> FB: feedback notes + reader type
-FB --> Author: feedback.md + revision tasks appended to tasks.md
-
-loop for each CRITICAL revision task
-  Author -> RV: targeted revision
-  Author -> CO: verify fix
-end
-
-== Submission ==
-
-Author -> QR: draft
-QR --> Author: query-letter.md (250–350 words)
-
-Author -> QR: update / track / comp-titles
-QR --> Author: submission tracker updated
-
-Author -> EX: docx / epub / latex
-EX --> Author: submission-ready manuscript file
-
-@enduml
-```
 
 ---
 
@@ -880,6 +821,40 @@ Set the profile using `speckit.constitution` — it will prompt for the choice w
 | **LaTeX** | Professional typesetting, print-on-demand | pandoc ≥ 2.11 + LaTeX distribution |
 
 Install pandoc: [pandoc.org/installing.html](https://pandoc.org/installing.html)
+
+## Comparable products 
+
+**General-purpose LLMs (ChatGPT, Claude, Gemini direct)**
+
+Most writers using AI are just chatting with these directly — "write chapter 3", "make this better". No persistence, no consistency model, no gates. The constitution-based approach in this preset solves the biggest practical problem: style drift across sessions. With raw LLM use, chapter 10 sounds nothing like chapter 1 because nothing is carrying the voice forward. This preset's entire architecture exists to solve that.
+
+**Sudowrite — the closest real competitor**
+
+Sudowrite is purpose-built for fiction, has a chapter-by-chapter approach, and has the most polish of any dedicated tool. Where this preset wins: structural governance. Sudowrite helps you write scenes but doesn't enforce that the scenes are structurally coherent with the plan, that characters are arc-consistent, or that your invented terminology is spelled the same way throughout. It's a creative accelerator; this is a production system. Sudowrite also has no equivalent to the quality gates — it will just write whatever you ask.
+
+**NovelAI**
+
+Primarily a continuous text generator, not a workflow tool. Strong on keeping prose in a specific style (model fine-tuning approach rather than rule approach). No structural planning, no version management, no quality gates. Different use case entirely — closer to a co-author than a workflow system.
+
+**Scrivener + AI plugins**
+
+Scrivener is still the best document management tool for long-form writing. This preset has no file browser, no corkboard, no compile system. The two are complementary, not competing — speckit.export via pandoc covers the export gap but doesn't replace Scrivener's organizational model. A writer using this preset still needs something to manage raw files.
+
+**ProWritingAid / AutoCrit / Hemingway**
+
+These are manuscript analyzers, not AI writers. They catch passive voice, overused words, pacing issues. speckit.polish and speckit.checklist cover some of the same ground but from a craft principle angle rather than a statistical frequency angle. These tools are better at surface-level prose quality; this system is better at structural and voice-consistency enforcement.
+
+**Plottr / Fictionary / Campfire**
+
+Planning tools, not AI writers. Plottr is excellent for outlining. This preset's speckit.plan + speckit.outline + speckit.analyze covers equivalent structural ground but is AI-generated and directly connected to the drafting pipeline — the outline isn't a separate document you maintain manually, it becomes the working brief for prose generation.
+
+**The honest gap vs. Sudowrite specifically**
+
+Sudowrite's "Shrink Ray", "Describe", and "Brainstorm" features are genuinely better at in-the-moment creative assistance — the micro-level stuff. If you're stuck on one paragraph, Sudowrite is faster. This preset is better when the problem is the whole book — consistency, structure, arc tracking, series management across 80,000–300,000 words.
+
+**The positioning in one sentence**
+
+Most AI writing tools are accelerators (write faster). This preset is a production system (write consistently, at publishable quality, with structural integrity). That's a different — and currently underserved — market. The writers who will get the most value are those who've already discovered that raw AI writing creates a mess at novel scale.
 
 ---
 

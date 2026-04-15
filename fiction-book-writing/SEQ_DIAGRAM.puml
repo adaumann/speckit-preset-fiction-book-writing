@@ -14,6 +14,7 @@ skinparam noteBorderColor #AAAAAA
 skinparam noteBackgroundColor #FFFFF0
 
 actor Author
+participant "speckit.help" as HLP #Gainsboro
 participant "speckit.constitution" as C #LightSkyBlue
 participant "speckit.specify" as SP #LightSkyBlue
 participant "speckit.clarify" as CL #LightSkyBlue
@@ -27,9 +28,31 @@ participant "speckit.checklist" as CH #LightSalmon
 participant "speckit.continuity" as CO #LightSalmon
 participant "speckit.revise" as RV #LightSalmon
 participant "speckit.polish" as PO #Thistle
+participant "speckit.versions" as VER #Wheat
+participant "speckit.glossary" as GL #Wheat
+participant "speckit.research" as RS #Wheat
+participant "speckit.subplot" as SUB #Bisque
 participant "speckit.feedback" as FB #PeachPuff
+participant "speckit.series" as SER #LightCyan
+participant "speckit.brainstorm" as BRN #LavenderBlush
+participant "speckit.interview" as INT #MistyRose
+participant "speckit.roleplay" as RPL #Linen
 participant "speckit.query" as QR #Lavender
+participant "speckit.synopsis" as SYN #Honeydew
+participant "speckit.pacing" as PAC #PaleGreen
+participant "speckit.sensitivity" as SEN #LightPink
 participant "speckit.export" as EX #Lavender
+
+== Session Start ==
+
+note over Author, HLP
+  Run at any time to get
+  workflow guidance and
+  next-step recommendations.
+end note
+
+Author -> HLP: (any time)
+HLP --> Author: phase detection + blockers + next action
 
 == Setup ==
 
@@ -37,6 +60,17 @@ Author -> C: style mode + plot structure
 C --> Author: constitution.md (Story Bible)
 
 == Concept ==
+
+opt Brainstorm first (any topic)
+  Author -> BRN: topic (spec / plan / characters / themes / world / pov / ...)
+  BRN --> Author: brainstorm notes file + optional patch to topic file
+  note right of BRN
+    Use before speckit.specify to
+    explore ideas, or at any phase
+    to stress-test existing decisions
+    (challenge mode).
+  end note
+end
 
 Author -> SP: free-text story idea
 SP --> Author: spec.md (brief, arcs, beats)
@@ -55,6 +89,22 @@ end note
 
 Author -> PL: (reads spec.md + constitution.md)
 PL --> Author: plan.md (act breakdown, chapter map)
+PL --> Author: research.md, glossary.md, characters/, locations.md, timeline.md
+
+opt Series (non-standalone)
+  Author -> SER: init
+  SER --> Author: series/series-bible.md (scaffolded)
+end
+
+opt Character exploration (interview)
+  Author -> INT: [character name]
+  INT --> Author: conversation transcript + insight notes
+end
+
+opt Brainstorm story structure
+  Author -> BRN: plan / characters / themes / world-building
+  BRN --> Author: brainstorm notes + optional patch to plan/spec
+end
 
 opt Multi-POV Novel
   Author -> POV: draft
@@ -120,8 +170,35 @@ loop for each chapter in tasks.md
     Author -> CH: re-run checklist
   end
 
+  opt Roleplay (scene exploration / dialog workshop)
+    Author -> RPL: [chapter or outline reference]
+    RPL --> Author: revision notes + subtext insights
+    note right of RPL
+      Walk through beats beat-by-beat
+      with AI/user role assignments.
+      Feeds back into revise or outline.
+    end note
+  end
+
   Author -> PO: (after checklist PASS)
   PO --> Author: <CHAPTER_ID>_polished.md
+
+  Author -> GL: audit (find unregistered terms)
+  GL --> Author: unregistered term candidates
+  Author -> GL: add [term] (register new terms)
+
+  opt Subplot management
+    Author -> SUB: add [character] (new mid-draft arc)
+    SUB --> Author: SP-NNN block added to subplots.md
+    Author -> SUB: check (beat gaps / arc absence audit)
+    SUB --> Author: CRITICAL / WARNING / INFO items
+  end
+
+  Author -> RS: check <CHAPTER_ID> (verify factual claims)
+  RS --> Author: UNSUPPORTED / PENDING flags
+
+  Author -> VER: diff <CHAPTER_ID> (review what changed)
+  VER --> Author: narrative passage comparison
 
 end
 
@@ -129,6 +206,29 @@ end
 
 Author -> CO: (full manuscript or chapter range)
 CO --> Author: continuity report (read-only)
+
+opt Pacing / tension arc audit
+  Author -> PAC: (full draft or chapter range)
+  PAC --> Author: pacing-arc.md (Mermaid xychart + chapter score table)
+  note right of PAC
+    CRITICAL: sagging middle, undersold
+    climax, premature peak.
+    WARNING: false plateau, hook failure.
+    Read-only; feeds speckit.revise.
+  end note
+end
+
+opt Sensitivity / representation review
+  Author -> SEN: (full draft, chapter, or --category)
+  SEN --> Author: flagged report (CRITICAL / WARNING / NOTE)
+  note right of SEN
+    Covers: representation, harmful
+    tropes, historical anachronism,
+    language, trauma depictions.
+    Read-only. Recommend human
+    sensitivity reader before query.
+  end note
+end
 
 note right of CO
   Story bible violations =
@@ -144,14 +244,40 @@ end
 == Feedback Cycle (optional) ==
 
 Author -> FB: feedback notes + reader type
-FB --> Author: feedback.md + revision tasks appended to tasks.md
+FB --> Author: feedback/<reader>-<date>.md + revision tasks appended to tasks.md
+
+note right of FB
+  Reader-slug-prefixed task IDs
+  prevent collisions across
+  multiple feedback rounds.
+end note
 
 loop for each CRITICAL revision task
   Author -> RV: targeted revision
   Author -> CO: verify fix
 end
 
+Author -> VER: tag <CHAPTER_ID> vN <milestone>
+VER --> Author: milestone label written to YAML frontmatter
+
+== Series Update (after book completion) ==
+
+opt Non-standalone
+  Author -> SER: update [N]
+  SER --> Author: series-bible.md updated (character states, new canon, threads)
+end
+
 == Submission ==
+
+Author -> SYN: draft (or update post-draft)
+SYN --> Author: synopsis.md (one-page 250–350w + full 1,000–2,000w)
+
+note right of SYN
+  Both formats reveal the ending.
+  Run after plan (outline) or
+  after drafting (accuracy).
+  Required before query letter.
+end note
 
 Author -> QR: draft
 QR --> Author: query-letter.md (250–350 words)

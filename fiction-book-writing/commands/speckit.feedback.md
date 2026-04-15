@@ -91,12 +91,14 @@ The feedback log becomes the audit trail for the editorial round — you can see
    - Increment severity if ≥2 readers independently raised the same issue
 
 6. **Generate revision tasks** (unless `triage` mode):
-   - Add a section to `tasks.md` under `## Beta / Editorial Round [N]`
+   - Scan `tasks.md` for existing `## Beta / Editorial Round` sections. Determine the next round number: if none exist use Round 1; if one or more exist, use the highest N + 1 **only if the current reader's feedback file was not already processed** (check whether any `[<reader-slug>·` task IDs already appear in tasks.md — if so, skip task generation and report `ℹ️ Tasks for this reader already exist in tasks.md. Use the triage argument to re-triage only.`).
+   - Add a section to `tasks.md` under `## Beta / Editorial Round [N]` with a sub-header: `### [reader-name] ([reader-type]) — [YYYY-MM-DD]`
    - One task per CRITICAL and MAJOR issue
+   - Issue IDs are prefixed with the reader slug to avoid collision when multiple feedback runs exist: `[<reader-slug>·S-001]` (e.g. `[jane·S-001]`). When step 5 merges an issue raised by 2+ readers, use the slug of the reader whose notes are primary (earliest date), and note the others: `(also: bob-2026-04-12)`
    - Task format (mirrors existing tasks.md convention):
      ```
-     - [ ] [FEEDBACK] [S-001] A2.201 — Restructure the midpoint scene: reader lost the stakes (2 readers)
-     - [ ] [FEEDBACK] [C-003] A1.102 — Clarify Elena's motivation for refusing the letter
+     - [ ] [FEEDBACK] [jane·S-001] A2.201 — Restructure the midpoint scene: reader lost the stakes (2 readers)
+     - [ ] [FEEDBACK] [jane·C-003] A1.102 — Clarify Elena's motivation for refusing the letter
      ```
    - MINOR issues: add as a single grouped task per category:
      ```

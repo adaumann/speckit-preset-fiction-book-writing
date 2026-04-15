@@ -70,10 +70,36 @@ Consider user input before proceeding (format override, title, author, options).
    - **Cover image** (EPUB only): If `FEATURE_DIR/cover.jpg` or `cover.png` exists,
      pass it as `--cover-image`. If not auto-detected and format is EPUB, note it in the output.
    - **CSS** (EPUB only): If `FEATURE_DIR/epub.css` or `style.css` exists, pass as `--epub-css`.
+   - **Blurb** (EPUB only): If `FEATURE_DIR/blurb.md` exists, read the first 150-word block as
+     the back-cover description. If the file does not exist, generate a blurb (see Step 4b) and
+     write it to `FEATURE_DIR/blurb.md` before proceeding.
+
+4b. **Blurb generation** (EPUB only — skip for DOCX and LaTeX):
+
+   If `FEATURE_DIR/blurb.md` does not exist, generate a back-cover blurb and write it:
+
+   **Blurb rules** (KDP / retailer standard):
+   - 100–150 words. Present tense. Third person (even if the novel is first person).
+   - Structure: **hook sentence** (protagonist + disruption) → **escalation** (what they must do, what stands in the way) → **stakes closer** (what is lost if they fail — do NOT reveal the ending or resolution).
+   - No rhetorical questions. No marketing language ("gripping", "unforgettable", "page-turning").
+   - End on tension, not resolution — the blurb sells the question, not the answer.
+   - Source material: `spec.md` logline, character arcs, dramatic question. Do not invent details not in the spec.
+
+   After generating, write to `FEATURE_DIR/blurb.md`:
+   ```markdown
+   # Back-Cover Blurb: [STORY_TITLE]
+
+   <!-- 100–150 words. Edit here and re-run speckit.export epub to update the EPUB metadata. -->
+
+   [GENERATED_BLURB_TEXT]
+   ```
+   Notify the user: `✓ blurb.md generated — review and edit before final distribution.`
+
+   If `FEATURE_DIR/blurb.md` already exists, read the first non-comment paragraph as the description text. Validate it is 100–150 words; warn if outside that range but proceed.
 
 5. **Run the export script**:
    ```
-   python .specify/presets/writing/scripts/python/export.py <format> \
+   python .specify/presets/fiction-book-writing/scripts/python/export.py <format> \
      --draft-dir FEATURE_DIR/draft \
      --output FEATURE_DIR/manuscript.<ext> \
      --title "<title>" \
@@ -81,6 +107,7 @@ Consider user input before proceeding (format override, title, author, options).
      [--reference-doc FEATURE_DIR/manuscript-template.docx]  # DOCX only
      [--cover-image FEATURE_DIR/cover.jpg]                   # EPUB only
      [--epub-css FEATURE_DIR/epub.css]                       # EPUB only
+     [--epub-description FEATURE_DIR/blurb.md]               # EPUB only
    ```
    On Windows, use `python` or `python3` as available.
 
@@ -90,10 +117,11 @@ Consider user input before proceeding (format override, title, author, options).
 
    | Field         | Value                              |
    |---|---|
-   | Format        | DOCX / LaTeX                       |
+   | Format        | DOCX / LaTeX / EPUB                |
    | Chapters      | N                                  |
    | Total words   | ~N,NNN                             |
    | Output        | FEATURE_DIR/manuscript.<ext>       |
+   | Blurb         | FEATURE_DIR/blurb.md (EPUB only)   |
    | Pandoc ver.   | X.X                                |
    ```
 
@@ -109,6 +137,7 @@ Consider user input before proceeding (format override, title, author, options).
    > - **KDP**: upload `.epub` directly on the manuscript upload step
    > - **Cover image**: place `cover.jpg` or `cover.png` next to `draft/` for auto-detection on the next run
    > - **Custom styling**: place `epub.css` next to `draft/` to control font, spacing, and indentation
+   > - **Blurb**: edit `blurb.md` and re-run export to update the back-cover description embedded in the EPUB metadata
    > - **Draft2Digital / IngramSpark**: accepted as-is; D2D reformats automatically
 
    If format is **LaTeX**, add:

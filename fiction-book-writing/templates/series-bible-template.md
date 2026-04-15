@@ -8,6 +8,38 @@
 
 ---
 
+## Workspace Structure
+<!-- How a multi-book series workspace is organized.
+     Each book is a self-contained spec folder in specs/. The series/ directory is shared.
+     speckit.specify names non-standalone book folders with a book-N prefix automatically. -->
+
+```
+<workspace-root>/
+├── series/
+│   └── series-bible.md              ← this file: series-level canon, shared across all books
+│
+└── specs/
+    ├── 001-book-1-[title]/           ← Book 1 (created by speckit.specify)
+    │   ├── spec.md                   ← story brief for this book
+    │   ├── plan.md                   ← story structure for this book
+    │   ├── tasks.md
+    │   ├── characters/               ← per-character profiles (each has ## X. Series Arc State)
+    │   ├── draft/
+    │   ├── outlines/
+    │   └── .specify/memory/
+    │       └── constitution.md       ← story bible for this book (has ## IX. Series Context)
+    │
+    └── 002-book-2-[title]/           ← Book 2
+        └── ...
+```
+
+**Authority hierarchy**:
+- `series/series-bible.md` wins over any per-book decision on canon, world rules, and character state.
+- Each book's `.specify/memory/constitution.md ## IX. Series Context` mirrors the relevant constraints from this file for that book — it is populated by `speckit.constitution` and should not be edited manually.
+- Each character's `## X. Series Arc State` table is the per-character view; the `## Character State Registry` in this file is the series-level authority.
+
+---
+
 ## Series Parameters
 
 | Parameter | Value |

@@ -47,6 +47,7 @@ Given that story idea, do this:
    - If `numberingScheme` is `"timestamp"` or `TIMESTAMP`: use `YYYYMMDD-HHMMSS` prefix
    - Otherwise: scan `specs/` directory for existing numbered directories (format `NNN-`) and use the next sequential number (zero-padded to 3+ digits). Also check current git branches for the highest number used. Use the higher of the two values + 1.
    - Create directory: `specs/<prefix>-<short-name>/`
+   - **Series naming**: if `series/series-bible.md` already exists and the story is non-standalone, incorporate the book number into the directory name: `specs/<prefix>-book-<N>-<short-name>/` (e.g., `specs/002-book-2-shattered-key/`). Infer N from the next empty row in `## Books in Series`, or ask the user if the table is not yet populated.
 
 4. **Copy the story brief template**:
    - Locate `spec-template.md` using the preset template resolution order
@@ -61,6 +62,10 @@ Given that story idea, do this:
    - **Plot Requirements**: Events that MUST happen for this to be this story. Use MUST language. Mark unknowns as `[NEEDS CLARIFICATION: reason]`.
    - **Key Entities**: Characters table, locations table, Chekhov items table (items introduced that must pay off).
    - **Reader Experience Goals**: What the reader MUST feel, discover, or experience. Measurable.
-   - **Assumptions & Scope**: What this story IS and is NOT. Series position. Target word count and audience if known.
+   - **Assumptions & Scope**: What this story IS and is NOT. Series position. Target word count and audience if known. Additionally:
+     - Check whether `series/series-bible.md` exists in the workspace.
+     - If it **exists**: read `## Series Parameters` and pre-fill `Series title`. Read `## Books in Series` to determine the next book number and pre-fill `Series position` (e.g., `book 2 of 3`). Set `Series bible path` to `series/series-bible.md`. Emit: `ℹ️ Existing series detected — series title and position pre-filled from series/series-bible.md. Confirm or override.`
+     - If it **does not exist** and series position is non-standalone: add a note to the spec — `⚠️ series/series-bible.md does not yet exist — speckit.plan will create it when this book is planned.`
+     - If series position is `standalone`: leave Series title and Series bible path fields blank.
 
 6. **Report**: Output the path to the created `spec.md`, the short name used, and any items left as `[NEEDS CLARIFICATION]`.
