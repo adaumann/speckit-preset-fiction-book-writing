@@ -121,6 +121,10 @@ After initialization, your project will have this layout:
         <CHAPTER_ID>_<Title>.md        ← Chapter draft
         <CHAPTER_ID>_<Title>_v2.md     ← Revised version
         <CHAPTER_ID>_<Title>_polished.md
+      audiodraft/
+        <CHAPTER_ID>_<Title>.md        ← Chapter draft
+        <CHAPTER_ID>_<Title>_v2.md     ← Revised version
+        <CHAPTER_ID>_<Title>_polished.md
       checklists/
         <CHAPTER_ID>_<Title>-checklist.md
       feedback/
