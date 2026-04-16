@@ -67,6 +67,46 @@ You **MUST** consider the user input before proceeding (if not empty).
    - `[STORY_SPECIFIC_PRINCIPLES]` — 3–5 rules unique to this story
    - `[ADDITIONAL_PROHIBITED_PHRASES]` — story/genre-specific additions to the Anti-AI filter
 
+3b. **Resolve Audiobook Production section** (Section X of constitution.md):
+
+   If `[OUTPUT_MODE]` is `[NEEDS CLARIFICATION]` or absent, ask:
+
+   > "What output do you want for this story?
+   > (a) **book** — prose drafts only, no audiobook files
+   > (b) **audiobook** — audiobook TTS drafts generated alongside prose drafts
+   > (c) **both** — prose drafts AND audiobook TTS drafts"
+
+   If Output Mode is `book`: mark the section as inactive and stop here.
+
+   If Output Mode is `audiobook` or `both`:
+
+   **TTS engine** — ask if not set:
+   > "Which TTS engine?
+   > (a) **ssml-cloud** — SSML XML output for Azure TTS, Google Cloud TTS, or Amazon Polly
+   > (b) **elevenlabs** — ElevenLabs voice IDs, break tags, and .pls lexicon sidecar
+   > (c) **both** — generate both variants per chapter"
+
+   **Speaker mode** — ask if not set:
+   > "Speaker mode?
+   > (a) **single** — one narrator voice reads everything (narration + all dialogue)
+   > (b) **multi** — narrator reads prose; each named character's dialogue is routed to a distinct voice"
+
+   **Speaker Configuration table**:
+   - Always populate the narrator row with the user's chosen voice name/ID
+   - For `multi` mode: add one row per named speaking character. Ask the user to provide voice names/IDs now, or stub with `[NEEDS CLARIFICATION]` to fill later
+   - For `single` mode: only the narrator row is required; remove or keep the comment placeholder
+
+   **Pronunciation Lexicon**:
+   - Scan `spec.md` and `characters.md` (if present) for unusual names, invented words, or foreign terms
+   - Pre-populate the lexicon table with any found. Mark IPA and hints as `[NEEDS CLARIFICATION]` for entries that need phonetic review
+   - Ask the user: "Any words or names you know TTS commonly mispronounces for this story?"
+
+   **Audiobook Style Hints**:
+   - Ask: "Any delivery notes for the narrator or specific characters? (e.g., speaking pace, emotional register, pausing style)"
+   - Populate the table if provided; leave the placeholder if none given
+
+   Validate: if `multi` speaker mode but no character voice rows populated → emit `⚠️ Speaker Configuration incomplete. Add voice IDs for each character or switch to single speaker mode.`
+
 4. **Increment the semantic version**:
    - **MAJOR**: if plot structure, POV strategy, or number of POV strands changed
    - **MINOR**: if new principles, style rules, or Anti-AI phrases added
@@ -95,5 +135,11 @@ You **MUST** consider the user input before proceeding (if not empty).
    - Theme is stated as a question, not an answer
    - If `author-sample` mode: all 8 Extracted Style Markers have values (not `[NEEDS CLARIFICATION]`)
    - If Series Position is non-standalone: `## IX. Series Context` is present and has at least one populated SC-NNN or STC-NNN row, or is explicitly marked `[TBD pending series-bible.md creation]`. Any Series Variance Log row that is present but has an empty Justification column → WARNING.
+   - `[OUTPUT_MODE]` is one of: `book`, `audiobook`, `both`
+   - If Output Mode is `audiobook` or `both`:
+     - `[TTS_ENGINE]` is one of: `ssml-cloud`, `elevenlabs`, `both`
+     - `[SPEAKER_MODE]` is one of: `single`, `multi`
+     - Narrator row in Speaker Configuration is populated (not `[NEEDS CLARIFICATION]`) — warn if not
+     - If `multi` speaker mode: at least one character row present in Speaker Configuration — warn if none
 
 8. **Report**: Summarize all resolved fields, the new version number, and any remaining items requiring attention.

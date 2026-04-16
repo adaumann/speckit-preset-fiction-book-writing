@@ -15,7 +15,7 @@ fiction-book-writing/   ← The installable preset
 The preset directory contains:
 
 - `preset.yml` — manifest consumed by `specify preset add`
-- `commands/` — 17 AI slash commands covering every stage from idea to submission
+- `commands/` — 25 AI slash commands covering every stage from idea to submission
 - `templates/` — 21 story document templates (characters, world-building, timelines, etc.)
 - `scripts/` — pandoc-based export script for DOCX, EPUB, and LaTeX
 

@@ -69,3 +69,9 @@ You **MUST** consider the user input before proceeding (if not empty).
 7. **Write checklist file**: Save to `FEATURE_DIR/checklists/<scene-short-name>-checklist.md`
 
 8. **Report**: Output the checklist path, the weighted score, the PASS/FAIL verdict, and the highest-risk items. If FAIL, explicitly state the scene must be revised before drafting continues — invoke `speckit.revise` with the chapter ID and the failing item codes.
+
+   **Audiobook sync note** (append to report; skip if `OUTPUT_MODE` is `book` in `constitution.md ## X`):
+   - Check for `audiodraft/<CHAPTER_ID>_<ChapterName>.ssml` and/or `_el.xml`
+   - If found: compare `version` field in the audiodraft YAML against the prose draft's `version`. If lower: `⚠️ Audiodraft is stale (prose v[N], audio v[M]) — resync by running speckit.revise or speckit.implement for this chapter.`
+   - If not found: `ℹ️ No audiodraft found for this chapter — run speckit.implement to generate one.`
+   - If in sync: `✓ Audiodraft in sync (v[N]).`

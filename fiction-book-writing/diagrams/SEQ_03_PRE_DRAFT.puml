@@ -1,0 +1,50 @@
+@startuml SEQ_03_PRE_DRAFT
+' ─────────────────────────────────────────────────────────────────────────────
+' Spec Kit — Fiction Book Writing Preset
+' Section 3 of 6: Pre-Draft Gate · Outline Review
+' ─────────────────────────────────────────────────────────────────────────────
+
+skinparam backgroundColor #FAFAFA
+skinparam sequenceArrowThickness 2
+skinparam roundcorner 8
+skinparam sequenceParticipantBorderColor #555555
+skinparam sequenceParticipantBackgroundColor #FFFFFF
+skinparam noteBorderColor #AAAAAA
+skinparam noteBackgroundColor #FFFFF0
+
+actor Author
+participant "speckit.analyze" as AN #LightYellow
+participant "speckit.plan" as PL #LightGreen
+participant "speckit.tasks" as TK #LightGreen
+participant "speckit.outline" as OL #LightGoldenRodYellow
+
+== Pre-Draft Gate ==
+
+Author -> AN: (reads spec.md + plan.md + tasks.md)
+AN --> Author: structural alignment report (read-only)
+
+note right of AN
+  Gaps flagged here must be
+  fixed before drafting.
+  No file modifications made.
+end note
+
+alt Gaps found
+  Author -> PL: fix plan
+  Author -> TK: regenerate tasks
+  Author -> AN: re-analyze
+end
+
+== Outline Review ==
+
+Author -> OL: all (or chapter range)
+OL --> Author: outlines/<CHAPTER_ID>-outline.md (status: DRAFT)
+
+note right of OL
+  Author edits beat sequence,
+  sensory anchors, dialogue reqs.
+  Set APPROVED to allow AI drafting.
+  Set SKIP to write chapter themselves.
+end note
+
+@enduml

@@ -51,6 +51,20 @@ Identify story bible violations, continuity errors, and untracked narrative thre
    - Report any outline entry with `status: in-draft` that has no corresponding draft file (`MISSING DRAFT`)
    - Report any draft whose `constitution_version` does not match the current `constitution.md` version (`STALE CONSTITUTION`)
    - For every `STALE CONSTITUTION` draft: read the `## Change Log` in `constitution.md` and identify all change entries newer than the draft's `constitution_version`. Match the specific principles changed against the draft content to identify likely violations. Output as the `Constitution Change Impact` table in the report.
+   - **Audiobook draft inventory** (skip entirely if `OUTPUT_MODE` is `book` in `constitution.md ## X`):
+     - For each prose draft, check whether a matching audiobook draft exists in `audiodraft/`:
+       - SSML: `audiodraft/<CHAPTER_ID>_<ChapterName>.ssml`
+       - ElevenLabs: `audiodraft/<CHAPTER_ID>_<ChapterName>_el.xml`
+     - If an audiobook draft exists, compare its `version` field (YAML frontmatter) against the prose draft's `version`. If the prose version is higher: flag as `STALE AUDIODRAFT`.
+     - If no audiobook draft exists for a drafted chapter: flag as `MISSING AUDIODRAFT`.
+     - Add a **Audiobook Draft Inventory** sub-table to the Draft File Inventory section:
+       ```
+       | Chapter ID | SSML file | EL file | Audio version | Prose version | Sync status |
+       |---|---|---|---|---|---|
+       | A1.101 | ✓ | ✓ | v2 | v3 | STALE AUDIODRAFT |
+       | A1.102 | ✗ | ✗ | — | v1 | MISSING AUDIODRAFT |
+       ```
+     - `STALE AUDIODRAFT` and `MISSING AUDIODRAFT` are both WARNING-level (not blocking). Suggest running `speckit.revise` or `speckit.implement` to resync.
 
 4. **Run analysis across these dimensions**:
 

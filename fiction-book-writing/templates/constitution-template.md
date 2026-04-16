@@ -360,6 +360,72 @@ The following phrases are PROHIBITED — they mark prose as AI-generated:
 
 ---
 
+## X. Audiobook Production
+<!-- Skip this section entirely if Output Mode is `book`.
+     When Output Mode is `audiobook` or `both`, speckit.implement generates a parallel
+     audiobook draft alongside each prose draft in audiodraft/. -->
+
+**Output Mode**: [OUTPUT_MODE]
+<!-- Set to ONE of the following values:
+     - book        → prose drafts only; no audiobook files generated
+     - audiobook   → audiobook drafts generated; prose drafts still created
+     - both        → prose drafts AND audiobook drafts generated -->
+
+**TTS Engine**: [TTS_ENGINE]
+<!-- Set to ONE of the following values (ignored when Output Mode is `book`):
+     - ssml-cloud  → SSML-tagged XML; compatible with Azure TTS, Google Cloud TTS, Amazon Polly
+     - elevenlabs  → ElevenLabs voice IDs, break tags, and .pls lexicon sidecar
+     - both        → generate both ssml-cloud and elevenlabs variants per chapter -->
+
+**Speaker Mode**: [SPEAKER_MODE]
+<!-- Set to ONE of the following values:
+     - single      → all narration and dialogue read by one narrator voice
+     - multi       → narrator voice for prose; each named character's dialogue routed
+                     to a distinct voice using the Speaker Configuration table below -->
+
+### Speaker Configuration
+<!-- Map narration and character dialogue roles to TTS voice identifiers.
+     ssml-cloud voice: provider voice name (e.g. en-US-JennyNeural for Azure, en-US-Neural2-F for Google).
+     ElevenLabs voice ID: the 20-character ID or the display name from your ElevenLabs account.
+     For single speaker mode: only the narrator row is required. -->
+
+| Role | Character / Function | SSML-Cloud Voice | ElevenLabs Voice ID | Notes |
+|---|---|---|---|---|
+| narrator | Narration & stage directions | [NARRATOR_VOICE_SSML] | [NARRATOR_VOICE_EL] | |
+| dialogue | [CHARACTER_NAME] | [VOICE_SSML] | [VOICE_EL] | |
+<!-- Add one row per named speaking character in multi speaker mode. -->
+
+### Pronunciation Lexicon
+<!-- Words, names, or terms that TTS engines commonly mispronounce.
+     IPA: International Phonetic Alphabet transcription.
+     SSML phoneme: used verbatim in <phoneme alphabet="ipa" ph="..."> tags.
+     ElevenLabs substitute: plain-text replacement injected inline in EL files and
+     also written into audiodraft/lexicon.pls as a <phoneme> entry. -->
+
+| Word / Name | IPA | Plain Hint | ElevenLabs Substitute |
+|---|---|---|---|
+| [WORD] | [IPA] | [PLAIN_HINT] | [SUBSTITUTE] |
+<!-- Examples:
+     | Caoimhe  | ˈkiːvə  | KEE-vuh  | Keeva  |
+     | Niamh    | niːv    | Neev     | Neev   |
+     | Siobhán  | ʃɪˈvɔːn | shih-VAWN | Shivawn | -->
+
+### Audiobook Style Hints
+<!-- Per-character or per-context delivery notes.
+     Copied as HTML comments into every audiobook draft file.
+     Human narrators and SSML prosody tuning both use these. -->
+
+| Character / Context | Hint |
+|---|---|
+| [CHARACTER_NAME] | [DELIVERY_NOTE] |
+<!-- Examples:
+     | Narrator            | Measured, cool, slight distance — never warm or excited          |
+     | Marcus (angry)      | Clipped. Short sentences. Pause before the last word.            |
+     | Chapter openings    | Slower pace; longer pauses between paragraphs                    |
+     | Whispered dialogue  | Add <prosody volume="soft" rate="slow"> in SSML                  | -->
+
+---
+
 ## Governance
 
 This Story Bible overrides all writing prompts and templates.

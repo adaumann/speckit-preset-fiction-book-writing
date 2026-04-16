@@ -148,6 +148,109 @@ You **MUST** consider the user input before proceeding (if not empty).
    - Note any deviations from the scene outline (additions, cuts, structural changes) as a comment block at the top of the draft file:
      ```
      <!-- DRAFT NOTES
+
+5b. **Generate audiobook draft** (if `OUTPUT_MODE` is `audiobook` or `both` in `constitution.md ## X`):
+
+   Read from `constitution.md ## X. Audiobook Production`:
+   - `TTS_ENGINE` (`ssml-cloud`, `elevenlabs`, or `both`)
+   - `SPEAKER_MODE` (`single` or `multi`)
+   - Speaker Configuration table (narrator + per-character voice IDs)
+   - Pronunciation Lexicon table
+   - Audiobook Style Hints table
+
+   Source: the prose draft just written in step 5.
+   Template: `templates/audiobook-draft-template.md` — use this as the structural model for generated files.
+
+   **Output paths** (create `audiodraft/` in `FEATURE_DIR` if it does not exist):
+   - SSML-cloud: `audiodraft/<CHAPTER_ID>_<ChapterName>.ssml`
+   - ElevenLabs: `audiodraft/<CHAPTER_ID>_<ChapterName>_el.xml`
+   - Lexicon sidecar (ElevenLabs, shared across all chapters): `audiodraft/lexicon.pls`
+
+   **File header** (top of every audiobook draft file, both formats):
+   ```yaml
+   ---
+   chapter_id: [CHAPTER_ID]
+   chapter_name: [CHAPTER_NAME]
+   audiobook_format: ssml-cloud | elevenlabs | both
+   speaker_mode: single | multi
+   source_draft: draft/[CHAPTER_ID]_[CHAPTER_NAME].md
+   status: audiodraft
+   generated: [YYYY-MM-DD]
+   ---
+   ```
+
+   **Prose-to-audio transformation rules (apply to both formats)**:
+   - Strip all markdown formatting: `**bold**` → plain text, `_italic_` marks for `<emphasis>`, `# headings` → chapter title spoken aloud as opening line
+   - Em-dash (—) mid-sentence → `<break time="250ms"/>`
+   - Ellipsis (…) trailing off → `<break time="400ms"/>`
+   - Paragraph break → `<break time="600ms"/>`
+   - Scene break (`---` or `* * *`) → `<break time="1500ms"/>`
+   - Italics (`_text_`) → `<emphasis level="moderate">text</emphasis>`
+   - ALL CAPS → `<emphasis level="strong">text</emphasis>`
+   - Every word in the Pronunciation Lexicon → wrap with `<phoneme alphabet="ipa" ph="[IPA]">[WORD]</phoneme>` (SSML) or substitute the ElevenLabs Substitute value inline (EL)
+   - Audiobook Style Hints → applied as `<!-- DELIVERY: [hint] -->` comments before the relevant passage, and as `<prosody>` attributes where applicable
+
+   **SSML-cloud output rules** (`ssml-cloud` or `both`):
+   - Root element: `<speak version="1.0" xmlns="http://www.w3.org/2001/10/synthesis" xml:lang="en-US">`
+   - Wrap full chapter narration in `<voice name="[NARRATOR_VOICE_SSML]">`
+   - In `multi` speaker mode: each character's dialogue is wrapped:
+     ```xml
+     </voice>
+     <voice name="[CHARACTER_VOICE_SSML]">
+       [dialogue text with phonemes and breaks]
+     </voice>
+     <voice name="[NARRATOR_VOICE_SSML]">
+     ```
+   - In `single` speaker mode: all text stays inside the narrator `<voice>` block; dialogue gets `<prosody rate="95%" pitch="-2st">` unless a Style Hint overrides it
+   - Close with `</voice></speak>`
+
+   **ElevenLabs output rules** (`elevenlabs` or `both`):
+   - ElevenLabs v2 API accepts: `<break>`, `<phoneme alphabet="ipa">`, `<emphasis>` — use only these tags
+   - In `multi` speaker mode: split the chapter into contiguous per-voice **segments**. Each segment is a self-contained `<speak>` block preceded by a routing comment:
+     ```xml
+     <!-- VOICE: [EL_VOICE_ID] | role: narrator -->
+     <speak>[narration text]<break time="600ms"/></speak>
+
+     <!-- VOICE: [EL_VOICE_ID] | role: [CHARACTER_NAME] -->
+     <speak>[dialogue text]</speak>
+     ```
+   - In `single` speaker mode: one `<speak>` block with `<!-- VOICE: [NARRATOR_EL_VOICE_ID] | role: narrator -->` header
+   - ElevenLabs Substitute values from the Pronunciation Lexicon replace the source word directly in the text (the `.pls` file handles phonetic mapping on the EL platform side)
+   - Emit an info comment at the top of the file:
+     ```xml
+     <!-- ELEVENLABS AUDIOBOOK DRAFT
+          Chapter:      [CHAPTER_ID] [CHAPTER_NAME]
+          Speaker mode: single | multi
+          Segments:     N
+          Lexicon:      audiodraft/lexicon.pls
+          Generated:    [DATE]
+          API hint:     POST /v1/text-to-speech/{voice_id}
+                        model_id: eleven_multilingual_v2 or eleven_turbo_v2_5
+                        Pass each segment's <speak> content as the `text` field. -->
+     ```
+
+   **Lexicon sidecar `audiodraft/lexicon.pls`** (ElevenLabs or both — create once, append on each chapter run):
+   - If file does not exist, create it with the PLS header and all current Pronunciation Lexicon entries
+   - If it exists, append only new entries not already present:
+     ```xml
+     <?xml version="1.0" encoding="UTF-8"?>
+     <lexicon version="1.0"
+              xmlns="http://www.w3.org/2005/01/pronunciation-lexicon"
+              alphabet="ipa" xml:lang="en">
+       <lexeme>
+         <grapheme>Caoimhe</grapheme>
+         <phoneme>ˈkiːvə</phoneme>
+       </lexeme>
+     </lexicon>
+     ```
+
+   **Report** (append to step 6 output):
+   ```
+   | Audiobook | audiodraft/[CHAPTER_ID]_[CHAPTER_NAME].ssml  | SSML segments: N |
+   | Audiobook | audiodraft/[CHAPTER_ID]_[CHAPTER_NAME]_el.xml | EL segments: N  |
+   | Lexicon   | audiodraft/lexicon.pls                        | Entries: N      |
+   ```
+   If any Pronunciation Lexicon entries still have `[NEEDS CLARIFICATION]` for IPA or Substitute: emit `⚠️ Lexicon incomplete — review audiodraft/lexicon.pls before synthesis.`
           Deviation from outline: [describe any deviation]
           New Chekhov items: [list any]
           Unresolved items: [list any]

@@ -117,7 +117,22 @@ Consider user input before proceeding (e.g. a specific act, chapter range, or `-
    - Apply to remaining estimated chapters to project final word count
    - Format: `Projected final: ~N,NNN words (based on N drafted chapters averaging N% of estimate)`
 
-9. **If `--brief` is in `$ARGUMENTS`**, collapse everything to two lines:
+9. **Audiobook draft coverage** (skip entirely if `OUTPUT_MODE` is `book` in `constitution.md ## X`, or if `audiodraft/` does not exist):
+
+   Scan `FEATURE_DIR/audiodraft/` for `.ssml` and `_el.xml` files. For each drafted chapter, check whether a matching audiobook draft exists and whether its `version` frontmatter field matches the prose draft's `version`.
+
+   Append to the summary block:
+   ```
+   | Audiobook drafts (SSML)   | N / N chapters (N%)  |
+   | Audiobook drafts (EL)     | N / N chapters (N%)  |
+   | Stale audiodrafts         | N chapters out of sync |
+   | Lexicon entries           | N  (audiodraft/lexicon.pls) |
+   ```
+   If any chapters have a stale or missing audiodraft, list them as:
+   `⚠️ MISSING AUDIODRAFT: A1.102, A2.201 — run speckit.implement to generate`
+   `⚠️ STALE AUDIODRAFT: A1.101 (prose v3, audio v2) — run speckit.revise or speckit.polish to resync`
+
+10. **If `--brief` is in `$ARGUMENTS`**, collapse everything to two lines:
    ```
    Manuscript: N/N chapters drafted (N%) · ~N,NNN words · Stage: [stage]
    Next: [chapter ID] — [chapter name]

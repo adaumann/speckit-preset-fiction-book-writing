@@ -158,7 +158,7 @@ def read_spec_meta(draft_dir: Path) -> dict[str, str]:
     spec_path = draft_dir.parent / "spec.md"
     if not spec_path.exists():
         return {}
-    text = spec_path.read_text(encoding="utf-8")
+    text = spec_path.read_text(encoding="utf-8", errors="replace")
     meta: dict[str, str] = {}
     # Look for a markdown H1 as the title
     m = re.search(r"^#\s+(.+)$", text, re.MULTILINE)

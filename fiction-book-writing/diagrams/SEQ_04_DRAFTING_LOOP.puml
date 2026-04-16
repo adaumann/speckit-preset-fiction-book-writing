@@ -1,0 +1,83 @@
+@startuml SEQ_04_DRAFTING_LOOP
+' ─────────────────────────────────────────────────────────────────────────────
+' Spec Kit — Fiction Book Writing Preset
+' Section 4 of 6: Drafting Loop
+' ─────────────────────────────────────────────────────────────────────────────
+
+skinparam backgroundColor #FAFAFA
+skinparam sequenceArrowThickness 2
+skinparam roundcorner 8
+skinparam sequenceParticipantBorderColor #555555
+skinparam sequenceParticipantBackgroundColor #FFFFFF
+skinparam noteBorderColor #AAAAAA
+skinparam noteBackgroundColor #FFFFF0
+
+actor Author
+participant "speckit.implement" as IM #LightCoral
+participant "speckit.checklist" as CH #LightSalmon
+participant "speckit.revise" as RV #LightSalmon
+participant "speckit.roleplay" as RPL #Linen
+participant "speckit.polish" as PO #Thistle
+participant "speckit.glossary" as GL #Wheat
+participant "speckit.subplot" as SUB #Bisque
+participant "speckit.research" as RS #Wheat
+participant "speckit.versions" as VER #Wheat
+
+== Drafting Loop (per chapter) ==
+
+loop for each chapter in tasks.md
+
+  alt Outline APPROVED (AI drafts)
+    Author -> IM: execute next task
+    IM --> Author: draft/<CHAPTER_ID>.md
+  else Outline SKIP (author writes)
+    Author -> IM: --outline-only (optional)
+    IM --> Author: outline file only (no prose)
+    note right of IM
+      Author writes draft/<CHAPTER_ID>.md
+      manually, then runs checklist.
+    end note
+  end
+
+  Author -> CH: (on draft chapter)
+  CH --> Author: checklists/<CHAPTER_ID>-checklist.md
+
+  alt Checklist FAIL
+    Author -> RV: <CHAPTER_ID> [failure codes]
+    RV --> Author: <CHAPTER_ID>_v2.md + diff summary
+    Author -> CH: re-run checklist
+  end
+
+  opt Roleplay (scene exploration / dialog workshop)
+    Author -> RPL: [chapter or outline reference]
+    RPL --> Author: revision notes + subtext insights
+    note right of RPL
+      Walk through beats beat-by-beat
+      with AI/user role assignments.
+      Feeds back into revise or outline.
+    end note
+  end
+
+  Author -> PO: (after checklist PASS)
+  PO --> Author: <CHAPTER_ID>_polished.md
+
+  Author -> GL: audit (find unregistered terms)
+  GL --> Author: unregistered term candidates
+  Author -> GL: add [term] (register new terms)
+
+  opt Subplot management
+    Author -> SUB: add [character] (new mid-draft arc)
+    SUB --> Author: SP-NNN block added to subplots.md
+    Author -> SUB: check (beat gaps / arc absence audit)
+    SUB --> Author: CRITICAL / WARNING / INFO items
+  end
+
+  Author -> RS: check <CHAPTER_ID> (verify factual claims)
+  RS --> Author: UNSUPPORTED / PENDING flags
+
+  Author -> VER: diff <CHAPTER_ID> (review what changed)
+  VER --> Author: narrative passage comparison
+
+end
+
+@enduml

@@ -1,0 +1,64 @@
+@startuml SEQ_06_SUBMISSION
+' ─────────────────────────────────────────────────────────────────────────────
+' Spec Kit — Fiction Book Writing Preset
+' Section 6 of 6: Submission
+' ─────────────────────────────────────────────────────────────────────────────
+
+skinparam backgroundColor #FAFAFA
+skinparam sequenceArrowThickness 2
+skinparam roundcorner 8
+skinparam sequenceParticipantBorderColor #555555
+skinparam sequenceParticipantBackgroundColor #FFFFFF
+skinparam noteBorderColor #AAAAAA
+skinparam noteBackgroundColor #FFFFF0
+
+actor Author
+participant "speckit.synopsis" as SYN #Honeydew
+participant "speckit.query" as QR #Lavender
+participant "speckit.export" as EX #Lavender
+participant "speckit.audiobook" as AUD #PaleTurquoise
+
+== Submission ==
+
+Author -> SYN: draft (or update post-draft)
+SYN --> Author: synopsis.md (one-page 250–350w + full 1,000–2,000w)
+
+note right of SYN
+  Both formats reveal the ending.
+  Run after plan (outline) or
+  after drafting (accuracy).
+  Required before query letter.
+end note
+
+Author -> QR: draft
+QR --> Author: query-letter.md (250–350 words)
+
+Author -> QR: update / track / comp-titles
+QR --> Author: submission tracker updated
+
+Author -> EX: docx / epub / latex
+EX --> Author: submission-ready manuscript file
+
+opt Audiobook production
+  Author -> AUD: voice add [narrator/character]
+  AUD --> Author: constitution.md updated (## X. Audiobook Production)
+  Author -> AUD: lexicon add [word]
+  AUD --> Author: pronunciation entry registered
+  Author -> AUD: lexicon export
+  AUD --> Author: audiodraft/lexicon.pls (W3C PLS 1.0)
+  Author -> AUD: draft all
+  AUD --> Author: audiodraft/*.ssml + audiodraft/*_el.xml
+  Author -> AUD: check
+  AUD --> Author: stale / missing audiodraft report
+  Author -> EX: audio
+  EX --> Author: audiodraft/manifest.md (chapter manifest)
+  note right of AUD
+    TTS engines: Azure / Google /
+    Amazon Polly (SSML) or ElevenLabs.
+    Single or multi-speaker mode.
+    Per-chapter files only — do not
+    concatenate before ACX submission.
+  end note
+end
+
+@enduml

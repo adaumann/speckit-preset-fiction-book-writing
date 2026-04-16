@@ -58,8 +58,8 @@ Consider user input before proceeding (format override, title, author, options).
      ```
 
 4. **Determine export parameters**:
-   - **Format**: Read from `$ARGUMENTS` (`docx`, `latex`, `tex`, or `epub`).
-     If not specified, ask the user: "Export format? `docx` (Word, submission), `epub` (KDP/distributors), or `latex` (typeset)?"
+   - **Format**: Read from `$ARGUMENTS` (`docx`, `latex`, `epub`, or `audio`).
+     If not specified, ask the user: "Export format? `docx` (Word, submission), `epub` (KDP/distributors), `latex` (typeset), or `audio` (assemble audiobook drafts from audiodraft/)?"
    - **Title**: Read from `$ARGUMENTS` if given; otherwise look for a YAML `title:` field
      or H1 heading in `spec.md`; fall back to `"Untitled Manuscript"`.
    - **Author**: Read from `$ARGUMENTS` if given; otherwise look in `spec.md`; fall back to `"Author Name"`.
@@ -149,3 +149,66 @@ Consider user input before proceeding (format override, title, author, options).
    If the user passes `polished` or `--polished-only` in `$ARGUMENTS`, add the
    `--polished-only` flag to the script invocation. Report which chapters were
    **skipped** (no polished version yet) in the output table.
+
+8. **Audio export** (format `audio` only — skip for all other formats):
+
+   8a. **Locate audiobook drafts**:
+   - Look for `FEATURE_DIR/audiodraft/` containing `.ssml` and/or `_el.xml` files
+   - If the directory does not exist or is empty, stop and report:
+     ```
+     ⚠️ No audiobook drafts found in FEATURE_DIR/audiodraft/
+     Run speckit.implement with Output Mode set to `audiobook` or `both`
+     in constitution.md ## X to generate audiobook draft files first.
+     ```
+
+   8b. **Read audiobook configuration** from `constitution.md ## X. Audiobook Production`:
+   - `TTS_ENGINE`, `SPEAKER_MODE`, Speaker Configuration table, Pronunciation Lexicon
+
+   8c. **Validate drafts**:
+   - Collect all `.ssml` / `_el.xml` files; sort by `chapter_id` from each file's YAML header
+   - Identify any prose draft chapters (`draft/`) that have **no corresponding audiobook draft** — list them in the report as `⚠️ Missing audiobook draft`
+   - If `audiodraft/lexicon.pls` exists, validate XML is well-formed; report a warning if not
+
+   8d. **Assemble and report**:
+   - Do NOT concatenate audio drafts into a single file (ACX and most TTS platforms require per-chapter files)
+   - Instead, produce a **chapter manifest** at `FEATURE_DIR/audiodraft/manifest.md`:
+     ```markdown
+     # Audiobook Chapter Manifest: [STORY_TITLE]
+
+     | # | Chapter ID | Chapter Name | SSML File | EL File | Segments | Status |
+     |---|---|---|---|---|---|---|
+     | 1 | A1.101 | Awakening | A1.101_Awakening.ssml | A1.101_Awakening_el.xml | N | audiodraft |
+     ```
+   - Report:
+     ```
+     ✅ Audiobook export complete
+
+     | Field          | Value                                   |
+     |---|---|
+     | Chapters       | N                                       |
+     | SSML files     | audiodraft/*.ssml                       |
+     | EL files       | audiodraft/*_el.xml                     |
+     | Lexicon        | audiodraft/lexicon.pls                  |
+     | Manifest       | audiodraft/manifest.md                  |
+     | Speaker mode   | single / multi                          |
+     | Missing drafts | N chapters have no audiobook draft yet  |
+     ```
+
+   8e. **Distribution guidance** (append to report):
+
+   > **SSML-cloud (Azure / Google / Amazon Polly)**:
+   > - Pass each `.ssml` file's content to your TTS API. One API call per chapter.
+   > - Azure TTS: `POST /cognitiveservices/v1` with `Content-Type: application/ssml+xml`
+   > - Amazon Polly: `SynthesizeSpeech` with `TextType: ssml`
+   > - Google Cloud TTS: `synthesize` with `input.ssml`
+   > - Output format: MP3 192kbps, mono or stereo — required by ACX
+
+   > **ElevenLabs**:
+   > - Upload `audiodraft/lexicon.pls` to your ElevenLabs project's pronunciation dictionary first
+   > - For each `_el.xml` file: split on `<!-- VOICE: ... -->` segment boundaries and POST each segment to `/v1/text-to-speech/{voice_id}` with `model_id: eleven_multilingual_v2`
+   > - Stitch segments in order to produce the chapter MP3
+
+   > **ACX submission (Audible)**:
+   > - Required: MP3 192kbps, -23 LUFS integrated loudness, -3 dBFS peak, room tone under -60 dBFS
+   > - One MP3 per chapter + one retail audio sample (first 5 minutes or opening chapter)
+   > - Tools: normalize with Auphonic (automatic) or Audacity (manual) before submission

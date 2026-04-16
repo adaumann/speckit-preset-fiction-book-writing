@@ -57,13 +57,15 @@ The YAML frontmatter in each file is the authority for metadata:
 
 **Revision notes** (`<!-- REVISION NOTES vN -->` comment blocks) record the scope and rationale for each revision. This command reads them when available.
 
+**Audiobook draft versioning**: When `OUTPUT_MODE` is `audiobook` or `both` in `constitution.md ## X`, audiobook drafts in `audiodraft/` carry their own `version` field in their YAML frontmatter. `speckit.versions` surfaces audiobook sync status alongside prose version history — a mismatch between prose version and audiodraft version is always shown.
+
 **Modes at a glance**:
 
 | Mode | Purpose | Writes files? |
 |---|---|---|
-| `list` | Timeline of all versions per chapter — dates, word counts, what changed | No |
+| `list` | Timeline of all versions per chapter — dates, word counts, what changed; includes audiodraft sync status | No |
 | `diff` | AI-narrated comparison of prose between two versions | No |
-| `log` | Cross-chapter revision history sorted by date | No |
+| `log` | Chronological revision history across all chapters; includes audiodraft resync events | No |
 | `tag` | Attach a named milestone label to a specific version | Yes — YAML frontmatter only |
 
 ---
@@ -112,6 +114,7 @@ For each chapter (or the specified chapter if a chapter ID was given), output:
                                                          draft/A1.101_Awakening_v2.md
   v3 ★  2026-03-18   3,295w   -15w  Polished             draft/A1.101_Awakening_v3.md
        [tags: beta-reader-1]
+       [audio: SSML v3 ✓  EL v2 ⚠️ stale]
 ```
 
 **Format rules:**
@@ -121,6 +124,11 @@ For each chapter (or the specified chapter if a chapter ID was given), output:
 - Show word count delta from the previous version (`+N w` or `-N w`)
 - If `tags:` is present: show as `[tags: …]` on a second line
 - If a version has `constitution_version` older than the current `constitution.md` version: flag with `⚠️ constitution mismatch` so the author knows a story bible update may affect this version
+- **Audiobook sync line** (skip if `OUTPUT_MODE` is `book`): for the current (★) version, check `audiodraft/<CHAPTER_ID>_<ChapterName>.ssml` and `audiodraft/<CHAPTER_ID>_<ChapterName>_el.xml`. Compare their `version` field against the prose version:
+  - `[audio: SSML vN ✓  EL vN ✓]` — both in sync
+  - `[audio: SSML vN ⚠️ stale]` — audiodraft version is lower than prose version
+  - `[audio: SSML — missing]` — no audiodraft file found
+  - Omit the audio line entirely if `OUTPUT_MODE` is `book` or `audiodraft/` does not exist
 
 After all chapters:
 ```
@@ -202,7 +210,9 @@ Total revision events: [N]
 Chapters touched: [N] of [M] total
 Average revisions per chapter: [X]
 Most-revised chapter: [CHAPTER_ID] [Name] ([N] revision cycles)
+Audiodraft resync events: [N]  (chapters where an audiodraft was regenerated after a prose revision or polish)
 ```
+Audiodraft resync events are identified from `<!-- AUDIOBOOK REVISION NOTES -->` and `<!-- AUDIOBOOK POLISH NOTES -->` blocks in `audiodraft/` files — count distinct chapters that have at least one such block.
 
 If a versioned file has no REVISION NOTES block: note `[no revision notes — manual edit]`.
 

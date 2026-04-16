@@ -127,6 +127,33 @@ Rewrite only the passages in a drafted chapter that are failing checklist items 
      -->
      ```
 
+8b. **Sync audiobook drafts** (skip if `OUTPUT_MODE` is `book` in `constitution.md ## X`):
+
+   Check for matching audiobook draft files in `FEATURE_DIR/audiodraft/`:
+   - SSML: `audiodraft/<CHAPTER_ID>_<ChapterName>.ssml`
+   - ElevenLabs: `audiodraft/<CHAPTER_ID>_<ChapterName>_el.xml`
+
+   If neither file exists: append `⚠️ No audiobook draft found — run speckit.implement to generate one.` to the report. Do not block.
+
+   If audiobook draft(s) exist: regenerate each from the revised prose draft (`draft/<CHAPTER_ID>_<ChapterName>_v<N>.md`) using the full transformation rules from `speckit.implement step 5b`:
+   - Apply all prose-to-audio rules: break timing, phonemes from Pronunciation Lexicon, SSML voice blocks / EL segment splits
+   - Carry forward speaker configuration and style hints from `constitution.md ## X`
+   - **Only changed passages need regeneration.** For passages outside the revision scope, copy the existing audiobook text verbatim — do not re-translate unchanged prose
+   - Increment `version` in the audiobook file's YAML frontmatter to match the prose draft version
+   - Add `revised: [YYYY-MM-DD]` to the audiobook YAML frontmatter
+   - Append a `<!-- AUDIOBOOK REVISION NOTES` block immediately after the YAML header:
+     ```xml
+     <!-- AUDIOBOOK REVISION NOTES v<N>
+          Synced from:  draft/<CHAPTER_ID>_<ChapterName>_v<N>.md
+          Synced date:  [YYYY-MM-DD]
+          Prose changes that affected audio:
+          - [item code]: [brief description of the passage that changed and its audio impact]
+          Unchanged segments: [N of N] carried forward from prior audiobook version
+     -->
+     ```
+   - Overwrite the existing audiobook file in place (no versioned copy needed — the prose draft versioning is the source of truth)
+   - Update `audiodraft/lexicon.pls` if the revised prose introduced any new words that appear in the Pronunciation Lexicon
+
 9. **Report**:
    ```
    ## Revision Report

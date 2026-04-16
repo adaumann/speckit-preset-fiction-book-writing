@@ -1,0 +1,64 @@
+@startuml SEQ_01_SETUP_CONCEPT
+' ─────────────────────────────────────────────────────────────────────────────
+' Spec Kit — Fiction Book Writing Preset
+' Section 1 of 6: Session Start · Setup · Concept
+' ─────────────────────────────────────────────────────────────────────────────
+
+skinparam backgroundColor #FAFAFA
+skinparam sequenceArrowThickness 2
+skinparam roundcorner 8
+skinparam sequenceParticipantBorderColor #555555
+skinparam sequenceParticipantBackgroundColor #FFFFFF
+skinparam noteBorderColor #AAAAAA
+skinparam noteBackgroundColor #FFFFF0
+
+actor Author
+participant "speckit.help" as HLP #Gainsboro
+participant "speckit.constitution" as C #LightSkyBlue
+participant "speckit.brainstorm" as BRN #LavenderBlush
+participant "speckit.specify" as SP #LightSkyBlue
+participant "speckit.clarify" as CL #LightSkyBlue
+
+== Session Start ==
+
+note over Author, HLP
+  Run at any time to get
+  workflow guidance and
+  next-step recommendations.
+end note
+
+Author -> HLP: (any time)
+HLP --> Author: phase detection + blockers + next action
+
+== Setup ==
+
+Author -> C: style mode + plot structure
+C --> Author: constitution.md (Story Bible)
+
+== Concept ==
+
+opt Brainstorm first (any topic)
+  Author -> BRN: topic (spec / plan / characters / themes / world / pov / ...)
+  BRN --> Author: brainstorm notes file + optional patch to topic file
+  note right of BRN
+    Use before speckit.specify to
+    explore ideas, or at any phase
+    to stress-test existing decisions
+    (challenge mode).
+  end note
+end
+
+Author -> SP: free-text story idea
+SP --> Author: spec.md (brief, arcs, beats)
+
+Author -> CL: (implicit)
+CL -> CL: scan for [NEEDS CLARIFICATION]
+CL --> Author: resolved spec.md
+
+note right of CL
+  Resolve ALL ambiguities
+  before planning. Gaps here
+  become structural holes.
+end note
+
+@enduml

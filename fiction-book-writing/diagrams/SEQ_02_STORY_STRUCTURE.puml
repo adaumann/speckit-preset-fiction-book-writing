@@ -1,0 +1,54 @@
+@startuml SEQ_02_STORY_STRUCTURE
+' ─────────────────────────────────────────────────────────────────────────────
+' Spec Kit — Fiction Book Writing Preset
+' Section 2 of 6: Story Structure
+' ─────────────────────────────────────────────────────────────────────────────
+
+skinparam backgroundColor #FAFAFA
+skinparam sequenceArrowThickness 2
+skinparam roundcorner 8
+skinparam sequenceParticipantBorderColor #555555
+skinparam sequenceParticipantBackgroundColor #FFFFFF
+skinparam noteBorderColor #AAAAAA
+skinparam noteBackgroundColor #FFFFF0
+
+actor Author
+participant "speckit.plan" as PL #LightGreen
+participant "speckit.series" as SER #LightCyan
+participant "speckit.interview" as INT #MistyRose
+participant "speckit.brainstorm" as BRN #LavenderBlush
+participant "speckit.pov" as POV #LightGreen
+participant "speckit.tasks" as TK #LightGreen
+
+== Story Structure ==
+
+Author -> PL: (reads spec.md + constitution.md)
+PL --> Author: plan.md (act breakdown, chapter map)
+PL --> Author: research.md, glossary.md, characters/, locations.md, timeline.md
+
+opt Series (non-standalone)
+  Author -> SER: init
+  SER --> Author: series/series-bible.md (scaffolded)
+end
+
+opt Character exploration (interview)
+  Author -> INT: [character name]
+  INT --> Author: conversation transcript + insight notes
+end
+
+opt Brainstorm story structure
+  Author -> BRN: plan / characters / themes / world-building
+  BRN --> Author: brainstorm notes + optional patch to plan/spec
+end
+
+opt Multi-POV Novel
+  Author -> POV: draft
+  POV --> Author: pov-structure.md (schedule, voices, asymmetry map)
+  Author -> POV: audit / schedule / asymmetry / relay
+  POV --> Author: updated pov-structure.md
+end
+
+Author -> TK: (reads plan.md + spec.md)
+TK --> Author: tasks.md (scene tasks ordered by act + arc)
+
+@enduml

@@ -1,0 +1,89 @@
+@startuml SEQ_05_POST_DRAFT_FEEDBACK
+' ─────────────────────────────────────────────────────────────────────────────
+' Spec Kit — Fiction Book Writing Preset
+' Section 5 of 6: Post-Draft Review · Feedback Cycle · Series Update
+' ─────────────────────────────────────────────────────────────────────────────
+
+skinparam backgroundColor #FAFAFA
+skinparam sequenceArrowThickness 2
+skinparam roundcorner 8
+skinparam sequenceParticipantBorderColor #555555
+skinparam sequenceParticipantBackgroundColor #FFFFFF
+skinparam noteBorderColor #AAAAAA
+skinparam noteBackgroundColor #FFFFF0
+
+actor Author
+participant "speckit.continuity" as CO #LightSalmon
+participant "speckit.pacing" as PAC #PaleGreen
+participant "speckit.sensitivity" as SEN #LightPink
+participant "speckit.revise" as RV #LightSalmon
+participant "speckit.feedback" as FB #PeachPuff
+participant "speckit.versions" as VER #Wheat
+participant "speckit.series" as SER #LightCyan
+
+== Post-Draft Review ==
+
+Author -> CO: (full manuscript or chapter range)
+CO --> Author: continuity report (read-only)
+
+opt Pacing / tension arc audit
+  Author -> PAC: (full draft or chapter range)
+  PAC --> Author: pacing-arc.md (Mermaid xychart + chapter score table)
+  note right of PAC
+    CRITICAL: sagging middle, undersold
+    climax, premature peak.
+    WARNING: false plateau, hook failure.
+    Read-only; feeds speckit.revise.
+  end note
+end
+
+opt Sensitivity / representation review
+  Author -> SEN: (full draft, chapter, or --category)
+  SEN --> Author: flagged report (CRITICAL / WARNING / NOTE)
+  note right of SEN
+    Covers: representation, harmful
+    tropes, historical anachronism,
+    language, trauma depictions.
+    Read-only. Recommend human
+    sensitivity reader before query.
+  end note
+end
+
+note right of CO
+  Story bible violations =
+  automatic CRITICAL.
+  No file modifications made.
+end note
+
+alt Continuity issues found
+  Author -> RV: targeted chapter revision
+  Author -> CO: re-run continuity
+end
+
+== Feedback Cycle (optional) ==
+
+Author -> FB: feedback notes + reader type
+FB --> Author: feedback/<reader>-<date>.md + revision tasks appended to tasks.md
+
+note right of FB
+  Reader-slug-prefixed task IDs
+  prevent collisions across
+  multiple feedback rounds.
+end note
+
+loop for each CRITICAL revision task
+  Author -> RV: targeted revision
+  Author -> CO: verify fix
+end
+
+Author -> VER: tag <CHAPTER_ID> vN <milestone>
+VER --> Author: milestone label written to YAML frontmatter
+
+== Series Update (after book completion) ==
+
+opt Non-standalone
+  Author -> SER: update [N]
+  SER --> Author: series-bible.md updated (character states, new canon, threads)
+end
+
+@enduml

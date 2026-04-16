@@ -38,7 +38,7 @@ Can write full prose or stays with book story outlines in order to write your ow
 
 The Fiction Book Writing preset applies the Spec-Driven Development methodology to creative fiction. It provides:
 
-- **25 AI commands** covering every stage from idea to submission-ready manuscript
+- **26 AI commands** covering every stage from idea to submission-ready manuscript
 - **21 templates** for all supporting story documents
 - **1 export script** (pandoc-based) for DOCX, EPUB, and LaTeX output
 - Support for **8 POV modes** (single, alternating, dual, braided, ensemble, mosaic, frame, chorus, first-person-multiple)
@@ -176,6 +176,257 @@ After initialization, your project will have this layout:
 | `speckit.synopsis` | Submission | Generate a one-page (250–350 words) and full (1,000–2,000 words) synopsis; reveals the ending; present tense, third person |
 | `speckit.query` | Submission | Generate a 250–350 word query letter with hook, body, comp titles, and submission tracker |
 | `speckit.export` | Submission | Export manuscript to DOCX (Word), EPUB (KDP/IngramSpark), or LaTeX via pandoc |
+| `speckit.audiobook` | Audiobook | Convert prose chapters to SSML/ElevenLabs audiodraft files, manage voice assignments and pronunciation lexicon, check for stale drafts, export `lexicon.pls` |
+
+---
+
+### Sub-Commands Quick Reference
+
+All sub-commands and arguments for every command.
+
+#### `speckit.brainstorm`
+```
+/speckit.brainstorm                        ← prompts for topic interactively
+/speckit.brainstorm [topic]                ← spec, plan, characters, themes, world-building,
+                                              locations, series, glossary, pov, research, timeline
+/speckit.brainstorm character [name]       ← pre-fill a specific character
+/speckit.brainstorm [topic] challenge      ← Challenge Mode: stress-test existing decisions
+/speckit.brainstorm [topic] quick          ← short session (3–5 questions)
+/speckit.brainstorm [topic] standard       ← standard session (default)
+/speckit.brainstorm [topic] deep           ← exhaustive session
+```
+
+#### `speckit.specify`
+```
+/speckit.specify [free-text idea]          ← turn a pitch into a structured story brief
+```
+
+#### `speckit.constitution`
+```
+/speckit.constitution                      ← create or update the story bible (interactive)
+```
+
+#### `speckit.clarify`
+```
+/speckit.clarify                           ← detect and resolve all ambiguities in spec.md
+```
+
+#### `speckit.plan`
+```
+/speckit.plan                              ← build the full story structure from spec.md
+```
+
+#### `speckit.pov`
+```
+/speckit.pov draft                         ← create pov-structure.md from spec.md
+/speckit.pov audit                         ← audit voice differentiation across all POV characters
+/speckit.pov schedule                      ← generate or validate the chapter-by-chapter POV schedule
+/speckit.pov asymmetry                     ← check no POV character knows what they shouldn't
+/speckit.pov relay                         ← review POV handoff transitions between chapters
+/speckit.pov [free-text question]          ← contextual POV design question (read-only)
+```
+
+#### `speckit.tasks`
+```
+/speckit.tasks                             ← generate scene-by-scene writing tasks from plan.md
+```
+
+#### `speckit.outline`
+```
+/speckit.outline                           ← generate outline for the next scene without one
+/speckit.outline all                       ← generate outlines for all unoutlined scenes
+/speckit.outline [CHAPTER_ID]              ← generate outline for one scene (e.g. A1.101)
+/speckit.outline [CHAPTER_ID]–[CHAPTER_ID] ← generate outlines for a chapter range
+```
+
+#### `speckit.analyze`
+```
+/speckit.analyze                           ← full pre-draft structural alignment check (read-only)
+```
+
+#### `speckit.implement`
+```
+/speckit.implement                         ← draft the next unchecked scene task in order
+/speckit.implement [CHAPTER_ID]            ← draft a specific chapter
+/speckit.implement --outline-only          ← generate outline only; no prose produced
+```
+
+#### `speckit.checklist`
+```
+/speckit.checklist                         ← checklist for most recently modified draft
+/speckit.checklist [CHAPTER_ID]            ← checklist for a specific chapter
+/speckit.checklist "Act I"                 ← checklists for all scenes in an act/phase
+```
+
+#### `speckit.continuity`
+```
+/speckit.continuity                        ← full post-draft continuity analysis (read-only)
+/speckit.continuity [CHAPTER_ID]           ← scope to a single chapter
+/speckit.continuity [CHAPTER_ID]–[CHAPTER_ID] ← scope to a chapter range
+```
+
+#### `speckit.revise`
+```
+/speckit.revise [CHAPTER_ID]                             ← revise all failing passages (auto-loads checklist)
+/speckit.revise [CHAPTER_ID] "CHR-002 STB-004"           ← revise specific failure codes
+/speckit.revise [CHAPTER_ID] checklists/[file].md        ← revise from explicit checklist path
+```
+
+#### `speckit.polish`
+```
+/speckit.polish                            ← polish most recently PASS-checked draft
+/speckit.polish [CHAPTER_ID]               ← polish a specific chapter
+/speckit.polish [CHAPTER_ID]–[CHAPTER_ID]  ← polish a chapter range
+```
+
+#### `speckit.roleplay`
+```
+/speckit.roleplay                          ← play through most recently modified outline or draft
+/speckit.roleplay [CHAPTER_ID]             ← play through a specific scene
+/speckit.roleplay [CHAPTER_ID] outline     ← force outline mode (even if a draft exists)
+/speckit.roleplay [CHAPTER_ID] draft       ← force draft mode (even if only outline exists)
+/speckit.roleplay [CHAPTER_ID] dialog      ← Dialog Workshop mode: speaker turns + improvisation
+/speckit.roleplay [CHAPTER_ID] tension     ← Tension Curve analysis pass after play-through
+/speckit.roleplay [CHAPTER_ID] pick        ← Section Picker: choose which beats to include
+/speckit.roleplay [CHAPTER_ID] [N]-[M]     ← play only segments N through M (e.g. 3-7)
+/speckit.roleplay [CHAPTER_ID] dialog pick ← mode flags and pick/range are combinable
+```
+
+#### `speckit.feedback`
+```
+/speckit.feedback [file-path] --reader-type [beta|cp|editor]   ← ingest feedback from a file
+/speckit.feedback "[quoted notes]" "[reader name]" --reader-type [type]
+/speckit.feedback triage                   ← re-categorize an existing feedback log
+/speckit.feedback tasks                    ← generate tasks from an already-triaged log
+```
+
+#### `speckit.status`
+```
+/speckit.status                            ← full project dashboard (word counts, chapter status, gates)
+```
+
+#### `speckit.versions`
+```
+/speckit.versions list [CHAPTER_ID]        ← version timeline for one chapter
+/speckit.versions list                     ← version timeline for all chapters
+/speckit.versions diff [CHAPTER_ID]        ← narrative diff: latest vs. previous version
+/speckit.versions diff [CHAPTER_ID] v1 v3  ← diff two specific versions
+/speckit.versions log                      ← cross-chapter revision history sorted by date
+/speckit.versions tag [CHAPTER_ID] v2 [label]  ← attach a milestone label to a version
+```
+
+#### `speckit.glossary`
+```
+/speckit.glossary                          ← status dashboard (same as status)
+/speckit.glossary add [term]               ← register a new term interactively
+/speckit.glossary add [term] --type [type] ← skip type prompt: invented, character, place, faction, rule
+/speckit.glossary check                    ← scan all drafted chapters for glossary violations
+/speckit.glossary check [CHAPTER_ID]       ← scope the check to one chapter
+/speckit.glossary audit                    ← find unregistered invented terms in drafts
+/speckit.glossary audit [CHAPTER_ID]       ← scope the audit to one chapter
+/speckit.glossary status                   ← term counts, open violations, coverage by section
+```
+
+#### `speckit.subplot`
+```
+/speckit.subplot                           ← subplot health dashboard (same as status)
+/speckit.subplot add [character name]      ← register a new subplot arc interactively
+/speckit.subplot add [name] --priority [P2/P3]  ← skip the priority prompt
+/speckit.subplot check                     ← audit all subplot arcs (beat gaps, absence streaks)
+/speckit.subplot check [SP-NNN]            ← scope audit to a single subplot
+/speckit.subplot intersect                 ← rebuild the Convergence Map
+/speckit.subplot resolve [SP-NNN]          ← mark a subplot's dramatic question as resolved
+```
+
+#### `speckit.pacing`
+```
+/speckit.pacing                            ← full tension arc audit of all drafted chapters
+/speckit.pacing [CHAPTER_ID]              ← scope to a single chapter
+/speckit.pacing [CHAPTER_ID]–[CHAPTER_ID] ← scope to a chapter range
+/speckit.pacing chart                     ← output only the Mermaid tension arc chart
+/speckit.pacing --act "Act II"            ← scope to one act band
+```
+
+#### `speckit.sensitivity`
+```
+/speckit.sensitivity                       ← full sensitivity review of all drafted chapters
+/speckit.sensitivity [CHAPTER_ID]          ← scope to a single chapter
+/speckit.sensitivity [CHAPTER_ID]–[CHAPTER_ID] ← scope to a chapter range
+/speckit.sensitivity --category [name]     ← representation, tropes, historical, language, trauma
+/speckit.sensitivity --genre [genre]       ← override genre detection (e.g. historical-fiction, fantasy)
+```
+
+#### `speckit.research`
+```
+/speckit.research add "[topic]"            ← log a new research item or source finding
+/speckit.research resolve R-003 --finding "..." --source "..."
+/speckit.research check [CHAPTER_ID]       ← check one chapter for unsupported factual claims
+/speckit.research status                   ← open-item dashboard sorted by story risk
+```
+
+#### `speckit.series`
+```
+/speckit.series init                       ← scaffold series/series-bible.md (before Book 1)
+/speckit.series audit                      ← cross-book continuity, arc chains, unresolved threads
+/speckit.series update [book-number]       ← sync series bible after completing a book
+/speckit.series status                     ← series-wide dashboard
+```
+
+#### `speckit.interview`
+```
+/speckit.interview [CHARACTER_NAME]        ← interactive one-on-one session with a character
+```
+
+#### `speckit.help`
+```
+/speckit.help                              ← full guidance report for current project state
+/speckit.help --focus [phase]             ← limit advice to one phase: planning, drafting,
+                                              revision, polish, submission
+/speckit.help --chapter [CHAPTER_ID]      ← focused advice for one chapter
+/speckit.help "[free-text question]"       ← contextual answer grounded in project state
+```
+
+#### `speckit.synopsis`
+```
+/speckit.synopsis                          ← generate both one-page and full synopsis
+/speckit.synopsis one-page                 ← generate only the 250–350 word synopsis
+/speckit.synopsis full                     ← generate only the 1,000–2,000 word synopsis
+/speckit.synopsis update                   ← regenerate from current draft (post-draft accuracy)
+/speckit.synopsis check                    ← validate synopsis.md against spec.md and plan.md
+```
+
+#### `speckit.query`
+```
+/speckit.query draft                       ← generate a query letter from spec.md and synopsis.md
+/speckit.query update                      ← add a submission log entry
+/speckit.query track                       ← view submission tracker table
+/speckit.query comp-titles                 ← generate comp title suggestions only
+/speckit.query "[Agent Name at Agency]"    ← generate a personalization paragraph
+```
+
+#### `speckit.export`
+```
+/speckit.export                            ← DOCX (default, submission-ready)
+/speckit.export docx                       ← DOCX (Word, Shunn manuscript format)
+/speckit.export epub                       ← EPUB (KDP / Draft2Digital / IngramSpark)
+/speckit.export latex                      ← LaTeX (typeset)
+/speckit.export audio                      ← assemble audiobook chapter manifest; validate drafts
+/speckit.export --polished-only            ← skip chapters without a polished version
+```
+
+#### `speckit.audiobook`
+```
+/speckit.audiobook                         ← audiodraft production dashboard (same as status)
+/speckit.audiobook draft [CHAPTER_ID]      ← convert one prose chapter to audiodraft
+/speckit.audiobook draft all               ← convert all new/stale chapters to audiodraft
+/speckit.audiobook voice add [CHARACTER_NAME]  ← add or update a TTS voice assignment
+/speckit.audiobook voice list              ← display all current voice assignments
+/speckit.audiobook lexicon add [WORD]      ← register a pronunciation entry (IPA + EL substitute)
+/speckit.audiobook lexicon list            ← display the full pronunciation lexicon
+/speckit.audiobook lexicon export          ← write audiodraft/lexicon.pls (W3C PLS 1.0)
+/speckit.audiobook check                   ← find stale and missing audiodrafts vs. prose drafts
+/speckit.audiobook status                  ← full audiodraft dashboard
+```
 
 ---
 

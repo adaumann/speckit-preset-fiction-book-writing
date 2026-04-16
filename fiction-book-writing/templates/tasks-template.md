@@ -22,6 +22,11 @@
   - Short name: PascalCase, 2–4 words (e.g., `Awakening`, `BetrayalRevealed`, `SupremeOrdeal`)
   - Examples: `draft/A1.101_Awakening.md`, `draft/JO3.201_SupremeOrdeal.md`
 
+**Audiodraft tasks** (only present when `OUTPUT_MODE` is `audiobook` or `both` in `constitution.md ## X`):
+- Each prose draft task is immediately followed by a paired audiodraft task (no `[P]` — depends on prose draft)
+- Format: `TXXX [CA-n] Audiodraft: Generate SSML draft — [Scene Name] → audiodraft/{CHAPTER_ID}_{ShortName}.md`
+- Audiobook setup tasks (voice IDs, pronunciation lexicon) appear in Phase 1 before the critical checkpoint
+
 ---
 
 ## Phase 1: Research & World-Building
@@ -113,3 +118,6 @@ Verify before proceeding:
 - [ ] T030 Anti-AI: Scan all `draft/` chapters for prohibited phrases from constitution.md Anti-AI Filter
 - [ ] T031 Endings: Verify all chapter endings are off-balance (no tidy summaries)
 - [ ] T032 Resonance: Confirm opening chapter (`draft/A1.101_*.md`) and closing chapter (`draft/A3.30N_*.md`) form a meaningful contrast or echo
+
+<!-- Audiodraft polish task — only present when OUTPUT_MODE is audiobook or both in constitution.md ## X -->
+<!-- - [ ] T033 Audiodraft: Review all SSML files for pronunciation, break timing, and delivery hints against constitution.md ## X -->

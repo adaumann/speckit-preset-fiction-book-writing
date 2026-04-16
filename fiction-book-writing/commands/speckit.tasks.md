@@ -41,6 +41,7 @@ You **MUST** consider the user input before proceeding (if not empty).
    - **Required**: `plan.md` (story structure, chosen plot structure, act breakdown), `spec.md` (character arcs with priorities)
    - **Optional**: `characters.md` (index) and `characters/` profiles (voice signatures, micro-obsessions), `world-building.md`, `timeline.md`, `research.md`
    - Note which optional documents are missing — some tasks may be marked `[BLOCKED: needs <document>]`
+   - Read `constitution.md ## X. Audiobook Production` and extract `OUTPUT_MODE` (`book`, `audiobook`, or `both`). If absent or `[NEEDS CLARIFICATION]`, treat as `book`.
 
 3. **Execute task generation workflow**:
    - Extract the chosen plot structure from `plan.md`
@@ -72,12 +73,27 @@ You **MUST** consider the user input before proceeding (if not empty).
    - Example output paths: `draft/A1.101_Awakening.md`, `draft/JO3.201_SupremeOrdeal.md`
    - Phase checkpoints drawn from story bible compliance requirements
 
+5b. **Generate audiobook tasks** (only when `OUTPUT_MODE` is `audiobook` or `both`):
+   - Add a **Phase 1 audiobook setup block** (before the critical checkpoint) with these tasks:
+     - `T___ [P] Audiobook: Configure narrator and character voice IDs (SSML name / ElevenLabs voice ID) → update constitution.md ## X`
+     - `T___ [P] Audiobook: Populate Pronunciation Lexicon for invented/foreign/unusual words → update constitution.md ## X`
+     - If `OUTPUT_MODE` is `both`: add `T___ [P] Audiobook: Configure ElevenLabs voice IDs and upload lexicon.pls → update constitution.md ## X`
+   - For **every prose draft task** in every phase, insert a paired audiodraft task immediately after it:
+     - Format: `T___ [CA-n] Audiodraft: Generate SSML draft — [SCENE_SHORT_NAME] → audiodraft/{CHAPTER_ID}_{ShortName}.md`
+     - The audiodraft task is sequential (no `[P]` marker) and depends on the prose draft task completing first
+     - Output path mirrors prose path but uses `audiodraft/` directory: `audiodraft/A1.101_Opening.md`
+   - Add an **audiobook polish task** in the Polish Pass phase:
+     - `T___ Audiodraft: Review all SSML files for pronunciation, break timing, and delivery hints against constitution.md ## X`
+   - Update the task statistics header to include: `Audiodraft Tasks: NN`
+
 6. **Task generation rules**:
    - Every scene beat from spec.md Key Scenes MUST have at least one draft task
    - Research tasks (Phase 1) are generated from `research.md` R-items — never copied from tasks-template.md boilerplate
    - Research tasks precede all drafting tasks
    - No drafting task may be `[P]` with a scene that it causally depends on
    - Polish tasks are always sequential, never parallel
-   - Total task count, arc distribution, and parallel opportunity count are reported in the task file header
+   - Audiodraft tasks are only generated when `OUTPUT_MODE` is `audiobook` or `both` — never when `OUTPUT_MODE` is `book`
+   - Each audiodraft task is always paired with its prose draft task and is never `[P]` (it depends on the prose draft being complete)
+   - Total task count, arc distribution, parallel opportunity count, and audiodraft task count (if applicable) are reported in the task file header
 
 7. **Report**: Total tasks, tasks per arc (P1/P2/P3), parallel vs. sequential ratio, number of story-specific research tasks generated, recommended MVP scope (minimum scenes to complete Act I).

@@ -76,3 +76,6 @@
 | Dramatic Question | |
 | Theme | |
 | Anti-AI Filter active | yes |
+| Output Mode | |
+| TTS Engine | |
+| Speaker Mode | |

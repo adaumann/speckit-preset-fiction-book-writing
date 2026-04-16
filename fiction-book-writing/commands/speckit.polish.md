@@ -140,6 +140,35 @@ Expected format: a chapter ID (e.g., `A1.101`) or a range (e.g., `A1.101–A1.10
    - Save as `draft/<CHAPTER_ID>_<ChapterName>_v<N>.md`
    - Keep all prior versions unchanged
 
+7b. **Sync audiobook drafts** (skip if `OUTPUT_MODE` is `book` in `constitution.md ## X`):
+
+   Check for matching audiobook draft files in `FEATURE_DIR/audiodraft/`:
+   - SSML: `audiodraft/<CHAPTER_ID>_<ChapterName>.ssml`
+   - ElevenLabs: `audiodraft/<CHAPTER_ID>_<ChapterName>_el.xml`
+
+   If neither file exists: note `⚠️ No audiobook draft found for <CHAPTER_ID> — run speckit.implement to generate one.` in the report. Do not block.
+
+   If audiobook draft(s) exist: regenerate from the polished prose draft using `speckit.implement step 5b` transformation rules:
+   - Re-apply all polish fixes at the audio text level:
+     - WR-001 filter word removal → the direct prose replacement is used verbatim; no `<voice>` or break changes needed
+     - PR-001 / PR-004 rhythm fixes → sentence splits may change `<break>` placement; update break timing to match new sentence boundaries
+     - WR-002 word repetition fixes → update the inline text; re-check that affected words are still in the Pronunciation Lexicon if they were wrapped in `<phoneme>` tags
+     - VR-004 em-dash reduction → fewer `<break time="250ms"/>` tags; verify count matches revised prose
+     - DI-001 / DI-002 said-bookism / adverb-on-attribution fixes → update attribution text in the segment; these are within `<voice>` or narrator segments, not boundary changes
+   - **Do not change segment boundaries or voice assignments** unless the polish fix changed a narration-to-dialogue or dialogue-to-narration boundary (rare; flag if it happens)
+   - Increment `version` in the audiobook YAML frontmatter to match the polished prose version
+   - Add `polished: [YYYY-MM-DD]` to the audiobook YAML frontmatter
+   - Append a `<!-- AUDIOBOOK POLISH NOTES` block immediately after the YAML header:
+     ```xml
+     <!-- AUDIOBOOK POLISH NOTES v<N>
+          Synced from:  draft/<CHAPTER_ID>_<ChapterName>_v<N>.md
+          Polished:     [YYYY-MM-DD]
+          Audio changes: N (break adjustments: N | phoneme updates: N | text fixes: N)
+          Segment boundary changes: none | [describe if any]
+     -->
+     ```
+   - Overwrite the existing audiobook file in place
+
 8. **Append polish notes** to the top of the polished file (after YAML frontmatter, before prose):
    ```
    <!-- POLISH NOTES v<N>
@@ -155,6 +184,7 @@ Expected format: a chapter ID (e.g., `A1.101`) or a range (e.g., `A1.101–A1.10
    - Issues fixed vs. skipped
    - Net word delta
    - Any items flagged during fixing that require meaning-change review (user must decide)
+   - Audiobook draft sync result (regenerated / not found / skipped)
    - If no issues were found: `✅ <CHAPTER_ID>: prose is clean — no polish changes needed.`
 
 10. **Check for extension hooks** (after polishing): check `hooks.after_polish` in `.specify/extensions.yml`. Process as standard hook block. Skip silently if absent.

@@ -2,6 +2,17 @@
 
 The following diagram shows the full lifecycle from initial idea to submission-ready manuscript, including the pre-draft quality gates, the per-chapter quality loop, and the post-draft feedback cycle.
 
+> **Split diagrams** — individual sections are in `diagrams/`:
+>
+> | File | Sections |
+> |---|---|
+> | [diagrams/SEQ_01_SETUP_CONCEPT.puml](diagrams/SEQ_01_SETUP_CONCEPT.puml) | Session Start · Setup · Concept |
+> | [diagrams/SEQ_02_STORY_STRUCTURE.puml](diagrams/SEQ_02_STORY_STRUCTURE.puml) | Story Structure |
+> | [diagrams/SEQ_03_PRE_DRAFT.puml](diagrams/SEQ_03_PRE_DRAFT.puml) | Pre-Draft Gate · Outline Review |
+> | [diagrams/SEQ_04_DRAFTING_LOOP.puml](diagrams/SEQ_04_DRAFTING_LOOP.puml) | Drafting Loop |
+> | [diagrams/SEQ_05_POST_DRAFT_FEEDBACK.puml](diagrams/SEQ_05_POST_DRAFT_FEEDBACK.puml) | Post-Draft Review · Feedback Cycle · Series Update |
+> | [diagrams/SEQ_06_SUBMISSION.puml](diagrams/SEQ_06_SUBMISSION.puml) | Submission · Audiobook |
+
 ```plantuml
 @startuml fiction-book-writing-workflow
 
