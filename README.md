@@ -1,4 +1,4 @@
-# speckit-preset-fiction-book-writing
+# # Spec Kit Fiction Book Writing Preset
 
 A [Spec Kit](https://github.com/github/spec-kit) preset for novel and long-form fiction writing.
 
@@ -15,7 +15,7 @@ fiction-book-writing/   ← The installable preset
 The preset directory contains:
 
 - `preset.yml` — manifest consumed by `specify preset add`
-- `commands/` — 25 AI slash commands covering every stage from idea to submission
+- `commands/` — 26 AI slash commands covering every stage from idea to submission
 - `templates/` — 21 story document templates (characters, world-building, timelines, etc.)
 - `scripts/` — pandoc-based export script for DOCX, EPUB, and LaTeX
 
