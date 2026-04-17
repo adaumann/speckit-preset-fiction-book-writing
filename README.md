@@ -1,4 +1,4 @@
-<# speckit-preset-fiction-book-writing
+# speckit-preset-fiction-book-writing
 
 A [Spec Kit](https://github.com/github/spec-kit) preset for novel and long-form fiction writing.
 
