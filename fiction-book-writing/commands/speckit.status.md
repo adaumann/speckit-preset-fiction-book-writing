@@ -46,7 +46,20 @@ Consider user input before proceeding (e.g. a specific act, chapter range, or `-
    - Prefer the highest-numbered `_vN.md` version when multiple exist (same stem)
    - Extract per chapter: `chapter_id`, `chapter_name`, `act_phase`, `status`, `estimated_words`, `actual_words`, `drafted` date
    - Count actual body words for any chapter missing `actual_words` in frontmatter
-   - If `draft/` is empty or absent, skip chapter table and note "No chapters drafted yet"
+   - If `draft/` is empty or absent: read `OUTPUT_MODE` from `constitution.md ## X. Audiobook Production`.
+     - If `OUTPUT_MODE` is `audiobook`: note `No prose drafts (audiobook-only mode)` and proceed directly to the Audiodraft Inventory step below instead of the chapter progress table.
+     - Otherwise: note `No chapters drafted yet` and skip the chapter progress table.
+
+   **Audiodraft Inventory** (include when `OUTPUT_MODE` is `audiobook` or `both`, or when `draft/` is absent in audiobook-only mode):
+   - Scan `FEATURE_DIR/audiodraft/` for `.ssml` and `_el.xml` files. For each, read `chapter_id`, `chapter_name`, `version`, `status`, `generated` from YAML frontmatter.
+   - Cross-reference against `plan.md ## Scene Outline` to identify chapters with no audiodraft (`MISSING`).
+   - Print one row per chapter:
+     ```
+     | Chapter ID | Name | SSML | EL | Audio version | Status |
+     |---|---|---|---|---|---|
+     | A1.101 | Awakening | ✓ | ✓ | v2 | audiodraft |
+     | A1.102 | The Letter | ✗ | ✗ | — | MISSING |
+     ```
 
 3. **Collect task data** from `FEATURE_DIR/tasks.md`:
    - Count total tasks vs. completed (`- [x]`) tasks

@@ -47,6 +47,8 @@ The Fiction Book Writing preset applies the Spec-Driven Development methodology 
 
 The central philosophy: the **story bible** (`constitution.md`) is the governing authority. Every drafted scene, every revision, every checklist gate derives its rules from it.
 
+Each specification run (/speckit.specify) will generate one book, it is a 1:1 relationship. Make sure to give the most detailed specification and plan before implementation.
+
 ---
 
 ## Quick Start

@@ -51,6 +51,9 @@ You **MUST** consider the user input before proceeding (if not empty).
    - If style mode is not set in constitution.md, pause and ask: "author-sample or humanized-ai?"
 
    **Phase 0 — Supporting Documents**:
+
+   > **Pre-fill rule**: Every supporting document MUST be written with actual story-specific content inferred from `spec.md` and `constitution.md`. Do NOT produce bare template copies. Replace every `[placeholder]` marker with real content. Only write `[NEEDS CLARIFICATION: reason]` when a field genuinely cannot be inferred from available information. The output must be immediately editable by the writer — not a blank scaffold.
+
    - Generate `research.md`: identify all world/domain knowledge gaps that must be resolved before drafting (historical accuracy, world rules, technical domains)
    - Generate character profiles: one file per major character at `characters/[character-name].md` using `characters-template.md` (use the character's name in lowercase-kebab-case as the filename, e.g., `characters/theresa-solis.md`). For each character, populate all nine sections:
      - **I. Core Identity**: dominant trait, strength, flaw, drive, fear, background foundation, internal arc (wound / want / need / transformation)

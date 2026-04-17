@@ -41,6 +41,14 @@ You **MUST** consider the user input before proceeding (if not empty).
 
 1. **Setup**: Run `{SCRIPT}` from repo root and parse `FEATURE_DIR`.
 
+   **Audiobook-only guard**: Read `OUTPUT_MODE` from `constitution.md ## X. Audiobook Production`. If `OUTPUT_MODE` is `audiobook` and no `draft/` directory exists, stop:
+   ```
+   ⛔ speckit.checklist validates prose draft files (draft/).
+   In audiobook-only mode no prose drafts exist — SSML/ElevenLabs audiodraft
+   files cannot be evaluated with scene quality checklists.
+   To check audiodraft sync status run: speckit.audiobook check
+   ```
+
 2. **Identify the target**: Determine what the checklist is for from `$ARGUMENTS`:
    - A specific scene file (e.g., "create checklist for scenes/act1-opening.md")
    - An act or phase (e.g., "create checklists for all Act I scenes")

@@ -48,6 +48,13 @@ Rewrite only the passages in a drafted chapter that are failing checklist items 
 1. **Setup**: Run `{SCRIPT}` from repo root and parse `FEATURE_DIR`.
 
 2. **Identify the revision target**:
+   - Read `OUTPUT_MODE` from `constitution.md ## X. Audiobook Production`. If `OUTPUT_MODE` is `audiobook` and no `draft/` directory exists, stop:
+     ```
+     ⛔ speckit.revise operates on prose draft files (draft/).
+     In audiobook-only mode no prose drafts exist — SSML/ElevenLabs audiodraft
+     files are not revisable with this command.
+     To regenerate a stale or failing audiodraft run: speckit.audiobook draft [CHAPTER_ID]
+     ```
    - Parse `$ARGUMENTS` for chapter ID. Resolve to `draft/<CHAPTER_ID>_<ChapterName>.md` in `FEATURE_DIR`.
    - If no argument given: scan `checklists/` for the most recently modified file with `Verdict: FAIL` — use its linked chapter as the target.
    - Abort with a clear error if the draft file does not exist or has no valid YAML frontmatter header.

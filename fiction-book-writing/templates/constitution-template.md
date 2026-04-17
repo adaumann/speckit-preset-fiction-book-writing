@@ -83,6 +83,7 @@
        thriller      → action-forward, minimal interiority, short-dominant sentences
        atmospheric   → maximum sensory density, slow burn, atmosphere as plot engine
        dark-realist  → clipped declarative prose, cold interiority, consequence-forward
+       hybrid        → intentional cross-profile; active profile per act documented in Section VIII
 -->
 
 **[PROSE_PROFILE]**
@@ -129,6 +130,12 @@
 - **Pacing bias**: Consequence-forward — causes are skipped over or presented as given; the story opens in the aftermath and works backward or proceeds through accumulating costs; no catharsis
 - **Additional Anti-AI filter**: "broken but not beaten" · "found her strength" · "it was what it was" · "at the end of the day" · "despite everything" · "survivors"
 
+#### hybrid
+- **Usage**: The prose profile shifts deliberately at act boundaries or for specific POV characters. Document the active profile per act/character in Section VIII Story Bible.
+- **Constraint**: Each segment must fully satisfy its designated profile's rules for the duration of that segment. Mixing profiles within a single scene is not permitted.
+- **Transition rule**: A profile shift MUST coincide with a structural boundary (act break, chapter, or POV change). Never mid-scene.
+- **Additional Anti-AI filter**: Inherits all prohibited phrases from every active profile used in this story
+
 ---
 
 ## II. Sensory Detail & Environment
@@ -149,6 +156,69 @@ Show emotions through **involuntary bodily reactions**, not named feelings.
 | ❌ | ✅ |
 |---|---|
 | "She felt despair." | "Her knees went soft. She leaned on the door frame and did not push off." |
+
+### Scene-Opening Orientation
+Every scene MUST establish **who, where, and approximate time** within the first 2–3 sentences before entering interiority or dialogue. The reader cannot be oriented by character thought alone.
+
+- Acceptable: a brief sensory anchor tied to a specific location
+- Not acceptable: opening mid-thought with no spatial grounding, then orienting the reader three paragraphs later
+
+### Narrative Distance Consistency
+Within a single scene, POV distance MUST NOT drift. Choose one distance at the scene's opening and hold it:
+
+| Distance | Characteristics |
+|---|---|
+| Close | Direct access to thoughts; "she thought"; body sensations named |
+| Deep | Thoughts embedded as narration; no "she thought" scaffolding; sensation IS prose |
+| Remote | External behavior only; no inner access; reader infers entirely |
+
+Zooming in and out within one scene is only permitted if it serves a deliberate disorientation effect AND is documented in the scene's `scene-outline.md` note.
+
+### Exposition & Infodump Rule
+World-facts, backstory, and technical information MUST be delivered through **character need or perception**, not narrator explanation.
+
+- A character explains only what they would plausibly say, to someone who would plausibly need to hear it, in the pressure of the moment
+- Backstory arrives in fragments — provoked by a current stimulus, not summarized in sequence
+- **Two-sentence rule**: Any block of expository narration longer than two sentences in a row is a red flag. Cut or redistribute into dialogue, sensory detail, or action
+
+### Flashback Rules
+Flashbacks are permitted only under these conditions:
+1. The present-tense trigger (smell, object, sound) that pulls the character into the memory MUST be shown first
+2. Maximum flashback length: **one scene** (no multi-chapter excursions into the past)
+3. Return to the present MUST include a sensory re-anchoring beat — not "she snapped back to reality"
+4. A flashback may not be used to deliver exposition that could be shown in forward-moving plot
+
+### Repetition & Echo Discipline
+The same descriptive word, image, or comparison MUST NOT recur within the same scene. Rules:
+- No repeated key adjectives within 500 words
+- No repeated metaphor vehicle within a chapter (e.g., using "water" as a metaphor for memory twice)
+- If a word or image is deliberately echoed for thematic resonance, it MUST be separated by at least one full scene and land with measurably more weight than its first use
+
+### Simile & Metaphor Budget
+- Maximum **two extended comparisons** (simile or metaphor developed across more than one clause) per scene
+- Comparisons MUST be drawn from the POV character's lived world — a soldier's metaphors come from combat, not astronomy
+- Dead metaphors ("heart sank", "blood ran cold") count toward the budget and should be replaced with physical feedback instead
+
+### Narrator Editorializing Prohibition
+The narrator MUST NOT interpret, summarize, or editorialize about characters, situations, or meaning. The reader draws the conclusion; the narrator provides only the evidence.
+
+**Prohibited narrator moves:**
+
+| ❌ Telling | ✅ Showing |
+|---|---|
+| "She was the kind of person who never asked for help." | Show her decline three offers within the scene. |
+| "He was clearly lying." | Show the pause, the redirected eye, the too-specific detail. |
+| "The situation was hopeless." | Show every exit closing, one by one. |
+| "Despite everything, she still cared." | Show the involuntary action that betrays it. |
+| "It was the worst day of his life." | Show what he does with his hands. |
+
+**Specific prohibitions:**
+- No "she was the kind of person who…" constructions
+- No "clearly," "obviously," "undeniably" in narration — if it is clear, the prose made it clear; stating it is redundant and condescending
+- No narrator summary of what a scene meant: "And so she finally understood…" — end the scene on the moment; let the understanding be implicit
+- No authorial intrusion declaring a character's trait: establish it through behavior across multiple scenes, never in a single descriptive sentence
+
+**Permitted exception**: A POV character's *filtered* interpretation of another character is allowed ("Marcus looked like a man who had never asked for help in his life") — this is characterization of the observer, not narrator editorializing.
 
 ---
 
@@ -186,6 +256,8 @@ Characters MUST NOT answer directly first. They deflect, misinterpret, or use si
 
 ### Distinct Voices
 Each POV character must have a documented voice signature in their `characters/[name].md` profile covering: vocabulary range, sentence rhythm under stress, observational register, and default deflection strategy.
+
+> **Architecture**: Which POV mode is used, who narrates which structural phase, the rotation schedule, and the information asymmetry map are defined in `pov-structure.md`. This file governs the rules that apply to all POV prose regardless of mode.
 
 ### Power Dynamics
 Dialogue MUST reflect hierarchy and tension: who controls the room, who fears, who negotiates for scraps. This should be visible in sentence length, interruption, and topic avoidance — not stated.
@@ -237,6 +309,17 @@ Scenes MUST NOT end on tidy summaries or emotional resolution. End on:
 - A lingering sensory impression
 - An action whose meaning is not yet clear
 
+### Chapter Endings
+Chapter endings carry disproportionate reader-retention weight and require separate discipline:
+
+| Chapter position | Required ending type |
+|---|---|
+| Mid-story chapters (default) | End on a micro-hook — a decision made, a threat entered, or a revelation whose implications are not yet processed. The reader must feel pulled forward, not satisfied. |
+| Act-break chapters | End on a **status shift**, not an emotion. Something the character had is now gone, or something unavoidable has arrived. |
+| Final chapter | Resolution of dramatic question MUST precede the final image. The last paragraph is sensory, not expository — no summarizing of what was learned. |
+
+**Prohibited chapter endings**: characters going to sleep (unless it is structurally ironic), neutral scene-setting that recaps what just happened, and dialogue that tidily closes a conflict.
+
 ### Strand Interaction
 When multiple POV strands or characters meet, show **clashing perceptions** — how trauma, bias, or prior experience colors the same event differently for each person present.
 
@@ -258,13 +341,83 @@ Prefer showing **consequence before cause** to create dramatic irony. Use time j
 
 | Parameter | Value |
 |---|---|
-| POV Strategy | [POV_STRATEGY] |
+| POV Strategy | [POV_STRATEGY] — full architecture in `pov-structure.md` |
 | Tense | [TENSE] |
+| Tone | [TONE] |
+| Vocabulary Register | [VOCABULARY_REGISTER] |
 | Sentence Rhythm | Variable: short/jagged during panic or action; long/winding during reflection or exhaustion |
 | Target Word Count | [WORD_COUNT_TARGET] |
 | Genre | [GENRE] |
 | Target Audience | [TARGET_AUDIENCE] |
 | Series Position | [SERIES_POSITION] |
+
+<!-- VOCABULARY_REGISTER values and what they govern:
+
+     plain-colloquial     → Everyday speech; contractions permitted; no specialist terms;
+                            short words preferred over long synonyms. Accessible to all readers.
+
+     clinical-precise     → Technical and exact; minimal emotional language; domain-specific
+                            jargon used correctly and without apology. Suits science, legal,
+                            or procedural settings. Jargon must be consistent — do not swap
+                            between lay and technical terms for the same concept.
+
+     literary-elevated    → Careful, deliberate word selection; some rare or archaic words
+                            permitted if they earn their place; no padding. Suits literary
+                            fiction where language itself is part of the experience.
+
+     working-class-direct → Short words, concrete nouns, distrust of abstraction; no
+                            performative vocabulary; idiom and ellipsis over formal structure.
+                            Characters think in things, not concepts.
+
+     bureaucratic-deadpan → Passive constructions, procedural language, institutional
+                            vocabulary; irony and horror emerge from the flatness. Suits
+                            dystopian, corporate, or satirical registers.
+
+     custom               → Register defined in [VOCABULARY_REGISTER_NOTES] below. Use when
+                            the story requires a blend or a register not listed above (e.g.,
+                            archaic fantasy diction, dialect-inflected narration). -->
+
+[VOCABULARY_REGISTER_NOTES]
+<!-- Required only when Vocabulary Register is `custom`.
+     Describe: formality level, domain specificity, permitted jargon, class/cultural markers,
+     and any words or constructions that are prohibited or mandatory. -->
+
+<!-- TARGET_AUDIENCE values and what they govern:
+
+     literary-reader   → Expects ambiguity, rewards slow prose, tolerates unresolved endings.
+                         Interiority may run long; subtext can be dense; theme need not be
+                         signposted. Prose Profile literary or dark-realist recommended.
+
+     casual-reader     → Reads for story and character momentum. Needs clear stakes per chapter,
+                         regular payoffs, and accessible vocabulary. Subtext present but not
+                         opaque. Prose Profile commercial recommended.
+
+     naive-reader      → Little genre experience or unfamiliar with literary convention.
+                         Exposition must be slightly more explicit; subtext should be backed
+                         by a more visible behavioral cue; chapter hooks must be unambiguous.
+                         Avoid ironic or deeply unreliable narrators without clear signals.
+
+     young-adult       → Teen protagonist or readership. Coming-of-age stakes. Emotional
+                         intensity is HIGH but content levels (violence, sexual content) are
+                         moderated. Voice is close and immediate. Pacing is faster than adult
+                         literary; no chapter should feel like it marks time.
+
+     middle-grade      → Age 8–12. Protagonist is the reader's age. Dark themes permitted
+                         but consequence must be proportionate and not hopeless. Vocabulary
+                         accessible; sentences shorter on average; wonder and agency central.
+
+     children          → Age 6–8. Simple sentence structure. Concrete sensory world. Stakes
+                         feel large to the character; no ambiguous morality; resolution is
+                         emotionally satisfying. Speckit.implement adjusts language complexity.
+
+     custom            → Audience defined in [TARGET_AUDIENCE_NOTES] below. Set this when
+                         the story targets a niche (e.g., genre-savvy thriller readers,
+                         academic SF audience, romance subgenre readers). -->
+
+[TARGET_AUDIENCE_NOTES]
+<!-- Required only when Target Audience is `custom`.
+     Describe the assumed reader: prior genre knowledge, tolerance for ambiguity,
+     expected vocabulary level, and any content expectations specific to this readership. -->
 
 ### Anti-AI Filter ⚠️
 The following phrases are PROHIBITED — they mark prose as AI-generated:
@@ -296,6 +449,30 @@ The following phrases are PROHIBITED — they mark prose as AI-generated:
 <!-- The spine of the entire story. One sentence.
      Example: "Will Elena expose the conspiracy before it exposes her?" -->
 
+### Protagonist Want vs. Need
+<!-- The engine of the arc. These must be in tension — if they align, there is no arc.
+     Want: What the protagonist consciously pursues (external goal)
+     Need: What the protagonist must confront or accept to be whole (internal wound)
+     The story forces the protagonist to choose between them at the climax. -->
+
+| | Protagonist |
+|---|---|
+| **Want** (surface goal) | [PROTAGONIST_WANT] |
+| **Need** (deep wound / truth) | [PROTAGONIST_NEED] |
+| **Misbelief** (lie they tell themselves) | [PROTAGONIST_MISBELIEF] |
+
+<!-- Add additional rows for co-protagonists if applicable. -->
+
+### Antagonist Design
+[ANTAGONIST_DESIGN]
+<!-- The antagonist is not a villain — they are a mirror.
+     Document:
+     - Core motivation: what the antagonist wants and why they believe they are justified
+     - Worldview: the governing logic that makes their actions coherent from their own perspective
+     - Method: how they pursue their goal (coercion, manipulation, systemic force, ideology)
+     - Mirror function: which aspect of the protagonist's misbelief does the antagonist embody or weaponize?
+     The antagonist MUST NOT be defeated by a flaw the reader could not have anticipated. -->
+
 ### Theme
 [THEME]
 <!-- Stated as a question, not an answer.
@@ -311,9 +488,73 @@ The following phrases are PROHIBITED — they mark prose as AI-generated:
      - The resolution cannot rely on information withheld from the reader
      - No rescue; characters solve their own problems or accept the cost -->
 
+### Subplot Integration Rule
+Every subplot MUST relate to the main theme at a competing angle — not simply fill page count. Each subplot should:
+1. Force the protagonist (or a POV character) to act in a way that either deepens their misbelief OR chips at it
+2. Resolve on a different timeline than the main plot, so its resolution either foreshadows or ironizes the main climax
+3. Be documented in `subplots.md` with its thematic function stated explicitly
+
+[HYBRID_PROFILE_ACT_MAP]
+<!-- REQUIRED only when PROSE_PROFILE is `hybrid`.
+     Map each structural unit to its designated profile.
+     Example:
+     | Act / POV strand | Profile |
+     |---|---|
+     | Act I | commercial |
+     | Act II (Elena chapters) | literary |
+     | Act II (Marcus chapters) | thriller |
+     | Act III | dark-realist |
+     Delete this block entirely if PROSE_PROFILE is not hybrid. -->
+
 ---
 
-## IX. Series Context
+## IX. Content & Sensitivity Policy
+<!-- Governs how speckit.implement and speckit.sensitivity handle difficult material.
+     This section does not restrict story content — it specifies HOW difficult content
+     is handled so the AI produces consistent, intentional prose rather than
+     defaulting to genre conventions or sanitizing without instruction. -->
+
+### Violence
+**Level**: [VIOLENCE_LEVEL]
+<!-- Set to ONE of the following:
+     - implied       → consequence shown, act kept off-page
+     - functional    → act shown with minimal physical detail; emphasis on consequence
+     - visceral      → full sensory detail; physical and psychological aftermath required
+     - unflinching   → no restraint; lingering on cost is part of the narrative purpose -->
+
+**Rules**:
+- Violence MUST carry cost — physical, psychological, or relational. Consequence-free violence is prohibited regardless of level.
+- Perpetrator's interiority during violence MUST be shown if they are a POV character.
+
+### Sexual Content
+**Level**: [SEXUAL_CONTENT_LEVEL]
+<!-- Set to ONE of the following:
+     - none          → no sexual content; intimacy closed-door
+     - suggestive    → tension and implication only; physical detail stops at the threshold
+     - moderate      → tasteful explicit content; body described but not graphic
+     - explicit      → fully on-page; consistent with adult commercial fiction standards -->
+
+### Trauma Depiction
+**Level**: [TRAUMA_LEVEL]
+<!-- Set to ONE of the following:
+     - referenced    → trauma acknowledged as backstory, not dramatized
+     - present       → trauma affects character behavior visibly; flashback fragments permitted
+     - immersive     → trauma rendered in full sensory and psychological depth -->
+
+**Rules**:
+- Trauma responses MUST be consistent with the character's established history — no convenient recovery for plot convenience
+- Recovery arcs, if present, must be earned (see Section III Earned Growth)
+
+### Reader Advisory Flags
+[CONTENT_WARNINGS]
+<!-- List any content advisory flags this story carries for sensitivity readers or front-matter disclosure.
+     Examples: suicide, sexual violence, child harm, addiction, racial violence, eating disorders.
+     Set to "none" if no advisories apply.
+     speckit.sensitivity uses this list to flag relevant scenes during review. -->
+
+---
+
+## X. Series Context
 <!-- ACTIVE only when Series Position is non-standalone.
      Skip this section entirely if Series Position is `standalone`.
      This section is a per-book read-out of the series-level constraints that directly govern THIS book.
@@ -360,7 +601,7 @@ The following phrases are PROHIBITED — they mark prose as AI-generated:
 
 ---
 
-## X. Audiobook Production
+## XI. Audiobook Production
 <!-- Skip this section entirely if Output Mode is `book`.
      When Output Mode is `audiobook` or `both`, speckit.implement generates a parallel
      audiobook draft alongside each prose draft in audiodraft/. -->
@@ -461,10 +702,41 @@ Revise only the passages that violate the new or amended principle. Mark the dra
 > ⚠️ Do not advance drafting of new chapters until all `STALE CONSTITUTION` drafts from the impact scope are resolved or triaged.
 
 ### Compliance Review
-Each chapter draft MUST be checked against:
-- Section II (Sensory Detail — Dirt Rule + Physical Feedback)
-- Section V (Triple Purpose scene test)
-- Section VII Anti-AI Filter
+Each chapter draft MUST be checked against all of the following:
+
+| Section | Rule | Check |
+|---|---|---|
+| II | Dirt Rule — at least one environmental flaw per scene | per scene |
+| II | Physical Feedback — emotions shown through involuntary bodily reaction | per scene |
+| II | Scene-Opening Orientation — who/where/time within first 2–3 sentences | per scene |
+| II | Exposition & Infodump Rule — no narrator explanation blocks longer than 2 sentences | per scene |
+| II | Repetition & Echo Discipline — no repeated key word within 500 words | per scene |
+| II | Simile & Metaphor Budget — max two extended comparisons per scene | per scene |
+| II | Narrator Editorializing Prohibition — no narrator interpretation, summary, or trait declaration | per scene |
+| III | Micro-Obsessions — POV character habit recurs and escalates | per chapter |
+| III | Voice Homogeneity — each POV character passes the name-tag swap test | per chapter |
+| IV | Oblique Dialogue — no character answers directly first | per scene |
+| IV | Physical Presence in Dialogue — each character has at least one physical action | per scene |
+| IV | Em-dash density cap — no more than 3 em-dashes per 1,000 words | per scene |
+| V | Triple Purpose — plot advance + character reveal + world deepening | per scene |
+| V | Off-Balance Ending — no tidy scene closure | per scene |
+| V | Chapter Ending type — matches required type for chapter position | per chapter |
+| VI | Chronological Consistency — no contradicted world-state details | per chapter |
+| VII | Anti-AI Filter — no prohibited phrases | per scene |
+
+### Author Rule Overrides
+<!-- Formal record of universal rules deliberately relaxed for this story.
+     An override does NOT remove the rule globally — it documents an intentional,
+     scoped exception. speckit.continuity will not flag drafts for overridden rules
+     within the declared scope.
+     Leave empty if no overrides apply. -->
+
+| Rule | Section | Scope (scene / chapter / whole book) | Rationale |
+|---|---|---|---|
+| [RULE_NAME] | [SECTION] | [SCOPE] | [RATIONALE] |
+<!-- Example:
+     | Dirt Rule | II | Ch. 1 opening scene only | First impression of the station must feel pristine to mirror the protagonist's false sense of safety. Flaw introduced in Ch. 2. |
+     | Em-dash cap | IV | Marcus chapters throughout | Marcus's speech pattern is defined by mid-thought redirection; cap raised to 5 per 1,000 words for his POV only. | -->
 
 ### Versioning
 - **MAJOR**: Structural changes (e.g., switching plot structure, adding/removing POV strands)

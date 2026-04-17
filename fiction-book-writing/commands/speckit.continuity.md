@@ -40,7 +40,7 @@ Identify story bible violations, continuity errors, and untracked narrative thre
 
 2. **Load documents**:
    - Required: `spec.md`, `plan.md`, `tasks.md`, `.specify/memory/constitution.md`
-   - Required: draft files in `FEATURE_DIR/draft/` — identified via their YAML frontmatter header (`chapter_id`, `beat_id`, `pov_character`, `status`, `constitution_version`). Abort with a clear error if no draft files exist.
+   - Required: draft files in `FEATURE_DIR/draft/` — identified via their YAML frontmatter header (`chapter_id`, `beat_id`, `pov_character`, `status`, `constitution_version`). If no draft files exist: read `OUTPUT_MODE` from `constitution.md ## X. Audiobook Production`. If `OUTPUT_MODE` is `audiobook`, skip all prose analysis dimensions (A–F below) and proceed directly to the **Audiobook Draft Inventory** sub-step in Step 3 — report audiodraft coverage and sync status only. If `OUTPUT_MODE` is `book` or `both`, abort with: `⛔ No draft files found in FEATURE_DIR/draft/ — run speckit.implement to produce at least one chapter before running continuity.`
    - Also load: `characters.md` (index) and `characters/` profiles, `timeline.md`, `world-building.md`, `locations.md` (if present), `glossary.md` (if present), `subplots.md` (if present)
 
 3. **Draft file inventory**:

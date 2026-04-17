@@ -63,6 +63,13 @@ The session proceeds in **segments** (a segment is one beat, one paragraph, or o
 
 Run `{SCRIPT}` from repo root and parse `FEATURE_DIR`.
 
+**Audiobook-only guard**: Read `OUTPUT_MODE` from `constitution.md ## X. Audiobook Production`. If `OUTPUT_MODE` is `audiobook` and neither `outlines/` nor `draft/` exists, stop:
+```
+⛔ speckit.roleplay requires an outline or prose draft file to play through.
+In audiobook-only mode neither outlines/ nor draft/ exists.
+Generate a scene outline first: speckit.implement --outline-only [CHAPTER_ID]
+```
+
 Resolve the **target file**:
 1. Parse `$ARGUMENTS` for a chapter ID, optional mode flag, and optional scope flag (`pick` or `N-M` range).
 2. If no argument: use the most recently modified file in `FEATURE_DIR/outlines/` or `FEATURE_DIR/draft/`, preferring outlines.

@@ -66,6 +66,14 @@ Expected format: a chapter ID (e.g., `A1.101`) or a range (e.g., `A1.101–A1.10
 1. **Setup**: Run `{SCRIPT}` from repo root and parse `FEATURE_DIR`.
 
 2. **Identify the target**:
+   - Read `OUTPUT_MODE` from `constitution.md ## X. Audiobook Production`. If `OUTPUT_MODE` is `audiobook` and no `draft/` directory exists, stop:
+     ```
+     ⛔ speckit.polish operates on prose draft files (draft/).
+     In audiobook-only mode no prose drafts exist — SSML/ElevenLabs audiodraft
+     files cannot be line-edited with this command.
+     To manage audiodraft quality run: speckit.audiobook check
+     To regenerate stale audiodrafts run: speckit.audiobook draft all
+     ```
    - Parse `$ARGUMENTS` for chapter ID or range. Resolve to `draft/*.md` file(s).
    - If no argument given: find the most recently modified draft file whose matching checklist has `Verdict: PASS`.
    - For each target file, verify the most recent checklist in `checklists/` has `Verdict: PASS`. If FAIL: abort that file with: `⛔ <CHAPTER_ID>: checklist is FAIL — run speckit.revise before polishing.`
