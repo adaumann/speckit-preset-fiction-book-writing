@@ -6,6 +6,47 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ---
 
+## [1.5.0] - 2026-04-17
+
+### Added
+- `constitution-template.md` — new Section IX: Content & Sensitivity Policy (violence, sexual content, trauma depiction, reader advisory flags)
+- `constitution-template.md` — `hybrid` prose profile option with `[HYBRID_PROFILE_ACT_MAP]` block; transitions permitted only at structural boundaries
+- `constitution-template.md` — six new craft rules in Section II: Scene-Opening Orientation, Narrative Distance Consistency, Exposition & Infodump Rule, Flashback Rules, Repetition & Echo Discipline, Simile & Metaphor Budget
+- `constitution-template.md` — Narrator Editorializing Prohibition (show-don't-tell master rule) with show/tell contrast table and filtered-POV exception
+- `constitution-template.md` — Chapter Endings Discipline in Section V: required ending type by chapter position, prohibited endings list
+- `constitution-template.md` — `Tone` and `Vocabulary Register` parameters in Section VII Stylistic Parameters table
+- `constitution-template.md` — `VOCABULARY_REGISTER` option block (plain-colloquial, clinical-precise, literary-elevated, working-class-direct, bureaucratic-deadpan, custom)
+- `constitution-template.md` — `TARGET_AUDIENCE` option block (literary-reader, casual-reader, naive-reader, young-adult, middle-grade, children, custom)
+- `constitution-template.md` — Protagonist Want vs. Need table, Antagonist Design field, Subplot Integration Rule in Section VIII
+- `constitution-template.md` — Author Rule Overrides table in Governance; Compliance Review expanded to full per-rule table with per-scene/per-chapter granularity
+- `constitution-template.md` — cross-reference to `pov-structure.md` at the Distinct Voices rule and POV Strategy parameter
+- `spec-template.md` — Opening Hook section (what reader must know/feel/suspect/withheld)
+- `spec-template.md` — POV Roster section with rotation pattern table
+- `spec-template.md` — Key Relationship Arcs section (RA-NNN entries with open/stress/close states)
+- `spec-template.md` — Subplots section (SP-NNN entries with want/need/thematic function/resolution timing)
+- `spec-template.md` — Act Boundaries & Structural Beats section with word-count targets and pacing intent
+- `spec-template.md` — World Rules table (WR-NNN by category) and Research Domains table in Key Entities
+- `spec-template.md` — Tone field and Sequel/Series Threads Left Open in Assumptions & Scope
+- `spec-template.md` — Open Questions & Deferred Decisions table (OQ-NNN with owner and resolution deadline)
+- `plan-template.md` — six new Story Bible Check gates: POV Roster, subplot thematic function, act boundaries, World Rules, Open Questions, constitution version
+- `plan-template.md` — seventh Story Bible Check gate: `themes.md` exists with declared thematic question and at least one registered motif
+- `plan-template.md` — eighth Story Bible Check gate: `subplots.md` has a beat sheet for every SP-NNN arc declared in spec.md
+- `plan-template.md` — full structure blocks for Kishōtenketsu, Save the Cat, Freytag's Pyramid, and Five-Act in the Structure Map section
+- `plan-template.md` — Triple Purpose Check, Subplot Threads Active, World Rules at Risk fields in the beat template
+- `plan-template.md` — Constitution version, Triple Purpose Declaration, Relationship Arcs Activated fields in the chapter outline template
+- `plan-template.md` — Pacing Health Check section between Beat Sheet and Scene Outline (act word-count comparison table, Subplot Pacing Check)
+- `plan-template.md` — `themes.md`, `subplots.md`, `locations.md`, `glossary.md` added to Supporting Documents table with descriptions
+
+### Changed
+- `speckit.polish` — audiobook-only guard: stops with clear message and redirects to `speckit.audiobook check/draft` when `OUTPUT_MODE: audiobook` and no `draft/` exists
+- `speckit.revise` — audiobook-only guard: same pattern; redirects to `speckit.audiobook draft [CHAPTER_ID]`
+- `speckit.roleplay` — audiobook-only guard at Step 1: stops when neither `outlines/` nor `draft/` exists; redirects to `speckit.implement --outline-only`
+- `speckit.continuity` — audiobook-only mode: instead of unconditional abort when no drafts exist, checks `OUTPUT_MODE`; audiobook-only skips prose analysis dimensions and runs audiodraft inventory only
+- `speckit.checklist` — audiobook-only guard at Step 1: stops with clear message; redirects to `speckit.audiobook check`
+- `speckit.status` — audiobook-only mode: when `draft/` is absent, shows Audiodraft Inventory table (from `audiodraft/`) cross-referenced against `plan.md` instead of generic "No chapters drafted yet"
+
+---
+
 ## [1.4.1] - Current
 
 ### Changed
