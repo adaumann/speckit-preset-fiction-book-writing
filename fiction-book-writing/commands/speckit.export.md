@@ -86,7 +86,10 @@ If no reference doc is found, pandoc uses its built-in defaults (functional but 
    - **ISBN** (EPUB + IngramSpark only): Read `--isbn` from `$ARGUMENTS`. If platform is `ingramspark` and no ISBN is provided, emit a WARNING: `⚠️ --isbn not set — IngramSpark requires an ISBN in EPUB metadata. Add --isbn 978-... to the command.`
    - **Title**: Read from `$ARGUMENTS` if given; otherwise look for a YAML `title:` field
      or H1 heading in `spec.md`; fall back to `"Untitled Manuscript"`.
-   - **Author**: Read from `$ARGUMENTS` if given; otherwise look in `spec.md`; fall back to `"Author Name"`.
+   - **Author**: Read from `$ARGUMENTS` (`--author "..."`) if given; otherwise read `author_name` from `constitution.md § VII Author Name`; then look in `spec.md`; fall back to `"Author Name"`.
+   - **Language**: Read `language` from `constitution.md § VII Language` (or pass `--lang` in `$ARGUMENTS` to override). Passed as the `lang` metadata field in EPUB (`dc:language`), DOCX, and LaTeX output. Default: `en`.
+   - **Copyright**: Read `copyright` from `constitution.md § VII Copyright` (or pass `--rights "© 2025 ..."` in `$ARGUMENTS` to override). Written as `dc:rights` in EPUB metadata; omitted from output if not set.
+   - **About the Author** (EPUB and DOCX): Read `Author Bio (Long)` from `constitution.md § VII`. If set, it is appended as a `# About the Author` section after the final chapter. Pass `--no-author-bio` in `$ARGUMENTS` to suppress. Use `speckit.bio draft` to create the canonical bio if not yet set.
    - **Output path**: `FEATURE_DIR/manuscript.docx`, `FEATURE_DIR/manuscript.epub`, or `FEATURE_DIR/manuscript.tex`
      (overridden by `--output` in `$ARGUMENTS` if present).
    - **Reference doc** (DOCX only): If `FEATURE_DIR/manuscript-template.docx` exists,

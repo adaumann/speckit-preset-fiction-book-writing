@@ -369,11 +369,15 @@ For each variant, also output:
 If `tagline` element is included and no `--tagline` text was given, generate three tagline options from the logline seed:
 
 Rules:
-- Maximum 8 words
+- **English and non-agglutinative languages** (`Language = en`, `fr`, `es`, `it`, `pt`): Maximum 8 words
+- **Agglutinative languages** (`Language = de`, `nl`, `fi`, `hu`, `tr`) or any language where a single token may represent a multi-word concept: Maximum 4 compound words (a compound noun like *Sternenstaub* counts as 1 word, not 2)
+- If Language is not set, apply the 8-word rule
 - Must not restate the title
 - Must create curiosity or dread — avoid describing the plot
 - Present tense or gerund preferred ("Some doors are meant to stay closed.")
 - Avoid clichés: "One man…", "In a world…", "A journey…"
+
+> **Image generation note**: AI image prompts (Steps 5–6) are ALWAYS written in English regardless of the publication Language setting — image generation models are English-prompt optimised. The Language setting only affects tagline word-count rules and cover copy text.
 
 Present options:
 ```

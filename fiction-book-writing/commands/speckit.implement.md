@@ -95,6 +95,8 @@ You **MUST** consider the user input before proceeding (if not empty).
    - Report the outline file path(s) and remind the author to review, then either approve or set `status: SKIP` and re-run `/speckit.implement`
    - Stop after generating outlines
 
+   **Prose language**: Draft all prose in the language specified in `constitution.md § VII Language`. If Language is not set or not recognised, default to English.
+
    **Output path**: `draft/<CHAPTER_ID>_<ChapterName>.md`
    **Naming convention**: `{PREFIX}{phase}.{beat_number}_{ShortName}.md` where PREFIX is the plot-structure prefix from `constitution.md` (e.g., `A` = three-act, `JO` = Hero's Journey, `SC` = Save the Cat, `KT` = Kishōtenketsu, `FT` = Freytag, `SL` = Story Circle, `FA` = Five-Act, `P` = generic). Examples: `draft/A1.101_Awakening.md`, `draft/JO3.201_SupremeOrdeal.md`
    Create `draft/` directory in `FEATURE_DIR` if it does not exist.

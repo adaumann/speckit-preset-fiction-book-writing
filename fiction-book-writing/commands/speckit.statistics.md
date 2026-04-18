@@ -54,10 +54,14 @@ Accepted arguments:
 
 ### Section A — Readability
 
+> **Language gate**: Flesch Reading Ease and Flesch-Kincaid Grade Level are calibrated for English only.
+> If `constitution.md § VII Language` is set to any value other than `en`, **omit both Flesch metrics** from the report and display:
+> `ℹ️ Flesch-Kincaid is an English-only metric — omitted for Language: [LANGUAGE]. Sentence length variance, long/short sentence ratios, and rhythm verdict are language-agnostic and are still reported.`
+
 | Metric | How it is computed | Target range |
 |---|---|---|
-| Flesch Reading Ease | Standard formula over the full chapter | 60–80 (literary fiction); 50–70 (dense/literary) |
-| Flesch-Kincaid Grade Level | Grade level equivalent | 6–10 (general fiction); up to 12 for literary |
+| Flesch Reading Ease | Standard formula over the full chapter *(English only — see note above)* | 60–80 (literary fiction); 50–70 (dense/literary) |
+| Flesch-Kincaid Grade Level | Grade level equivalent *(English only — see note above)* | 6–10 (general fiction); up to 12 for literary |
 | Average sentence length | Total words ÷ total sentences | 12–18 words (vary by genre) |
 | Sentence length variance | Standard deviation of sentence lengths | ≥6 = good variety; <4 = flat rhythm |
 | Long sentence % | Sentences ≥35 words as % of total | Flag if >20% |

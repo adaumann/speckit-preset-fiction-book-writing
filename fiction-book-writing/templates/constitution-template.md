@@ -1,5 +1,10 @@
 ---
 title: [STORY_TITLE]
+author_name: [AUTHOR_NAME]
+author_bio_short: [AUTHOR_BIO_SHORT]
+author_bio_long: [AUTHOR_BIO_LONG]
+language: [LANGUAGE]
+copyright: [COPYRIGHT]
 dramatic_question: [DRAMATIC_QUESTION]
 theme: [THEME]
 plot_structure: [PLOT_STRUCTURE]
@@ -147,6 +152,11 @@ constitution_version: [CONSTITUTION_VERSION]
 
 | Parameter | Value |
 |---|---|
+| Author Name | [AUTHOR_NAME] |
+| Author Bio (Short) | [AUTHOR_BIO_SHORT] |
+| Author Bio (Long) | [AUTHOR_BIO_LONG] |
+| Language | [LANGUAGE] |
+| Copyright | [COPYRIGHT] |
 | POV Strategy | [POV_STRATEGY] |
 | Tense | [TENSE] |
 | Sentence Rhythm | Variable: short/jagged during panic or action; long/winding during reflection or exhaustion |
@@ -155,6 +165,53 @@ constitution_version: [CONSTITUTION_VERSION]
 | Tone | [TONE] |
 | Target Audience | [TARGET_AUDIENCE] |
 | Series Position | [SERIES_POSITION] |
+
+**Author Name** — *(Required. Used by `speckit.cover` for cover typography, `speckit.query` for query-letter byline, and `speckit.export` for EPUB metadata.)*
+<!-- Your publishing name — use the exact byline you want on the cover and title page.
+     Examples: "Jane Smith", "J. S. Smith", "Janine Smith-Brauer" -->
+
+**Author Bio (Short)** — *(Optional. Used by `speckit.query` as the bio paragraph in query letters and platform author profiles. ≤50 words, third person. Run `speckit.bio draft` to generate.)*
+<!-- One paragraph, third person, ≤50 words.
+     Lead with strongest credential or genre connection.
+     Store as a single line — no internal line breaks. -->
+
+**Author Bio (Long)** — *(Optional. Appended by `speckit.export` as an “About the Author” section in EPUB and DOCX back matter. 100–150 words, third person. Run `speckit.bio draft` to generate.)*
+<!-- One to two paragraphs, third person, 100–150 words.
+     Expand the short bio with personal connection and current project.
+     Store as a single line — no internal line breaks. -->
+
+**Copyright** — *(Optional. Written into the `dc:rights` metadata field in EPUB, DOCX, and LaTeX exports. If left blank, the field is omitted from the exported file.)*
+<!-- Choose one format or write your own:
+     - All rights reserved (standard):
+       © 2025 Jane Smith. All rights reserved.
+     - Creative Commons Attribution 4.0:
+       © 2025 Jane Smith. Licensed under CC BY 4.0. https://creativecommons.org/licenses/by/4.0/
+     - Creative Commons NonCommercial:
+       © 2025 Jane Smith. Licensed under CC BY-NC 4.0. https://creativecommons.org/licenses/by-nc/4.0/
+     - Public Domain (CC0):
+       This work is dedicated to the public domain under CC0 1.0. https://creativecommons.org/publicdomain/zero/1.0/
+
+     Update the year to the publication year when you export for distribution.
+     For pen names: use the pen name, not your legal name. -->
+
+**Language** — *(Required. Used by `speckit.implement` and `speckit.outline` to determine the prose language; by `speckit.audiobook` for SSML `xml:lang` and `.pls` lexicon locale; by `speckit.statistics` to gate Flesch-Kincaid; by `speckit.polish` to gate English-specific craft rules; by `speckit.query` to select submission-format convention; by `speckit.cover` to apply agglutinative-language tagline rules.)*
+<!-- Set to a BCP-47 language code:
+     - en    → English (default — all language-specific features active)
+     - de    → German (Flesch-Kincaid omitted; Exposé format for query; compound-word tagline rule)
+     - fr    → French
+     - es    → Spanish
+     - it    → Italian
+     - pt    → Portuguese
+     - nl    → Dutch (compound-word tagline rule)
+     - ja    → Japanese (Flesch-Kincaid omitted; no Latin-script filter-word list)
+     - zh    → Chinese (Simplified)
+     - fi    → Finnish (compound-word tagline rule)
+     - hu    → Hungarian (compound-word tagline rule)
+     - tr    → Turkish (compound-word tagline rule)
+
+     Language affects: prose generation, SSML output, lexicon locale, polish rules, statistics, query format.
+     Exception: AI image-generation prompts (speckit.cover) are ALWAYS written in English,
+     regardless of this setting, because image models are English-prompt optimised. -->
 
 **Tone** — *(Required when `STYLE_MODE: humanized-ai`. Used by `speckit.implement` to calibrate narrative register and by `speckit.statistics` to set readability target bands.)*
 <!-- Choose one:

@@ -45,6 +45,12 @@ Consider user input before proceeding. Accepted arguments:
 
 1. **Setup**: Run `{SCRIPT}` from repo root. Parse `FEATURE_DIR`.
 
+   **Market detection**: Read `constitution.md § VII Language`. If Language is not `en`, determine the submission convention for that market before proceeding:
+   - `de` (German): Standard format is a **German Exposé** — a formal 3–5 page synopsis followed by the first 3 sample chapters. The short US-style query letter (hook + body + comp titles in 300 words) is not standard in German-speaking publishing. Generate an Exposé cover letter instead (see note at the end of Step 4).
+   - `fr`, `it`, `es`, `pt`: Query formats vary by publisher — generate the standard US-style structure but add a note: `ℹ️ Query letter conventions differ in [MARKET]. Verify the target publisher's submission guidelines before sending.`
+   - Other languages: Generate standard US-style structure with the same market-convention note.
+   If Language is `en` or not set: proceed with standard US query letter format.
+
 2. **Check for required sources**:
    - Read `spec.md` — extract: title, genre, logline, protagonist name + identity, central dramatic question, stakes, word count estimate (from tasks.md if not in spec)
    - If `synopsis.md` exists: read the One-Page Synopsis section (250–350 words) as the story body source
@@ -87,7 +93,8 @@ Consider user input before proceeding. Accepted arguments:
    - Simultaneous submission note if applicable
 
    **Bio** (1 paragraph):
-   - Publication credits → relevant professional credentials → personal connection → debut disclosure-free fallback
+   - If `constitution.md § VII Author Bio (Short)` is set, use it verbatim — do not rewrite unless the user explicitly asks.
+   - If not set: generate from publication credits → relevant professional credentials → personal connection → debut disclosure-free fallback. Suggest running `speckit.bio draft` to save a canonical version.
    - Never: "This is my first novel." Never: "I've been writing since childhood."
 
 5. **Comp title suggestions** (always include, even without `comp-titles` argument):
@@ -123,3 +130,20 @@ Consider user input before proceeding. Accepted arguments:
 
    ⚠️ Issues: [list or "None"]
    ```
+
+---
+
+## German Exposé Format (Language: de)
+
+When `constitution.md § VII Language` is `de`, generate a **Exposé** instead of a US query letter.
+Structure:
+1. **Anschreiben** (cover letter, 1 page): Greeting, one-sentence pitch (title, genre, word count), brief personal note, closing.
+2. **Exposé-Hauptteil** (3–5 pages): Character-driven synopsis with full plot arc including the ending (unlike US query letters, German publishers expect the ending revealed). Tone: clear and professional. Active voice. No rhetorical questions.
+3. **Leseprobe** (sample chapters): First 3 chapters or approximately the first 10,000 words — attach separately, not embedded.
+
+File output: `FEATURE_DIR/expose.md` (cover letter + Exposé body). Note separately that the Leseprobe is `draft/*.md` chapters 1–3.
+
+Quality check adjustments for Exposé:
+- No comp-title paragraph needed (German publishers rely on genre categories, not comp titles)
+- Word count target for the Exposé body: 1,500–3,000 words
+- Full plot spoilers required — do not use the US hook-only structure

@@ -269,4 +269,8 @@ provides:
       name: "speckit.cover"
       file: "commands/speckit.cover.md"
       description: "Cover design command — generates a cover brief (cover-brief.md), AI image-generation prompts (3 variants: hero subject, environment, symbol), and platform technical specs for KDP ebook, KDP print, IngramSpark, Draft2Digital, and social media. Reads spec.md and constitution.md for title, author, genre, series, tone, and audience. 10 visual style presets: photorealistic, illustrated, painterly, minimalist, typographic, dark-moody, cinematic, retro-pulp, hand-drawn, abstract. Calculates print spine width from page count."
+    - type: "command"
+      name: "speckit.bio"
+      file: "commands/speckit.bio.md"
+      description: "Author bio manager — draft, refine, and generate context-specific variants (agent query, reader back matter, platform profile, social media, first-person press kit). Stores canonical short (≤50 words) and long (100–150 words) bios in constitution.md § VII. Variants: agent, reader, platform (25-word KDP/D2D), social (160-char), first-person (website/newsletter), long (press kit). Short bio used by speckit.query; long bio appended by speckit.export as \"About the Author\" back matter."
 tags: ["writing", "novel", "fiction", "storytelling", "creative-writing", "kdp"]

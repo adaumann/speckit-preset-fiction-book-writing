@@ -31,6 +31,7 @@ Can write full prose or stays with book story outlines in order to write your ow
 - [Plot Structure Support](#plot-structure-support)
 - [Style Modes](#style-modes)
 - [Export Formats](#export-formats)
+- [Language Support](#language-support)
 
 ---
 
@@ -38,7 +39,7 @@ Can write full prose or stays with book story outlines in order to write your ow
 
 The Fiction Book Writing preset applies the Spec-Driven Development methodology to creative fiction. It provides:
 
-- **26 AI commands** covering every stage from idea to submission-ready manuscript
+- **27 AI commands** covering every stage from idea to submission-ready manuscript
 - **21 templates** for all supporting story documents
 - **1 export script** (pandoc-based) for DOCX, EPUB, and LaTeX output
 - Support for **8 POV modes** (single, alternating, dual, braided, ensemble, mosaic, frame, chorus, first-person-multiple)
@@ -185,6 +186,7 @@ After initialization, your project will have this layout:
 | `speckit.export` | Submission | Export manuscript to DOCX (Word), EPUB (KDP/IngramSpark), or LaTeX via pandoc. `--platform` selects KDP, IngramSpark, D2D, Shunn, or Smashwords formatting |
 | `speckit.audiobook` | Audiobook | Convert prose chapters to SSML/ElevenLabs audiodraft files, manage voice assignments and pronunciation lexicon, check for stale drafts, export `lexicon.pls` |
 | `speckit.cover` | Submission | Generate a cover brief, AI image-generation prompts (3 variants), and platform specs for KDP, IngramSpark, D2D, and social. 10 style presets. Reads spec.md for title/author/genre/series |
+| `speckit.bio` | Submission | Draft, refine, and generate author bio variants (agent / reader / platform / social / first-person). Stores canonical short and long bios in constitution.md. Short bio used by `speckit.query`; long bio appended by `speckit.export` as "About the Author" |
 
 ---
 
@@ -213,6 +215,16 @@ All sub-commands and arguments for every command.
 ```
 /speckit.constitution                      ← create or update the story bible (interactive)
 ```
+
+`speckit.constitution` governs the full story bible at `.specify/memory/constitution.md`. During setup you will be prompted for:
+
+- **Style mode**: `author-sample` (paste prose for voice extraction) or `humanized-ai` (built-in craft ruleset)
+- **Plot structure**: Three-Act, Save the Cat, Hero's Journey, Story Circle, Fichtean Curve, Custom
+- **Author Name**: your publishing byline — used by `speckit.cover`, `speckit.query`, and `speckit.export`
+- **Language**: BCP-47 code (`en`, `de`, `fr`, `es`, `it`, `pt`, `nl`, `ja`, `zh`, `fi`, `hu`, `tr`) — gates prose checks and sets export `dc:language`
+- **Copyright**: selectable format (All rights reserved / CC BY 4.0 / CC BY-NC 4.0 / CC0 / custom) — written as `dc:rights` in EPUB metadata
+- **Author Bio (Short)** and **Author Bio (Long)**: stored in the bible; consumed by `speckit.query` (short) and `speckit.export` back matter (long). Use `speckit.bio draft` to generate and save these.
+- **Tone**, **Target Audience**, **Series Position**, and all craft parameters
 
 #### `speckit.clarify`
 ```
@@ -437,6 +449,13 @@ All sub-commands and arguments for every command.
 /speckit.export latex --platform ingramspark-6x9   ← IngramSpark 6"×9" (PDF/X-1a notes)
 /speckit.export audio                      ← assemble audiobook chapter manifest; validate drafts
 /speckit.export --polished-only            ← skip chapters without a polished version
+/speckit.export --title "My Novel"         ← override title (default: reads from spec.md)
+/speckit.export --author "Jane Smith"      ← override author byline (default: reads from constitution.md)
+/speckit.export --lang de                  ← override BCP-47 language code (default: reads from constitution.md → en)
+/speckit.export --rights "© 2026 Jane Smith. All rights reserved."  ← override dc:rights metadata
+/speckit.export --author-bio "Jane Smith writes…"  ← override "About the Author" back matter text
+/speckit.export --no-author-bio            ← suppress "About the Author" even if set in constitution.md
+/speckit.export --status polished          ← filter by chapter status
 ```
 
 #### `speckit.audiobook`
@@ -480,6 +499,23 @@ All sub-commands and arguments for every command.
 /speckit.cover refresh                     ← regenerate image prompt variants, same brief
 /speckit.cover prompt-only                 ← output only the AI image prompt, no file written
 /speckit.cover brief-only                  ← write cover-brief.md only, no chat prompt output
+```
+
+#### `speckit.bio`
+
+```
+/speckit.bio                               ← list existing bios (or draft if none set)
+/speckit.bio draft                         ← interactive: answer prompts to build canonical short + long bio
+/speckit.bio refine                        ← improve existing bio stored in constitution.md
+/speckit.bio variant agent                 ← 3rd person ≤50w for query-letter bio paragraph
+/speckit.bio variant reader                ← 3rd person 100–150w for "About the Author" back matter
+/speckit.bio variant platform              ← ≤25w for KDP/D2D Author Central profile
+/speckit.bio variant social                ← ≤160 chars for X/Instagram/Bluesky bio field
+/speckit.bio variant first-person          ← 80–120w 1st person for website/newsletter
+/speckit.bio variant long                  ← 200–300w 3rd person for press kit / festival programme
+/speckit.bio list                          ← display short and long bios from constitution.md
+/speckit.bio set short [text]              ← save short bio to constitution.md § VII
+/speckit.bio set long [text]               ← save long bio to constitution.md § VII
 ```
 
 ---
@@ -1021,6 +1057,31 @@ Chapter assembly logic:
 - Sorts chapters by `chapter_id` from frontmatter
 - Highest version number wins (e.g., `_v3.md` beats `_v2.md`)
 
+#### Metadata Resolution
+
+All export metadata is read automatically from `constitution.md § VII` — no manual flags needed unless you want to override:
+
+| Metadata | Source in constitution.md | CLI override |
+|---|---|---|
+| Author byline | `Author Name` | `--author "Jane Smith"` |
+| Language (`dc:language`) | `Language` (BCP-47 code) | `--lang de` |
+| Copyright (`dc:rights`) | `Copyright` | `--rights "© 2026 Jane Smith"` |
+| "About the Author" | `Author Bio (Long)` | `--author-bio "..."` / `--no-author-bio` |
+
+If `Language` is not set, the export defaults to `en`. Run `speckit.bio draft` to generate the canonical author bio before exporting if you want an "About the Author" section appended.
+
+#### Platform Presets
+
+| Platform flag | Output format | Use case |
+|---|---|---|
+| *(default)* | DOCX Shunn | Agent/publisher manuscript submission |
+| `--platform smashwords` | DOCX | Smashwords aggregator (minimal styles) |
+| `--platform kdp` | EPUB | Amazon KDP (cover required for listing) |
+| `--platform ingramspark` | EPUB | IngramSpark + accessibility + optional ISBN |
+| `--platform d2d` | EPUB | Draft2Digital (no embedded cover) |
+| `--platform kdp-print-6x9` | LaTeX | KDP Print 6"×9" |
+| `--platform ingramspark-6x9` | LaTeX | IngramSpark 6"×9" (PDF/X-1a notes) |
+
 ---
 
 ## Workflow Sequence Diagram
@@ -1128,11 +1189,65 @@ Set the profile using `speckit.constitution` — it will prompt for the choice w
 
 Install pandoc: [pandoc.org/installing.html](https://pandoc.org/installing.html)
 
-## Comparable products 
+All export metadata (author byline, language, copyright, "About the Author" back matter) is read automatically from `constitution.md § VII`. No manual configuration is required for standard exports. See the [Export tutorial](#export) for the full metadata resolution table and CLI overrides.
+
+**Language support**: Set `Language` in `constitution.md § VII` to a BCP-47 code (`en`, `de`, `fr`, `es`, `it`, `pt`, `nl`, `ja`, `zh`, `fi`, `hu`, `tr`). The code is passed as `dc:language` to EPUB, as `lang` metadata to DOCX/LaTeX, and gates English-only prose checks in `speckit.polish` and `speckit.statistics`. See [Language Support](#language-support) for full details.
+
+---
+
+## Language Support
+
+Set `Language` in `constitution.md § VII` to a [BCP-47](https://www.rfc-editor.org/rfc/bcp/bcp47.txt) language code. This single field propagates through the entire pipeline:
+
+| BCP-47 Code | Language |
+|---|---|
+| `en` | English (default) |
+| `de` | German |
+| `fr` | French |
+| `es` | Spanish |
+| `it` | Italian |
+| `pt` | Portuguese |
+| `nl` | Dutch |
+| `ja` | Japanese |
+| `zh` | Chinese |
+| `fi` | Finnish |
+| `hu` | Hungarian |
+| `tr` | Turkish |
+
+### What the Language field controls
+
+| Command / Output | Effect |
+|---|---|
+| `speckit.implement` | All drafted prose is written in the set language |
+| `speckit.outline` | Scene outlines are written in the set language |
+| `speckit.polish` | English-only rules (WR-001, WR-004, DI-001, DI-002) are suppressed when Language ≠ `en`; a note explains which checks were skipped |
+| `speckit.statistics` | Flesch–Kincaid readability score is suppressed when Language ≠ `en` (not valid for non-English prose) |
+| `speckit.audiobook` | `xml:lang` attribute set on `<speak>` and `<lexicon>` SSML elements; warning issued if TTS voice model may not support the language |
+| `speckit.cover` | Tagline length target: ≤8 words for analytic languages; ≤4 compound words for agglutinative languages (de, nl, fi, hu, tr) |
+| `speckit.query` | If Language = `de`: generates German Exposé format (Anschreiben + Exposé body + Leseprobe) instead of English query letter |
+| `speckit.export` (EPUB) | Passed as `dc:language` metadata; sets pandoc `--metadata lang=<code>` |
+| `speckit.export` (DOCX/LaTeX) | Passed as pandoc `lang` metadata |
+| `audiobook-draft-template.md` | `xml:lang` placeholder pre-filled from Language |
+
+### Setting the language
+
+Run `speckit.constitution` and set the `Language` field in Section VII, or edit `constitution.md` directly:
+
+```yaml
+language: de
+```
+
+The CLI `--lang` flag overrides `constitution.md` for a single export run without changing the stored value:
+
+```
+/speckit.export epub --lang de
+```
+
+## Comparable products
 
 **General-purpose LLMs (ChatGPT, Claude, Gemini direct)**
 
-Most writers using AI are just chatting with these directly — "write chapter 3", "make this better". No persistence, no consistency model, no gates. The constitution-based approach in this preset solves the biggest practical problem: style drift across sessions. With raw LLM use, chapter 10 sounds nothing like chapter 1 because nothing is carrying the voice forward. This preset's entire architecture exists to solve that.
+Most writers using AI are just chatting with these directly — "write chapter 3", "make this better". ChatGPT Projects and Claude Projects now offer persistent memory and context management, which helps with session continuity. What they still lack is a consistency *model*: no quality gates, no structural governance, no constitution-based authority that every command obeys. Chapter 10 can still sound nothing like chapter 1 unless you manually enforce the rules in every prompt. This preset's architecture removes that manual burden and replaces it with automated enforcement.
 
 **Sudowrite — the closest real competitor**
 

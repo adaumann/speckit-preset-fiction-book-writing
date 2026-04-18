@@ -66,6 +66,8 @@ Accepted arguments:
    - `chapter_id`, `chapter_name`, `pov_character`, `pov_type`, `act_phase`, `plot_structure_stage`, `timeline_position`, `setting`, `estimated_words`
    - Set `status: DRAFT`
 
+   **Outline language**: Draft all text in the outline (opening hook, beat sequence labels, dialogue requirement notes, sensory anchor descriptions) in the language specified in `constitution.md § VII Language`. If Language is not set or not recognised, default to English.
+
    **Opening Hook** — derive from the plan entry's opening hook or first key beat. Write as one concrete sentence (character in motion, not in reflection). Must be specific to this scene, not generic.
 
    **Beat Sequence** — expand each key beat from the plan entry to a single-sentence causal step. Verify:

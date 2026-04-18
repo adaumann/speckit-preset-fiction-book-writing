@@ -17,7 +17,11 @@ Options:
     --draft-dir PATH        Path to draft/ directory (auto-detected if omitted)
     --output FILE, -o FILE  Output file (default: manuscript.docx / manuscript.tex / manuscript.epub)
     --title TITLE           Manuscript title (reads from spec.md if omitted)
-    --author NAME           Author name (reads from spec.md if omitted)
+    --author NAME           Author name (reads from constitution.md/spec.md if omitted)
+    --lang LANG             BCP-47 language code for EPUB metadata (reads from constitution.md if omitted; default: en)
+    --rights TEXT           Copyright statement for dc:rights metadata (reads from constitution.md if omitted)
+    --author-bio TEXT       "About the Author" back matter text (reads from constitution.md if omitted)
+    --no-author-bio         Suppress "About the Author" back matter even if set in constitution.md
     --cover-image FILE      Cover image for EPUB (jpg/png)
     --reference-doc FILE    Custom pandoc reference .docx for DOCX formatting
     --epub-css FILE         Custom CSS stylesheet for EPUB
@@ -221,6 +225,36 @@ def resolve_platform_templates(
     return None
 
 
+def read_constitution_meta(draft_dir: Path) -> dict[str, str]:
+    """Read author_name, language, copyright, and author bios from constitution.md YAML front-matter."""
+    for candidate in (
+        draft_dir.parent / ".specify" / "memory" / "constitution.md",
+        draft_dir.parent / "constitution.md",
+    ):
+        if candidate.exists():
+            text = candidate.read_text(encoding="utf-8", errors="replace")
+            # Extract YAML front-matter block
+            fm_match = re.match(r"^---\s*\n(.+?)\n---", text, re.DOTALL)
+            if fm_match:
+                fm = fm_match.group(1)
+                meta: dict[str, str] = {}
+                for key, field in (
+                    ("author_name", "author"),
+                    ("language", "language"),
+                    ("copyright", "rights"),
+                    ("author_bio_short", "bio_short"),
+                    ("author_bio_long", "bio_long"),
+                ):
+                    m = re.search(rf"^{key}:\s*(.+)$", fm, re.MULTILINE | re.IGNORECASE)
+                    if m:
+                        value = m.group(1).strip()
+                        # Skip placeholder values left from the template
+                        if value and not value.startswith("["):
+                            meta[field] = value
+                return meta
+    return {}
+
+
 def read_spec_meta(draft_dir: Path) -> dict[str, str]:
     """Try to read title and author from spec.md adjacent to draft/."""
     spec_path = draft_dir.parent / "spec.md"
@@ -257,6 +291,7 @@ def build_combined_markdown(
     chapters: list[tuple[dict[str, str], str]],
     title: str,
     author: str,
+    author_bio: str | None = None,
 ) -> str:
     """Assemble chapters into a single pandoc-compatible markdown document."""
     parts: list[str] = []
@@ -270,6 +305,11 @@ def build_combined_markdown(
             parts.append(f"# {chapter_name}\n\n")
         parts.append(body.strip())
         parts.append("\n\n")
+
+    if author_bio:
+        parts.append("# About the Author\n\n")
+        parts.append(author_bio.strip())
+        parts.append("\n")
 
     return "".join(parts)
 
@@ -291,6 +331,8 @@ def export_docx(
     title: str,
     author: str,
     reference_doc: Path | None,
+    lang: str = "en",
+    rights: str | None = None,
 ) -> None:
     """Export to DOCX via pandoc.
 
@@ -313,7 +355,10 @@ def export_docx(
             "--to", "docx",
             "--metadata", f"title={title}",
             "--metadata", f"author={author}",
+            "--metadata", f"lang={lang}",
         ]
+        if rights:
+            cmd += ["--metadata", f"rights={rights}"]
         if reference_doc and reference_doc.exists():
             cmd += ["--reference-doc", str(reference_doc)]
         _run_pandoc(cmd)
@@ -327,6 +372,8 @@ def export_latex(
     title: str,
     author: str,
     latex_template: Path | None = None,
+    lang: str = "en",
+    rights: str | None = None,
 ) -> None:
     """Export to LaTeX via pandoc.
 
@@ -348,7 +395,10 @@ def export_latex(
             "--standalone",
             "--metadata", f"title={title}",
             "--metadata", f"author={author}",
+            "--metadata", f"lang={lang}",
         ]
+        if rights:
+            cmd += ["--metadata", f"rights={rights}"]
         if latex_template and latex_template.exists():
             cmd += ["--template", str(latex_template)]
         else:
@@ -374,6 +424,8 @@ def export_epub(
     epub_css: Path | None,
     epub_defaults: Path | None = None,
     isbn: str | None = None,
+    lang: str = "en",
+    rights: str | None = None,
 ) -> None:
     """Export to EPUB3 via pandoc.
 
@@ -398,8 +450,10 @@ def export_epub(
             "--toc-depth", "1",
             "--metadata", f"title={title}",
             "--metadata", f"author={author}",
-            "--metadata", "lang=en-US",
+            "--metadata", f"lang={lang}",
         ]
+        if rights:
+            cmd += ["--metadata", f"rights={rights}"]
         if epub_defaults and epub_defaults.exists():
             cmd += ["--defaults", str(epub_defaults)]
         if isbn:
@@ -460,7 +514,30 @@ def main() -> None:
     parser.add_argument(
         "--author",
         default=None,
-        help="Author name (reads from spec.md if omitted)",
+        help="Author name (reads from constitution.md / spec.md if omitted)",
+    )
+    parser.add_argument(
+        "--lang",
+        default=None,
+        metavar="LANG",
+        help="BCP-47 language code for EPUB/DOCX/LaTeX metadata (reads from constitution.md if omitted; default: en)",
+    )
+    parser.add_argument(
+        "--rights",
+        default=None,
+        metavar="TEXT",
+        help="Copyright statement for dc:rights metadata (reads from constitution.md if omitted)",
+    )
+    parser.add_argument(
+        "--author-bio",
+        default=None,
+        metavar="TEXT",
+        help="\"About the Author\" back matter text (reads from constitution.md if omitted)",
+    )
+    parser.add_argument(
+        "--no-author-bio",
+        action="store_true",
+        help="Suppress \"About the Author\" back matter even if set in constitution.md",
     )
     parser.add_argument(
         "--reference-doc",
@@ -551,10 +628,16 @@ def main() -> None:
         )
         sys.exit(1)
 
-    # Read title / author defaults from spec.md
+    # Read title / author / language defaults: constitution.md takes priority over spec.md
+    constitution_meta = read_constitution_meta(draft_dir)
     spec_meta = read_spec_meta(draft_dir)
     title = args.title or spec_meta.get("title") or "Untitled Manuscript"
-    author = args.author or spec_meta.get("author") or "Author Name"
+    author = args.author or constitution_meta.get("author") or spec_meta.get("author") or "Author Name"
+    lang = args.lang or constitution_meta.get("language") or "en"
+    rights: str | None = args.rights or constitution_meta.get("rights") or None
+    author_bio: str | None = None
+    if not getattr(args, "no_author_bio", False):
+        author_bio = getattr(args, "author_bio", None) or constitution_meta.get("bio_long") or None
 
     # Collect chapters
     chapters = collect_chapters(
@@ -571,9 +654,12 @@ def main() -> None:
         sys.exit(1)
 
     # Report
-    print(f"Title:  {title}")
-    print(f"Author: {author}")
-    print(f"Format: {fmt.upper()}")
+    print(f"Title:    {title}")
+    print(f"Author:   {author}")
+    print(f"Language: {lang}")
+    if rights:
+        print(f"Rights:   {rights}")
+    print(f"Format:   {fmt.upper()}")
     print(f"Platform: {effective_platform}")
     print(f"Source: {draft_dir}")
     print(f"\n{len(chapters)} chapter(s):")
@@ -610,15 +696,18 @@ def main() -> None:
                 break
 
     # Build combined markdown and export
-    combined = build_combined_markdown(chapters, title, author)
+    combined = build_combined_markdown(chapters, title, author, author_bio)
+    if author_bio:
+        bio_words = len(author_bio.split())
+        print(f"Bio:        {bio_words} words (\"About the Author\" appended)")
 
     print(f"\nExporting to {output.resolve()} ...")
     if fmt == "docx":
-        export_docx(combined, output, title, author, reference_doc)
+        export_docx(combined, output, title, author, reference_doc, lang, rights)
     elif fmt == "epub":
-        export_epub(combined, output, title, author, cover_image, epub_css, epub_defaults, getattr(args, "isbn", None))
+        export_epub(combined, output, title, author, cover_image, epub_css, epub_defaults, getattr(args, "isbn", None), lang, rights)
     else:
-        export_latex(combined, output, title, author, latex_template)
+        export_latex(combined, output, title, author, latex_template, lang, rights)
 
     tips = {
         "docx": (

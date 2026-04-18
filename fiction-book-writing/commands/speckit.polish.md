@@ -71,9 +71,17 @@ Expected format: a chapter ID (e.g., `A1.101`) or a range (e.g., `A1.101–A1.10
    - For each target file, verify the most recent checklist in `checklists/` has `Verdict: PASS`. If FAIL: abort that file with: `⛔ <CHAPTER_ID>: checklist is FAIL — run speckit.revise before polishing.`
 
 3. **Load context**:
-   - Read `.specify/memory/constitution.md`: style mode, vocabulary register, story-specific Anti-AI phrases (`§VII`), em-dash cap rule
+   - Read `.specify/memory/constitution.md`: style mode, vocabulary register, story-specific Anti-AI phrases (`§VII`), em-dash cap rule, **Language** (`§VII Language`)
    - Read `.specify/memory/craft-rules.md`: universal Anti-AI Filter phrases, active prose profile rules, voice register standards
    - Read `characters/[pov-character-name].md`: vocabulary pool, vocabulary register, verbal tics, speech-under-stress patterns
+
+   **Language-aware scope**: If `Language ≠ en` (or Language is not set to `en`), the following checks are **English-only and must be SKIPPED**:
+   - WR-001 Filter word list (`she noticed`, `he felt`, etc.) — these patterns are English-specific; do not apply to other languages
+   - WR-004 Adverb density (the `-ly` suffix rule is English-specific morphology)
+   - DI-001 Said-bookism (dialogue attribution norms vary strongly by language)
+   - DI-002 Adverb on attribution (same reason)
+   For `Language ≠ en`, the following checks are **language-agnostic and always active**: PR-001–PR-004 (rhythm), WR-002 (word repetition), WR-003 (weak verbs), WR-005 (throat-clearing), VR-001–VR-006, DI-003 (double punctuation).
+   Notify the user at the start of the audit: `ℹ️ Language is set to [LANGUAGE] — English-specific checks (WR-001, WR-004, DI-001, DI-002) are disabled.`
    - Read `glossary.md` if present: Section V (Usage Rules) — capitalization rules, spelling preferences, terms that must not appear, and terms with restricted meaning. These supplement the Anti-AI Filter for this specific chapter's context.
    - Read author voice sample (if `STYLE_MODE: author-sample`): use it as the rhythm reference for sentence length calibration
 
