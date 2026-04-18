@@ -1,0 +1,123 @@
+% latex-kdp-6x9.tex — LaTeX template for KDP Print (6" × 9" trim)
+%
+% KDP Print requirements (trade paperback, standard):
+%   Trim size:  6" × 9"  (152.4mm × 228.6mm)
+%   Gutter:     0.375" for ≤150 pages; 0.5" for 151–300; 0.625" for 301–500; 0.75" for 501+
+%               This template defaults to 0.5" — adjust \innermargin for your page count.
+%   Outer/top/bottom: 0.625" standard
+%   Fonts:      must be embedded (pdflatex embeds by default with standard packages)
+%   Bleed:      0.125" if any content extends to the edge (not typical for text-only)
+%   PDF version: PDF 1.3–1.7 accepted; PDF/X not required (unlike IngramSpark)
+%   Color space: RGB or greyscale; CMYK not required for text-only interiors
+%
+% Running headers: Author Name (verso) / Book Title (recto), page number outside
+% Chapter openings: chapter title centred, 1/3 down the page
+% Body text: 11pt (readable on 6×9); 1.5 line spacing (industry standard for trade)
+%
+% Compile with:
+%   pdflatex manuscript.tex   (twice for headers/ToC)
+%   xelatex manuscript.tex    (for OpenType fonts or non-Latin characters)
+%
+% Usage with export.py:
+%   python export.py latex --platform kdp-print-6x9 --output manuscript.tex
+%   → then compile: pdflatex manuscript.tex
+
+\documentclass[12pt, twoside, openright]{book}
+
+% ── Page geometry (6" × 9", 0.5" gutter) ──────────────────────────────────
+\usepackage[
+  paperwidth=6in,
+  paperheight=9in,
+  inner=0.875in,      % spine/gutter side (0.625 outer + 0.25 binding allowance)
+  outer=0.625in,
+  top=0.875in,
+  bottom=0.875in,
+  includehead,
+  includefoot
+]{geometry}
+
+% ── Fonts ──────────────────────────────────────────────────────────────────
+% pdflatex: uses Latin Modern by default (embedded, KDP-safe)
+% xelatex: uncomment fontspec block below to use system fonts
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+
+% xelatex font block — uncomment and replace font names to use system fonts:
+% \usepackage{fontspec}
+% \setmainfont{Garamond Premier Pro}[Ligatures=TeX]
+
+% ── Paragraph style ────────────────────────────────────────────────────────
+\usepackage{setspace}
+\setstretch{1.3}         % slightly tighter than double-space; standard for trade paperback
+\setlength{\parindent}{1.5em}
+\setlength{\parskip}{0pt}
+
+% ── Running headers ────────────────────────────────────────────────────────
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{}
+% Verso (even pages): page number left | Author Name centred
+\fancyhead[LE]{\small\thepage\quad\textit{$author$}}
+% Recto (odd pages): Title centred | page number right
+\fancyhead[RO]{\textit{$title$}\quad\small\thepage}
+\renewcommand{\headrulewidth}{0pt}   % no rule under header (clean fiction style)
+
+% Chapter opening pages use plain style (no running header)
+\fancypagestyle{plain}{%
+  \fancyhf{}
+  \fancyfoot[C]{\small\thepage}
+  \renewcommand{\headrulewidth}{0pt}
+}
+
+% ── Chapter formatting ─────────────────────────────────────────────────────
+% Chapter title 1/3 down the page, centred, no "Chapter N" prefix
+\usepackage{titlesec}
+\titleformat{\chapter}[display]
+  {\normalfont\large\centering}
+  {}                    % no "Chapter N" label
+  {0pt}
+  {\vspace{2.5in}}      % pushes title ~1/3 down a 9" page
+\titlespacing*{\chapter}{0pt}{0pt}{2\baselineskip}
+
+% ── Scene break ────────────────────────────────────────────────────────────
+% \scenebreak produces a centred * * * between scenes
+\newcommand{\scenebreak}{%
+  \vspace{\baselineskip}
+  \begin{center}*\quad*\quad*\end{center}
+  \vspace{\baselineskip}
+}
+
+% ── Drop cap (optional) ────────────────────────────────────────────────────
+% \usepackage{lettrine}
+% Example usage: \lettrine{T}{he morning light}...
+
+% ── Hyperlinks (PDF bookmarks — not visible in print) ─────────────────────
+\usepackage[hidelinks]{hyperref}
+
+% ── Widow / orphan control ────────────────────────────────────────────────
+\widowpenalty=10000
+\clubpenalty=10000
+
+% ── Pandoc compatibility ──────────────────────────────────────────────────
+% Variables below are filled by pandoc from --metadata flags.
+% If compiling manually, replace $title$, $author$, $date$ with literal strings.
+
+\title{$title$}
+\author{$author$}
+\date{$if(date)$$date$$endif$}
+
+\begin{document}
+
+\frontmatter
+\maketitle
+
+$if(toc)$
+\tableofcontents
+$endif$
+
+\mainmatter
+
+$body$
+
+\end{document}

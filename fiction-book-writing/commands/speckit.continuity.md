@@ -40,8 +40,8 @@ Identify story bible violations, continuity errors, and untracked narrative thre
 
 2. **Load documents**:
    - Required: `spec.md`, `plan.md`, `tasks.md`, `.specify/memory/constitution.md`
-   - Required: draft files in `FEATURE_DIR/draft/` — identified via their YAML frontmatter header (`chapter_id`, `beat_id`, `pov_character`, `status`, `constitution_version`). If no draft files exist: read `OUTPUT_MODE` from `constitution.md ## X. Audiobook Production`. If `OUTPUT_MODE` is `audiobook`, skip all prose analysis dimensions (A–F below) and proceed directly to the **Audiobook Draft Inventory** sub-step in Step 3 — report audiodraft coverage and sync status only. If `OUTPUT_MODE` is `book` or `both`, abort with: `⛔ No draft files found in FEATURE_DIR/draft/ — run speckit.implement to produce at least one chapter before running continuity.`
-   - Also load: `characters.md` (index) and `characters/` profiles, `timeline.md`, `world-building.md`, `locations.md` (if present), `glossary.md` (if present), `subplots.md` (if present)
+   - Required: draft files in `FEATURE_DIR/draft/` — identified via their YAML frontmatter header (`chapter_id`, `beat_id`, `pov_character`, `status`, `constitution_version`). Abort with a clear error if no draft files exist.
+   - Also load: `characters.md` (index) and `characters/` profiles, `timeline.md`, `world-building.md`, `locations.md` (if present), `glossary.md` (if present), `subplots.md` (if present), `relationships.md` (if present)
 
 3. **Draft file inventory**:
    - Scan all `draft/*.md` files (or the scoped range from `$ARGUMENTS`)
@@ -92,7 +92,14 @@ Identify story bible violations, continuity errors, and untracked narrative thre
    - For each `LOC-NNN` location in `locations.md`: do the drafted scenes that use it apply the primary sensory anchor at least once? If a location appears in 2+ scenes and the primary anchor is absent from all of them → WARNING.
    - Do location State Log entries in `locations.md` match the prose? If a State Log row says a location changed state at beat X, do all drafted scenes set there after beat X reflect that change? Mismatch → CRITICAL.
 
-   **D. Open Narrative Threads**
+   **D. Relationship State Continuity** *(skip if `relationships.md` is absent)*
+   - For each `REL-NNN` block in `relationships.md`: compare the Phase Tracker rows against the drafted chapters that fall in each act. Does the prose reflect the power balance, trust level, and character beliefs declared for that phase? Contradiction → CRITICAL.
+   - Does any drafted scene portray a character knowing something about their relationship that, per the Phase Tracker, they shouldn't know yet? (information leak across relationship phases) → CRITICAL.
+   - Does any drafted scene between the two characters of a `REL-NNN` pair contradict the communication pattern declared in the Relationship Brief (register, deflection strategy, what they never say)? → WARNING.
+   - If the relationship has a resolution beat mapped to a chapter ID that has been drafted: does the prose honor the declared resolution type (resolved / fractured / transformed / ongoing)? Mismatch → CRITICAL.
+   - Update the `Scene evidence` column in the Phase Tracker table of `relationships.md` for any phase whose chapter IDs have now been drafted. This is the only write this dimension performs on `relationships.md`.
+
+   **E. Open Narrative Threads**
    - Are there Chekhov items introduced in drafted chapters that are not tracked in `plan.md` Open Threads or `spec.md` Key Entities?
    - Does any open thread in `plan.md` already have its introduction drafted but lack a planned pay-off scene in `tasks.md`?
    - Does any open thread lack a planned resolution before the final act?

@@ -62,11 +62,12 @@ Perform a **non-blocking inventory scan** — read each file if present, note it
 | `FEATURE_DIR/characters/` | Profile file count vs. character count in characters.md? |
 | `FEATURE_DIR/outlines/` | Exists? Count by status: DRAFT / APPROVED / SKIP? |
 | `FEATURE_DIR/draft/*.md` | Count by status: draft / revised / checked / polished? Oldest unrevised `drafted` date? Any `constitution_version` mismatches vs. current? |
-| `FEATURE_DIR/audiodraft/` | Exists? Count of `.ssml` and `_el.xml` files? Any with `version` lower than corresponding prose draft (`STALE AUDIODRAFT`)? Any drafted chapters with no matching audiodraft (`MISSING AUDIODRAFT`)? Only evaluated when `OUTPUT_MODE` is `audiobook` or `both` in `constitution.md`. Check `constitution.md ## X` for Speaker Configuration (any unassigned character voices?), Pronunciation Lexicon (entries present? `lexicon.pls` exported?). |
+| `FEATURE_DIR/audiodraft/` | Exists? Count of `.ssml` and `_el.xml` files? Any with `version` lower than corresponding prose draft (`STALE AUDIODRAFT`)? Any drafted chapters with no matching audiodraft (`MISSING AUDIODRAFT`)? Only evaluated when `OUTPUT_MODE` is `audiobook` or `both` in `constitution.md`. |
 | `FEATURE_DIR/checklists/` | Exists? Count of failing gates (incomplete items)? |
 | `FEATURE_DIR/feedback/` | Exists? Files with `Status: unprocessed` or `Status: triaged`? |
 | `FEATURE_DIR/pov-structure.md` | Exists? Any audit flags? |
 | `FEATURE_DIR/subplots.md` | Exists? Any `SP-NNN` entries with no draft coverage? |
+| `FEATURE_DIR/relationships.md` | Exists? Any `REL-NNN` entries with missing arc beats or no draft coverage? |
 | `FEATURE_DIR/series-bible.md` or `series/series-bible.md` | Exists? Current book registered? Open `SX-NNN` contradictions? |
 | `FEATURE_DIR/synopsis.md` | Exists? |
 | `FEATURE_DIR/pacing-arc.md` | Exists? (output of `speckit.pacing`) |
@@ -176,9 +177,7 @@ Things that are not on the critical path but would strengthen the manuscript:
 - `speckit.versions` never used (no tagged versions) → suggest tagging the first draft send
 - `series-bible.md` not yet created for a non-standalone spec → `speckit.series init`
 - All chapters polished but `pacing-arc.md` absent → `speckit.pacing` (tension arc audit before submission)
-- `OUTPUT_MODE` is `audiobook` or `both` AND stale or missing audiodrafts exist → `speckit.audiobook check` then `speckit.audiobook draft all` to regenerate, then `speckit.export audio` to review manifest
-- `OUTPUT_MODE` is `audiobook` or `both` AND `lexicon.pls` has not been exported → `speckit.audiobook lexicon export` before synthesis
-- `OUTPUT_MODE` is `audiobook` or `both` AND Speaker Mode is `multi` but only the narrator voice is configured → `speckit.audiobook voice add` to assign character voices
+- `OUTPUT_MODE` is `audiobook` or `both` AND stale or missing audiodrafts exist → `speckit.export audio` to review manifest and identify gaps before synthesis
 - All chapters polished but no sensitivity review on record (no session note or annotation in `constitution.md`) → `speckit.sensitivity` (recommend before querying, especially for work featuring communities outside author's experience)
 - `subplots.md` exists with SP entries marked unresolved and draft is past Act II → `speckit.subplot resolve` to close dramatic questions before synopsis/query
 
@@ -210,7 +209,7 @@ Use these per-phase command sets:
 `speckit.polish`, `speckit.pacing`, `speckit.sensitivity`, `speckit.versions list`, `speckit.glossary check`, `speckit.continuity`
 
 **Phase 6 (Submission prep):**
-`speckit.synopsis`, `speckit.export`, `speckit.query`, `speckit.pacing`, `speckit.sensitivity`, `speckit.feedback`, `speckit.series update`, `speckit.versions tag`, `speckit.audiobook status`, `speckit.audiobook draft all`
+`speckit.synopsis`, `speckit.export`, `speckit.query`, `speckit.pacing`, `speckit.sensitivity`, `speckit.feedback`, `speckit.series update`, `speckit.versions tag`
 
 ---
 

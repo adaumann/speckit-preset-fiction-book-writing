@@ -38,7 +38,7 @@ Run after `speckit.tasks` has produced a complete `tasks.md`. Does not require a
 
 2. **Load documents**:
    - Required: `spec.md`, `plan.md`, `tasks.md`, `.specify/memory/constitution.md`
-   - Also load: `characters.md` (index) and `characters/` profiles, `timeline.md`, `world-building.md`, `subplots.md` (if present)
+   - Also load: `characters.md` (index) and `characters/` profiles, `timeline.md`, `world-building.md`, `subplots.md` (if present), `relationships.md` (if present)
    - Abort with a clear error if any required document is missing
    - Do **not** scan `draft/` — this command is pre-draft only. If draft files are present, note their count in the report but do not analyze them.
 
@@ -68,7 +68,13 @@ Run after `speckit.tasks` has produced a complete `tasks.md`. Does not require a
    - Does the Convergence Map have any chapter flagged `high` load (3+ arcs) without a scene outline entry that explicitly addresses both arcs → WARNING.
    - Does every `SP-NNN` subplot reference a thematic link from `themes.md` (if `themes.md` exists)? Missing link → WARNING.
 
-   **E. Series Constraints** *(skip entirely if `spec.md` Series Position is `standalone`)*
+   **E. Relationship Arc Integrity** *(skip if `relationships.md` is absent)*
+   - For each `REL-NNN` block in `relationships.md`: does the relationship have all five required arc beats (establishing, first rupture, midpoint reversal, crisis, resolution) mapped to chapter IDs in `plan.md`? Missing beat → CRITICAL.
+   - Does any relationship's Phase Tracker show two or more consecutive acts with no scene evidence → WARNING.
+   - Does the resolution type for each `REL-NNN` match the closing state declared in the relationship's Phase Tracker? Contradiction → WARNING.
+   - Does every `REL-NNN` relationship reference a thematic link from `themes.md` (if `themes.md` exists)? Missing link → WARNING.
+
+   **F. Series Constraints** *(skip entirely if `spec.md` Series Position is `standalone`)*
    - Does `series/series-bible.md` exist? If not: CRITICAL — series bible is required before planning a non-standalone book.
    - Does the `spec.md` Series Position field match the book's row in the series bible `## Books in Series` table?
    - For each character, does their opening state in this book's `characters/[name].md` `## Series Arc State` table match the **closing state** from the preceding book's row in that same table (or the series bible Character State Registry)? Flag any mismatch as CRITICAL.
@@ -76,6 +82,8 @@ Run after `speckit.tasks` has produced a complete `tasks.md`. Does not require a
    - Are there any `OPEN` entries in `series/series-bible.md ## Known Contradictions` that involve this book? Flag as CRITICAL.
 
 4. **Output structured report**:
+
+   Summary line update: add `Relationships checked: N` alongside `Subplots checked: N`.
 
    ```
    ## Pre-Draft Analysis Report

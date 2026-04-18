@@ -66,20 +66,13 @@ Expected format: a chapter ID (e.g., `A1.101`) or a range (e.g., `A1.101–A1.10
 1. **Setup**: Run `{SCRIPT}` from repo root and parse `FEATURE_DIR`.
 
 2. **Identify the target**:
-   - Read `OUTPUT_MODE` from `constitution.md ## X. Audiobook Production`. If `OUTPUT_MODE` is `audiobook` and no `draft/` directory exists, stop:
-     ```
-     ⛔ speckit.polish operates on prose draft files (draft/).
-     In audiobook-only mode no prose drafts exist — SSML/ElevenLabs audiodraft
-     files cannot be line-edited with this command.
-     To manage audiodraft quality run: speckit.audiobook check
-     To regenerate stale audiodrafts run: speckit.audiobook draft all
-     ```
    - Parse `$ARGUMENTS` for chapter ID or range. Resolve to `draft/*.md` file(s).
    - If no argument given: find the most recently modified draft file whose matching checklist has `Verdict: PASS`.
    - For each target file, verify the most recent checklist in `checklists/` has `Verdict: PASS`. If FAIL: abort that file with: `⛔ <CHAPTER_ID>: checklist is FAIL — run speckit.revise before polishing.`
 
 3. **Load context**:
-   - Read `.specify/memory/constitution.md`: style mode, vocabulary register, Anti-AI Filter, voice markers, em-dash cap rule
+   - Read `.specify/memory/constitution.md`: style mode, vocabulary register, story-specific Anti-AI phrases (`§VII`), em-dash cap rule
+   - Read `.specify/memory/craft-rules.md`: universal Anti-AI Filter phrases, active prose profile rules, voice register standards
    - Read `characters/[pov-character-name].md`: vocabulary pool, vocabulary register, verbal tics, speech-under-stress patterns
    - Read `glossary.md` if present: Section V (Usage Rules) — capitalization rules, spelling preferences, terms that must not appear, and terms with restricted meaning. These supplement the Anti-AI Filter for this specific chapter's context.
    - Read author voice sample (if `STYLE_MODE: author-sample`): use it as the rhythm reference for sentence length calibration

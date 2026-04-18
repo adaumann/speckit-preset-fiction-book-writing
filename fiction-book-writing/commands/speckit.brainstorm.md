@@ -1,5 +1,5 @@
 ---
-description: Interactive brainstorming session for any story topic — spec, plan, characters, themes, world-building, locations, series, glossary, pov, research, or timeline. Loads existing topic files and prior brainstorm notes as context, asks probing questions in a loop, and produces a brainstorm notes file, a patch to the topic file, or nothing if cancelled. Supports challenge mode (stress-tests existing file decisions) and quick/standard/deep session lengths.
+description: Interactive brainstorming session for any story topic — spec, plan, characters, relationships, themes, world-building, locations, series, glossary, pov, research, or timeline. Loads existing topic files and prior brainstorm notes as context, asks probing questions in a loop, and produces a brainstorm notes file, a patch to the topic file, or nothing if cancelled. Supports challenge mode (stress-tests existing file decisions) and quick/standard/deep session lengths.
 handoffs:
   - label: Create Story Brief
     agent: speckit.specify

@@ -136,10 +136,78 @@ def collect_chapters(
 
 
 # ---------------------------------------------------------------------------
+# Template directory resolution
+# ---------------------------------------------------------------------------
+
+def find_templates_dir() -> Path | None:
+    """Locate the scripts/templates/ directory relative to this script."""
+    here = Path(__file__).resolve().parent
+    candidate = here.parent / "templates"
+    if candidate.is_dir():
+        return candidate
+    return None
+
+
+# Platform → template file mapping.
+# Keys are (format, platform) tuples.
+# Values are dicts with optional keys: epub_defaults, epub_css, latex_template, reference_doc.
+_PLATFORM_TEMPLATES: dict[tuple[str, str], dict[str, str]] = {
+    ("epub", "kdp"):              {"epub_defaults": "epub-kdp.yml",          "epub_css": "epub.css"},
+    ("epub", "ingramspark"):      {"epub_defaults": "epub-ingramspark.yml",  "epub_css": "epub.css"},
+    ("epub", "d2d"):              {"epub_defaults": "epub-d2d.yml",          "epub_css": "epub-d2d.css"},
+    ("latex", "kdp-print-6x9"):   {"latex_template": "latex-kdp-6x9.tex"},
+    ("latex", "ingramspark-6x9"): {"latex_template": "latex-ingramspark-6x9.tex"},
+    # docx platforms use a reference-doc .docx file placed in the templates dir.
+    # The files are not included in the preset (binary); the command tells the
+    # user where to place them.
+    ("docx", "shunn"):            {"reference_doc": "docx-shunn.docx"},
+    ("docx", "smashwords"):       {"reference_doc": "docx-smashwords.docx"},
+}
+
+_PLATFORM_DEFAULTS: dict[str, str] = {
+    "epub": "kdp",
+    "latex": "kdp-print-6x9",
+    "docx": "shunn",
+}
+
+
+def resolve_platform_templates(
+    fmt: str,
+    platform: str | None,
+    templates_dir: Path | None,
+) -> dict[str, Path | None]:
+    """Return resolved Paths for template assets given format + platform.
+
+    Returns a dict with keys: epub_defaults, epub_css, latex_template, reference_doc.
+    Any key not applicable to the current format is None.
+    """
+    result: dict[str, Path | None] = {
+        "epub_defaults": None,
+        "epub_css": None,
+        "latex_template": None,
+        "reference_doc": None,
+    }
+    if platform is None:
+        platform = _PLATFORM_DEFAULTS.get(fmt)
+    if platform is None or templates_dir is None:
+        return result
+    mapping = _PLATFORM_TEMPLATES.get((fmt, platform))
+    if mapping is None:
+        return result
+    for key, filename in mapping.items():
+        candidate = templates_dir / filename
+        if candidate.exists():
+            result[key] = candidate
+        else:
+            print(f"Note: platform template '{filename}' not found in {templates_dir} — skipping.")
+    return result
+
+
+
+# ---------------------------------------------------------------------------
 # Auto-detection helpers
 # ---------------------------------------------------------------------------
 
-def find_draft_dir(start: Path) -> Path | None:
     """Walk up from *start* looking for a draft/ subdirectory."""
     current = start
     for _ in range(8):
@@ -258,8 +326,13 @@ def export_latex(
     output_path: Path,
     title: str,
     author: str,
+    latex_template: Path | None = None,
 ) -> None:
-    """Export to LaTeX via pandoc (book class, 12pt, double-spaced, 1-inch margins)."""
+    """Export to LaTeX via pandoc.
+
+    Uses a platform-specific LaTeX template when provided (e.g. KDP 6×9 trim).
+    Falls back to pandoc built-in book class with 1-inch margins.
+    """
     with tempfile.NamedTemporaryFile(
         mode="w", suffix=".md", delete=False, encoding="utf-8"
     ) as tmp:
@@ -275,12 +348,18 @@ def export_latex(
             "--standalone",
             "--metadata", f"title={title}",
             "--metadata", f"author={author}",
-            "-V", "documentclass=book",
-            "-V", "geometry=margin=1in",
-            "-V", "fontsize=12pt",
-            "-V", "linestretch=2",
-            "-V", "indent=true",
         ]
+        if latex_template and latex_template.exists():
+            cmd += ["--template", str(latex_template)]
+        else:
+            # Built-in fallback: generic book layout
+            cmd += [
+                "-V", "documentclass=book",
+                "-V", "geometry=margin=1in",
+                "-V", "fontsize=12pt",
+                "-V", "linestretch=2",
+                "-V", "indent=true",
+            ]
         _run_pandoc(cmd)
     finally:
         os.unlink(tmp_path)
@@ -293,6 +372,8 @@ def export_epub(
     author: str,
     cover_image: Path | None,
     epub_css: Path | None,
+    epub_defaults: Path | None = None,
+    isbn: str | None = None,
 ) -> None:
     """Export to EPUB3 via pandoc.
 
@@ -319,6 +400,10 @@ def export_epub(
             "--metadata", f"author={author}",
             "--metadata", "lang=en-US",
         ]
+        if epub_defaults and epub_defaults.exists():
+            cmd += ["--defaults", str(epub_defaults)]
+        if isbn:
+            cmd += ["--metadata", f"isbn={isbn}"]
         if cover_image and cover_image.exists():
             cmd += ["--epub-cover-image", str(cover_image)]
         if epub_css and epub_css.exists():
@@ -342,6 +427,16 @@ def main() -> None:
         "format",
         choices=["docx", "latex", "tex", "epub"],
         help="Output format",
+    )
+    parser.add_argument(
+        "--platform",
+        default=None,
+        metavar="PLATFORM",
+        help=(
+            "Publishing platform: epub → kdp (default), ingramspark, d2d; "
+            "latex → kdp-print-6x9 (default), ingramspark-6x9; "
+            "docx → shunn (default), smashwords"
+        ),
     )
     parser.add_argument(
         "--draft-dir",
@@ -382,11 +477,31 @@ def main() -> None:
         help="Cover image for EPUB output (jpg or png)",
     )
     parser.add_argument(
+        "--isbn",
+        default=None,
+        metavar="ISBN",
+        help="ISBN for EPUB metadata (required for IngramSpark)",
+    )
+    parser.add_argument(
         "--epub-css",
         type=Path,
         default=None,
         metavar="FILE",
-        help="Custom CSS stylesheet for EPUB output",
+        help="Custom CSS stylesheet for EPUB output (overrides platform default)",
+    )
+    parser.add_argument(
+        "--epub-defaults",
+        type=Path,
+        default=None,
+        metavar="FILE",
+        help="Custom pandoc defaults YAML for EPUB (overrides platform default)",
+    )
+    parser.add_argument(
+        "--latex-template",
+        type=Path,
+        default=None,
+        metavar="FILE",
+        help="Custom LaTeX template file (overrides platform default)",
     )
     parser.add_argument(
         "--polished-only",
@@ -403,9 +518,17 @@ def main() -> None:
 
     fmt = "latex" if args.format == "tex" else args.format
 
+    # Resolve platform templates
+    templates_dir = find_templates_dir()
+    platform_assets = resolve_platform_templates(fmt, args.platform, templates_dir)
+    effective_platform = args.platform or _PLATFORM_DEFAULTS.get(fmt, "default")
+
     # Auto-detect cover image and CSS for EPUB if not specified
     cover_image: Path | None = args.cover_image
-    epub_css: Path | None = args.epub_css
+    epub_css: Path | None = args.epub_css or platform_assets["epub_css"]
+    epub_defaults: Path | None = getattr(args, "epub_defaults", None) or platform_assets["epub_defaults"]
+    latex_template: Path | None = getattr(args, "latex_template", None) or platform_assets["latex_template"]
+    reference_doc: Path | None = args.reference_doc or platform_assets["reference_doc"]
 
     # Verify pandoc is available
     if not check_pandoc():
@@ -451,6 +574,7 @@ def main() -> None:
     print(f"Title:  {title}")
     print(f"Author: {author}")
     print(f"Format: {fmt.upper()}")
+    print(f"Platform: {effective_platform}")
     print(f"Source: {draft_dir}")
     print(f"\n{len(chapters)} chapter(s):")
     for meta, body in chapters:
@@ -490,29 +614,38 @@ def main() -> None:
 
     print(f"\nExporting to {output.resolve()} ...")
     if fmt == "docx":
-        export_docx(combined, output, title, author, args.reference_doc)
+        export_docx(combined, output, title, author, reference_doc)
     elif fmt == "epub":
-        export_epub(combined, output, title, author, cover_image, epub_css)
+        export_epub(combined, output, title, author, cover_image, epub_css, epub_defaults, getattr(args, "isbn", None))
     else:
-        export_latex(combined, output, title, author)
+        export_latex(combined, output, title, author, latex_template)
 
     tips = {
         "docx": (
             f"Done.  Output: {output.resolve()}\n"
-            "Tip: pass --reference-doc manuscript-template.docx to apply\n"
-            "     Shunn manuscript formatting (TNR 12pt, double-spaced)."
+            f"Platform: {effective_platform}\n"
+            "Tip: pass --platform shunn for agent/publisher submission (TNR 12pt, double-spaced)\n"
+            "     or --platform smashwords for Smashwords DOCX (minimal styles)."
         ),
         "epub": (
             f"Done.  Output: {output.resolve()}\n"
+            f"Platform: {effective_platform}\n"
             "Tips:\n"
-            "  Validate:    https://www.epubcheck.org/ (or: epubcheck manuscript.epub)\n"
-            "  KDP upload:  accepted directly as-is\n"
-            "  Cover image: place cover.jpg/cover.png next to draft/ for auto-detection\n"
-            "  Styling:     place epub.css next to draft/ for custom font/spacing rules"
+            "  Validate:     https://www.epubcheck.org/ (or: epubcheck manuscript.epub)\n"
+            "  KDP:          --platform kdp  (default; cover required for KDP)\n"
+            "  IngramSpark:  --platform ingramspark  (add --isbn 978-... for ISBN metadata)\n"
+            "  D2D:          --platform d2d  (no cover embed; upload cover separately on D2D)\n"
+            "  Cover image:  place cover.jpg/cover.png next to draft/ for auto-detection"
         ),
         "latex": (
             f"Done.  Output: {output.resolve()}\n"
-            "Tip: compile with pdflatex or xelatex, or open in Overleaf."
+            f"Platform: {effective_platform}\n"
+            "Tips:\n"
+            "  KDP Print 6×9:         --platform kdp-print-6x9 (default)\n"
+            "  IngramSpark 6×9:       --platform ingramspark-6x9\n"
+            "  Compile:               pdflatex manuscript.tex  (twice for headers)\n"
+            "  Unicode/OpenType:      xelatex manuscript.tex\n"
+            "  IngramSpark PDF/X-1a:  convert output PDF via Ghostscript or Acrobat Preflight"
         ),
     }
     print(tips[fmt])

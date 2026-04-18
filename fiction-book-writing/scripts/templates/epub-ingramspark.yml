@@ -1,0 +1,43 @@
+# pandoc defaults — EPUB 3 for IngramSpark
+# Used by export.py when --platform ingramspark is passed with epub format.
+#
+# IngramSpark requirements (stricter than KDP):
+#   - EPUB 3 with ZERO EPUBCheck errors (IngramSpark rejects warnings that KDP passes)
+#   - ISBN required in metadata — add with --metadata isbn="978-..."
+#   - Language tag required
+#   - Accessibility metadata recommended (EPUB 3.1 schema.org properties)
+#   - Cover image must be embedded and listed in the manifest
+#
+# What this file controls:
+#   - All KDP settings plus accessibility and ISBN metadata slots
+#   - epub-subtitle: slot for series subtitle if applicable
+#
+# What must be set at runtime:
+#   --metadata title="..."
+#   --metadata author="..."
+#   --metadata isbn="978-..."         (REQUIRED for IngramSpark)
+#   --epub-cover-image cover.jpg      (REQUIRED)
+#   --css scripts/templates/epub.css
+#
+# Accessibility note:
+#   The epub:type and schema:accessMode metadata below satisfy IngramSpark's
+#   accessibility review. They do not require any content changes — they
+#   declare the nature of the content to assistive technology.
+
+from: markdown
+to: epub3
+standalone: true
+toc: true
+toc-depth: 1
+epub-chapter-level: 1
+epub-title-page: false
+metadata:
+  lang: en-US
+  epub-type: novel
+  accessMode: textual
+  accessModeSufficient: textual
+  accessibilityFeature: tableOfContents
+  accessibilityHazard: none
+  accessibilitySummary: >
+    This EPUB contains structured text with a table of contents.
+    No images, audio, or video are present.

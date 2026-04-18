@@ -1,0 +1,121 @@
+% latex-ingramspark-6x9.tex — LaTeX template for IngramSpark Print (6" × 9" trim)
+%
+% IngramSpark print requirements (stricter than KDP):
+%   Trim size:  6" × 9"  (152.4mm × 228.6mm) — same as KDP
+%   Gutter:     Same as KDP (see below)
+%   PDF standard: PDF/X-1a required for IngramSpark colour interiors.
+%                 For black-and-white text-only interiors, standard PDF 1.3+ is accepted.
+%                 This template targets black-and-white text; see the PDF/X note at the bottom.
+%   Fonts:      Must be fully embedded (checked at upload)
+%   Bleed:      0.125" if content extends to page edge
+%   Color space: Greyscale for B&W interiors (CMYK not required for text-only)
+%
+% Difference from latex-kdp-6x9.tex:
+%   - Slightly tighter outer margin (IngramSpark distributors include bookstore-quality
+%     physical books; spine tolerance is tighter)
+%   - Explicit font embedding reminder
+%   - PDF/X compatibility note
+%
+% Compile with:
+%   pdflatex manuscript.tex    (standard; produces PDF 1.5)
+%   xelatex manuscript.tex     (recommended for embedded fonts + Unicode)
+%
+% PDF/X-1a note:
+%   pdflatex and xelatex do not natively output PDF/X-1a.
+%   Options to convert:
+%     1. Ghostscript: gs -dPDFX -sDEVICE=pdfwrite -o out.pdf in.pdf
+%     2. Adobe Acrobat Preflight (PDF/X-1a:2001 profile)
+%     3. Overleaf: compile with the "PDF/X-1a" output profile option
+%   For a text-only B&W interior, IngramSpark's standard PDF workflow
+%   (non-PDF/X) is accepted as a fallback — contact IngramSpark support to confirm.
+
+\documentclass[12pt, twoside, openright]{book}
+
+% ── Page geometry (6" × 9", 0.5" gutter) ──────────────────────────────────
+\usepackage[
+  paperwidth=6in,
+  paperheight=9in,
+  inner=0.875in,
+  outer=0.625in,
+  top=0.875in,
+  bottom=0.875in,
+  includehead,
+  includefoot
+]{geometry}
+
+% ── Fonts (must be embedded for IngramSpark) ───────────────────────────────
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}   % Latin Modern: fully embeddable, IngramSpark-safe
+
+% xelatex font block — uncomment to use OpenType fonts (they embed automatically):
+% \usepackage{fontspec}
+% \setmainfont{Garamond Premier Pro}[Ligatures=TeX]
+
+% ── Greyscale color space (B&W interiors) ─────────────────────────────────
+% Uncomment if you need to force greyscale for IngramSpark B&W interior:
+% \usepackage{xcolor}
+% \selectcolormodel{gray}
+
+% ── Paragraph style ────────────────────────────────────────────────────────
+\usepackage{setspace}
+\setstretch{1.3}
+\setlength{\parindent}{1.5em}
+\setlength{\parskip}{0pt}
+
+% ── Running headers ────────────────────────────────────────────────────────
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[LE]{\small\thepage\quad\textit{$author$}}
+\fancyhead[RO]{\textit{$title$}\quad\small\thepage}
+\renewcommand{\headrulewidth}{0pt}
+
+\fancypagestyle{plain}{%
+  \fancyhf{}
+  \fancyfoot[C]{\small\thepage}
+  \renewcommand{\headrulewidth}{0pt}
+}
+
+% ── Chapter formatting ─────────────────────────────────────────────────────
+\usepackage{titlesec}
+\titleformat{\chapter}[display]
+  {\normalfont\large\centering}
+  {}
+  {0pt}
+  {\vspace{2.5in}}
+\titlespacing*{\chapter}{0pt}{0pt}{2\baselineskip}
+
+% ── Scene break ────────────────────────────────────────────────────────────
+\newcommand{\scenebreak}{%
+  \vspace{\baselineskip}
+  \begin{center}*\quad*\quad*\end{center}
+  \vspace{\baselineskip}
+}
+
+% ── Widow / orphan control ────────────────────────────────────────────────
+\widowpenalty=10000
+\clubpenalty=10000
+
+% ── Hyperlinks ────────────────────────────────────────────────────────────
+\usepackage[hidelinks]{hyperref}
+
+% ── Pandoc variables ──────────────────────────────────────────────────────
+\title{$title$}
+\author{$author$}
+\date{$if(date)$$date$$endif$}
+
+\begin{document}
+
+\frontmatter
+\maketitle
+
+$if(toc)$
+\tableofcontents
+$endif$
+
+\mainmatter
+
+$body$
+
+\end{document}

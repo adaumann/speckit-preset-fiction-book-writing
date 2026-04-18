@@ -45,7 +45,7 @@ You **MUST** consider the user input before proceeding (if not empty).
      > (d) **atmospheric** — maximum sensory density, slow burn, environment as plot engine (gothic, horror, weird fiction)
      > (e) **dark-realist** — clipped declarative prose, cold interiority, consequence-forward (noir, social realism, gritty literary)"
 
-     Set `[PROSE_PROFILE]` to the chosen value. The profile tunes how the universal craft principles (Sections II–VII) are weighted — it does not relax or override any universal rule.
+     Set `[PROSE_PROFILE]` to the chosen value. The profile tunes how the universal craft principles (Sections II–VI in craft-rules.md) are weighted — it does not relax or override any universal rule.
 
      Ask if there are any additional prohibited phrases to add to the Anti-AI Filter for this specific story/genre (beyond the profile's built-in additions).
 
@@ -126,7 +126,15 @@ You **MUST** consider the user input before proceeding (if not empty).
    - If Anti-AI Filter phrases changed: note in the impact report (scenes need re-scan)
    - If POV strategy changed: update `spec-template.md` character arc section header
 
-7. **Validate the final constitution**:
+7. **Generate `.specify/memory/craft-rules.md`**:
+   - Copy `templates/craft-rules-template.md`
+   - Set `[PROSE_PROFILE]` to the chosen prose profile value
+   - If `STYLE_MODE` is `humanized-ai`: keep only the chosen profile's definition block under `## Profile Specifications`; remove the other four profile blocks entirely
+   - If `STYLE_MODE` is `author-sample`: remove the entire `## Profile Specifications` section (profiles are irrelevant; craft rules II–VI and the Universal Anti-AI Filter still apply)
+   - Write the result to `.specify/memory/craft-rules.md`
+   - Emit: `✓ craft-rules.md written — loaded automatically by speckit.implement, speckit.checklist, speckit.polish, speckit.revise.`
+
+8. **Validate the final constitution**:
    - No unresolved `[NEEDS CLARIFICATION]` tokens remain
    - `[RATIFICATION_DATE]` and `[LAST_AMENDED_DATE]` are ISO format (`YYYY-MM-DD`)
    - Style mode is explicitly set

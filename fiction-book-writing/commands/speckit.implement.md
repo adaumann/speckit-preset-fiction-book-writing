@@ -70,7 +70,8 @@ You **MUST** consider the user input before proceeding (if not empty).
 3. **Load context**:
    - Read `tasks.md` — identify the first group of unchecked tasks (respect `[P]` markers for parallel drafting)
    - Read `plan.md` for the full beat sheet and scene outlines (the `## Plot Beat Sheet` and `## Scene Outline` sections are the primary drafting brief)
-   - Read `.specify/memory/constitution.md` for story bible (style mode, Anti-AI Filter, scene rules)
+   - Read `.specify/memory/constitution.md` for story bible (style mode, stylistic parameters, story-specific Anti-AI phrases, series context, audiobook config)
+   - Read `.specify/memory/craft-rules.md` for craft rules (Sections II–VI: Dirt Rule, Physical Feedback, Triple Purpose, Oblique Dialogue, universal Anti-AI Filter, active prose profile definition)
    - Read `characters.md` (index) and the POV character's profile at `characters/[name].md` if present (voice signatures, micro-obsessions)
    - Read the relevant section of `timeline.md` for the chapters being drafted
    - Read the `LOC-NNN` block(s) in `locations.md` matching the chapter's setting — load: Sensory Anchors, Atmosphere by Time/Condition row matching `timeline_position`, Character Relationships for the POV character, Dirt Rule detail options, prohibited uses. If `locations.md` does not exist or the location has no entry, continue without it but flag it in the draft notes block.
@@ -129,7 +130,7 @@ You **MUST** consider the user input before proceeding (if not empty).
    **While writing** (enforce story bible):
    - Apply the active style mode from `constitution.md`:
      - `author-sample`: match voice, rhythm, and sensory density from the extracted style markers
-     - `humanized-ai`: apply Sections II–VII of constitution.md (Dirt Rule, Physical Feedback, Oblique Dialogue, Triple Purpose, Anti-AI Filter, etc.)
+     - `humanized-ai`: apply Sections II–VI from `.specify/memory/craft-rules.md` (Dirt Rule, Physical Feedback, Oblique Dialogue, Triple Purpose, etc.) plus story-specific Anti-AI phrases from `constitution.md §VII`
    - Follow the key beats from the scene outline in causal order — each beat produces the next
    - Deliver the dialogue requirements: each critical exchange uses oblique dialogue (deflection before honest answer), includes the misunderstanding/word-failure moment if specified
    - Include the required sensory details; at minimum, the primary anchor from `locations.md` (or the scene outline if no location entry exists) and one Dirt Rule imperfection from the location's options

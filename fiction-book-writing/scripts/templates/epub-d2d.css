@@ -1,0 +1,36 @@
+/* epub-d2d.css — minimal EPUB stylesheet for Draft2Digital
+ *
+ * Draft2Digital reformats the EPUB using its own stylesheet per retailer.
+ * This CSS provides the absolute minimum structure so D2D's formatter
+ * has a clean base: no custom fonts, no complex margins, no decorative
+ * elements that might confuse the auto-formatter.
+ *
+ * Only define what is needed to ensure correct paragraph indentation
+ * and chapter breaks survive the import step.
+ */
+
+body {
+  margin: 0;
+  padding: 0;
+}
+
+p {
+  margin: 0;
+  padding: 0;
+  text-indent: 1.5em;
+}
+
+h1 + p {
+  text-indent: 0;
+}
+
+h1 {
+  text-align: center;
+  page-break-before: always;
+  break-before: page;
+}
+
+hr {
+  border: none;
+  margin: 1em auto;
+}

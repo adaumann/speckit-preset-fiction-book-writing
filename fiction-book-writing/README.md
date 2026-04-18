@@ -174,6 +174,7 @@ After initialization, your project will have this layout:
 | `speckit.glossary` | Consistency | Add terms, check drafts for glossary violations, audit unregistered terms, view coverage dashboard |
 | `speckit.subplot` | Consistency | Add P2/P3 arcs mid-draft, check beat gaps and arc absence streaks, rebuild Convergence Map, resolve dramatic questions |
 | `speckit.pacing` | Quality | Tension arc audit per chapter (1–10 score), plateau/peak/valley detection, act-band calibration, Mermaid xychart output. Flags sagging middles, undersold climaxes, and premature peaks |
+| `speckit.statistics` | Quality | Sentence-level prose statistics: readability score (Flesch/Kincaid), sentence length variance, passive voice %, adverb density, filter word count, weak verb %, and dialogue balance (% dialogue vs. action vs. narration). Read-only. Run after drafting or polishing |
 | `speckit.sensitivity` | Quality | Cultural representation, harmful tropes, anachronism review (historical fiction), identity portrayal, trauma depictions. CRITICAL/WARNING/NOTE tiers. Scoped by chapter, category, or full manuscript |
 | `speckit.research` | Research | Log knowledge gaps, resolve findings, check factual claims in drafts, view open-item dashboard |
 | `speckit.series` | Series | Init/audit/update the series bible and run cross-book continuity checks |
@@ -181,8 +182,9 @@ After initialization, your project will have this layout:
 | `speckit.help` | Navigation | Workflow advisor: scans project state, identifies blockers, recommends next steps |
 | `speckit.synopsis` | Submission | Generate a one-page (250–350 words) and full (1,000–2,000 words) synopsis; reveals the ending; present tense, third person |
 | `speckit.query` | Submission | Generate a 250–350 word query letter with hook, body, comp titles, and submission tracker |
-| `speckit.export` | Submission | Export manuscript to DOCX (Word), EPUB (KDP/IngramSpark), or LaTeX via pandoc |
+| `speckit.export` | Submission | Export manuscript to DOCX (Word), EPUB (KDP/IngramSpark), or LaTeX via pandoc. `--platform` selects KDP, IngramSpark, D2D, Shunn, or Smashwords formatting |
 | `speckit.audiobook` | Audiobook | Convert prose chapters to SSML/ElevenLabs audiodraft files, manage voice assignments and pronunciation lexicon, check for stale drafts, export `lexicon.pls` |
+| `speckit.cover` | Submission | Generate a cover brief, AI image-generation prompts (3 variants), and platform specs for KDP, IngramSpark, D2D, and social. 10 style presets. Reads spec.md for title/author/genre/series |
 
 ---
 
@@ -353,6 +355,16 @@ All sub-commands and arguments for every command.
 /speckit.pacing --act "Act II"            ← scope to one act band
 ```
 
+#### `speckit.statistics`
+```
+/speckit.statistics                        ← full prose statistics report across all drafted chapters
+/speckit.statistics [CHAPTER_ID]           ← scope to a single chapter
+/speckit.statistics [CHAPTER_ID]–[CHAPTER_ID] ← scope to a chapter range
+/speckit.statistics --act "Act II"         ← scope to one act band
+/speckit.statistics dialogue               ← output only the dialogue balance report
+/speckit.statistics readability            ← output only readability and sentence-level metrics
+```
+
 #### `speckit.sensitivity`
 ```
 /speckit.sensitivity                       ← full sensitivity review of all drafted chapters
@@ -412,10 +424,17 @@ All sub-commands and arguments for every command.
 
 #### `speckit.export`
 ```
-/speckit.export                            ← DOCX (default, submission-ready)
+/speckit.export                            ← DOCX (default, Shunn submission format)
 /speckit.export docx                       ← DOCX (Word, Shunn manuscript format)
-/speckit.export epub                       ← EPUB (KDP / Draft2Digital / IngramSpark)
-/speckit.export latex                      ← LaTeX (typeset)
+/speckit.export docx --platform smashwords ← Smashwords DOCX (minimal styles)
+/speckit.export epub                       ← EPUB, KDP platform (default)
+/speckit.export epub --platform kdp        ← EPUB for KDP (cover required for listing)
+/speckit.export epub --platform ingramspark ← EPUB for IngramSpark + accessibility metadata
+/speckit.export epub --platform ingramspark --isbn 978-3-16-148410-0  ← with ISBN
+/speckit.export epub --platform d2d        ← EPUB for Draft2Digital (stripped CSS; cover separate)
+/speckit.export latex                      ← LaTeX 6×9 KDP print (default)
+/speckit.export latex --platform kdp-print-6x9     ← KDP Print trim 6"×9"
+/speckit.export latex --platform ingramspark-6x9   ← IngramSpark 6"×9" (PDF/X-1a notes)
 /speckit.export audio                      ← assemble audiobook chapter manifest; validate drafts
 /speckit.export --polished-only            ← skip chapters without a polished version
 ```
@@ -432,6 +451,35 @@ All sub-commands and arguments for every command.
 /speckit.audiobook lexicon export          ← write audiodraft/lexicon.pls (W3C PLS 1.0)
 /speckit.audiobook check                   ← find stale and missing audiodrafts vs. prose drafts
 /speckit.audiobook status                  ← full audiodraft dashboard
+```
+
+#### `speckit.cover`
+```
+/speckit.cover                             ← interactive: prompts for platform, style, elements
+/speckit.cover --platform kdp-ebook        ← KDP ebook (2560×1600 RGB) [default]
+/speckit.cover --platform kdp-print        ← KDP print (300 DPI CMYK, spine calculated)
+/speckit.cover --platform ingramspark      ← IngramSpark ebook or print
+/speckit.cover --platform d2d              ← Draft2Digital (1600×2400 RGB)
+/speckit.cover --platform social           ← social media crops (1:1 and 9:16)
+/speckit.cover --platform all              ← all platforms, one brief with variant notes
+/speckit.cover --style photorealistic      ← photo composite (thriller, crime, romance)
+/speckit.cover --style illustrated         ← digital art (fantasy, YA, sci-fi)
+/speckit.cover --style painterly           ← oil/watercolour (literary, historical)
+/speckit.cover --style minimalist          ← type-led, near-no imagery (literary)
+/speckit.cover --style typographic         ← bold type dominates (thriller, contemporary)
+/speckit.cover --style dark-moody          ← atmospheric low-key (horror, dark fantasy)
+/speckit.cover --style cinematic           ← epic wide-angle silhouette (epic fantasy, sci-fi)
+/speckit.cover --style retro-pulp          ← halftone vintage (noir, genre homage)
+/speckit.cover --style hand-drawn          ← ink line art (MG, cozy, humour)
+/speckit.cover --style abstract            ← conceptual colour field (literary, poetry)
+/speckit.cover --include "series-title,tagline,extra-text"  ← add optional elements
+/speckit.cover --tagline "Some doors are meant to stay closed."  ← set tagline text
+/speckit.cover --extra "Book One of the Ashfall Chronicles"  ← series number label
+/speckit.cover --custom "With a foreword by Jane Smith"  ← custom text element
+/speckit.cover --platform kdp-print --style cinematic --include "series-title,tagline"  ← combined
+/speckit.cover refresh                     ← regenerate image prompt variants, same brief
+/speckit.cover prompt-only                 ← output only the AI image prompt, no file written
+/speckit.cover brief-only                  ← write cover-brief.md only, no chat prompt output
 ```
 
 ---
@@ -461,6 +509,7 @@ All sub-commands and arguments for every command.
 | `themes-template.md` | Thematic contract: motif registry, symbol tracker, chapter thematic map, drift log |
 | `feedback-template.md` | Beta/editorial feedback: raw notes, categorized issues, severity, revision tasks |
 | `query-letter-template.md` | Query letter: hook, story body, housekeeping, comp titles, bio, submission tracker |
+| `cover-brief-template.md` | Cover design brief: elements, colour palette, typography zones, 3 AI image prompts (hero/environment/symbol), platform specs, print spine calculation |
 
 ---
 

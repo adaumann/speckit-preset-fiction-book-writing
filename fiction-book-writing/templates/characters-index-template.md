@@ -38,8 +38,9 @@
 
 ## Relationship Map
 
-<!-- Key relationships between characters. One row per significant dynamic. -->
+<!-- Summary index only. Full symmetric arcs, phase trackers, and beat sheets are in relationships.md.
+     Add a row here for each REL-NNN entry in relationships.md. -->
 
-| Character A | Character B | Dynamic | Subtext (what neither says) |
-|---|---|---|---|
-| | | | |
+| REL ID | Character A | Character B | Type | Power balance (open) | Arc resolution | relationships.md link |
+|---|---|---|---|---|---|---|
+| REL-001 | | | | | | [relationships.md](relationships.md#rel-001) |

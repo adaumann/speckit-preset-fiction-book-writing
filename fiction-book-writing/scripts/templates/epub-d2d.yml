@@ -1,0 +1,30 @@
+# pandoc defaults — EPUB for Draft2Digital
+# Used by export.py when --platform d2d is passed with epub format.
+#
+# Draft2Digital requirements:
+#   - Accepts EPUB or DOCX; D2D reformats everything automatically
+#   - Simple heading structure only: H1 for chapter titles, nothing deeper
+#   - No custom fonts — D2D strips them
+#   - No complex CSS — D2D applies its own retail stylesheet per retailer
+#   - Language tag accepted but not required
+#   - Cover submitted separately via the D2D dashboard, not embedded in EPUB
+#
+# Strategy: produce the simplest possible well-formed EPUB.
+# Minimal CSS (epub-d2d.css) strips custom fonts and margins so D2D's
+# formatter has a clean base to work from.
+#
+# What must be set at runtime:
+#   --metadata title="..."
+#   --metadata author="..."
+#   --css scripts/templates/epub-d2d.css
+#   (no --epub-cover-image — cover is uploaded separately on D2D)
+
+from: markdown
+to: epub3
+standalone: true
+toc: true
+toc-depth: 1
+epub-chapter-level: 1
+epub-title-page: false
+metadata:
+  lang: en-US

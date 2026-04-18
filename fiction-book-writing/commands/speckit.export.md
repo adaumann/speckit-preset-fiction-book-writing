@@ -1,5 +1,5 @@
 ---
-description: Export all drafted chapters to DOCX, EPUB, or LaTeX via pandoc. Assembles chapters in chapter_id order, preferring polished versions when available.
+description: Export all drafted chapters to DOCX, EPUB, or LaTeX via pandoc. Supports platform-specific formatting for KDP (ebook + print), IngramSpark (ebook + print), Draft2Digital, and Shunn manuscript standard. Assembles chapters in chapter_id order, preferring polished versions when available.
 scripts:
   sh: scripts/bash/check-prerequisites.sh --json
   ps: scripts/powershell/check-prerequisites.ps1 -Json
@@ -21,6 +21,26 @@ $ARGUMENTS
 ```
 
 Consider user input before proceeding (format override, title, author, options).
+
+## Platform Presets
+
+Passing `--platform` selects a pre-configured set of pandoc defaults, CSS, and LaTeX templates from `scripts/templates/`. All platform assets are in the preset and require no setup unless noted.
+
+| Format | Platform | What it configures | Notes |
+|---|---|---|---|
+| `epub` | `kdp` *(default)* | EPUB 3, `epub.css` (indent, drop cap, chapter breaks), KDP metadata | Cover image required for KDP listing |
+| `epub` | `ingramspark` | EPUB 3, same CSS + accessibility metadata slots | Add `--isbn 978-...` for ISBN field |
+| `epub` | `d2d` | Minimal EPUB 3 + `epub-d2d.css` (stripped for D2D auto-formatter) | No cover embed; upload cover on D2D dashboard |
+| `latex` | `kdp-print-6x9` *(default)* | 6"×9" trim, 0.5" gutter, running headers, chapter title 1/3 down | Compile with `pdflatex` or `xelatex` |
+| `latex` | `ingramspark-6x9` | Same geometry + font embedding notes + greyscale option | PDF/X-1a conversion needed; see template header |
+| `docx` | `shunn` *(default)* | Shunn manuscript format via `docx-shunn.docx` reference doc | Place `docx-shunn.docx` in `scripts/templates/` — not included (binary) |
+| `docx` | `smashwords` | Minimal-style DOCX via `docx-smashwords.docx` reference doc | Place `docx-smashwords.docx` in `scripts/templates/` — not included (binary) |
+
+**DOCX note**: The `.docx` reference files for Shunn and Smashwords are not bundled in the preset (binary files cannot be distributed in a ZIP preset). To use them:
+- Shunn: download the official Shunn template from [shunn.net/format/novel](https://www.shunn.net/format/novel/) and place as `scripts/templates/docx-shunn.docx`
+- Smashwords: create a blank DOCX with only Normal, Heading 1, and Heading 2 styles, no tabs, no manual line breaks
+
+If no reference doc is found, pandoc uses its built-in defaults (functional but unformatted).
 
 ## Export Purpose
 
@@ -60,6 +80,10 @@ Consider user input before proceeding (format override, title, author, options).
 4. **Determine export parameters**:
    - **Format**: Read from `$ARGUMENTS` (`docx`, `latex`, `epub`, or `audio`).
      If not specified, ask the user: "Export format? `docx` (Word, submission), `epub` (KDP/distributors), `latex` (typeset), or `audio` (assemble audiobook drafts from audiodraft/)?"
+   - **Platform**: Read from `$ARGUMENTS` (`--platform [name]`).
+     If not specified, use the format default: `epub` → `kdp`, `latex` → `kdp-print-6x9`, `docx` → `shunn`.
+     Inform the user which platform preset is active: `Platform: kdp (default) — pass --platform ingramspark or --platform d2d to change.`
+   - **ISBN** (EPUB + IngramSpark only): Read `--isbn` from `$ARGUMENTS`. If platform is `ingramspark` and no ISBN is provided, emit a WARNING: `⚠️ --isbn not set — IngramSpark requires an ISBN in EPUB metadata. Add --isbn 978-... to the command.`
    - **Title**: Read from `$ARGUMENTS` if given; otherwise look for a YAML `title:` field
      or H1 heading in `spec.md`; fall back to `"Untitled Manuscript"`.
    - **Author**: Read from `$ARGUMENTS` if given; otherwise look in `spec.md`; fall back to `"Author Name"`.

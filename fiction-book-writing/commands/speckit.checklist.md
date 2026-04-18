@@ -41,14 +41,6 @@ You **MUST** consider the user input before proceeding (if not empty).
 
 1. **Setup**: Run `{SCRIPT}` from repo root and parse `FEATURE_DIR`.
 
-   **Audiobook-only guard**: Read `OUTPUT_MODE` from `constitution.md ## X. Audiobook Production`. If `OUTPUT_MODE` is `audiobook` and no `draft/` directory exists, stop:
-   ```
-   ⛔ speckit.checklist validates prose draft files (draft/).
-   In audiobook-only mode no prose drafts exist — SSML/ElevenLabs audiodraft
-   files cannot be evaluated with scene quality checklists.
-   To check audiodraft sync status run: speckit.audiobook check
-   ```
-
 2. **Identify the target**: Determine what the checklist is for from `$ARGUMENTS`:
    - A specific scene file (e.g., "create checklist for scenes/act1-opening.md")
    - An act or phase (e.g., "create checklists for all Act I scenes")
@@ -59,7 +51,7 @@ You **MUST** consider the user input before proceeding (if not empty).
    - Focus on: intended emotional register, whether dry irony is appropriate for this POV character, specific Anti-AI phrases to check for this genre/voice
    - Skip if the scene provides enough context
 
-4. **Load context**: Read `.specify/memory/constitution.md` for the active style mode and craft rules. Read `spec.md` for the character arc this scene serves.
+4. **Load context**: Read `.specify/memory/constitution.md` for the active style mode and story-specific parameters. Read `.specify/memory/craft-rules.md` for craft rules (Triple Purpose definition, Off-Balance Ending criteria, dialogue rules, universal Anti-AI Filter, active prose profile rules). Read `spec.md` for the character arc this scene serves.
 
 5. **Generate the checklist**: Use `templates/checklist-template.md` as structure. Customize the items based on:
    - The scene's POV character (which micro-obsession to check, which voice signature applies)

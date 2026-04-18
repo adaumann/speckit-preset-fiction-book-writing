@@ -94,6 +94,7 @@ Load the following documents as background context for voicing the character. Al
 | Story brief | `spec.md` | Character arc goals, dramatic question |
 | Story structure | `plan.md` | Scene-by-scene context, chapter map, arc checkpoints |
 | Other characters | `characters/` or `characters.md` | Relationship map, known dynamics |
+| Relationship arcs | `relationships.md` | Per-pair dynamic loop, communication pattern, phase state, what this character never says to each named counterpart |
 | Active outline | `outlines/[CHAPTER_ID]_*.md` | Scene state at context point (if chapter ID given) |
 | Active draft | `draft/[CHAPTER_ID]_*.md` | Written events at context point (if chapter ID given) |
 | Themes | `themes.md` | Active motifs this character carries |

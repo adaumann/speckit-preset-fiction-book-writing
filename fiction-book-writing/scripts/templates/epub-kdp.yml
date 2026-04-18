@@ -1,0 +1,33 @@
+# pandoc defaults — EPUB 3 for Kindle Direct Publishing (KDP)
+# Used by export.py when --platform kdp is passed with epub format.
+#
+# KDP requirements (as of 2025):
+#   - EPUB 3 (pandoc default)
+#   - Must pass EPUBCheck 5.x (no errors; warnings acceptable)
+#   - Language tag required
+#   - cover-image embedded in EPUB metadata
+#   - No DRM-specific build requirements at submission
+#
+# What this file controls:
+#   - epub-chapter-level: H1 headings become ToC entries and chapter breaks
+#   - toc-depth: only top-level headings appear in the ToC
+#   - lang metadata: required by KDP; default en-US
+#   - title-page: suppressed — KDP ignores a generated title page and it
+#     can cause display artefacts on older Kindle firmware
+#
+# What must be set at runtime (passed by export.py):
+#   --metadata title="..."
+#   --metadata author="..."
+#   --epub-cover-image cover.jpg    (required for KDP; warning if absent)
+#   --css scripts/templates/epub.css
+
+from: markdown
+to: epub3
+standalone: true
+toc: true
+toc-depth: 1
+epub-chapter-level: 1
+epub-title-page: false
+metadata:
+  lang: en-US
+  epub-type: novel

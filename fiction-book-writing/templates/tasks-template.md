@@ -113,11 +113,13 @@ Verify before proceeding:
 - [ ] T025 Continuity: Cross-check all `draft/` chapters against `timeline.md` for consistency errors
 - [ ] T026 Continuity: Verify character voice distinction — run Voice Homogeneity test on all POV chapters in `draft/`
 - [ ] T027 Continuity: Verify all Chekhov items introduced have paid off
-- [ ] T028 Pacing: Verify act word-count proportions are within acceptable range (±5% of targets)
-- [ ] T029 Theme: Read for theme — is it shown through behavior, never stated directly in dialogue?
-- [ ] T030 Anti-AI: Scan all `draft/` chapters for prohibited phrases from constitution.md Anti-AI Filter
-- [ ] T031 Endings: Verify all chapter endings are off-balance (no tidy summaries)
-- [ ] T032 Resonance: Confirm opening chapter (`draft/A1.101_*.md`) and closing chapter (`draft/A3.30N_*.md`) form a meaningful contrast or echo
+- [ ] T028 Statistics: Run `speckit.statistics` across all drafted chapters — review readability score, sentence length variance, passive voice %, adverb density, and dialogue balance; address CRITICAL flags before polishing
+- [ ] T029 Pacing: Run `speckit.pacing` — verify tension arc shape; no sagging middle, climax scores ≥8, act-band alignment holds
+- [ ] T030 Pacing: Verify act word-count proportions are within acceptable range (±5% of targets)
+- [ ] T031 Theme: Read for theme — is it shown through behavior, never stated directly in dialogue?
+- [ ] T032 Anti-AI: Scan all `draft/` chapters for prohibited phrases from constitution.md Anti-AI Filter
+- [ ] T033 Endings: Verify all chapter endings are off-balance (no tidy summaries)
+- [ ] T034 Resonance: Confirm opening chapter (`draft/A1.101_*.md`) and closing chapter (`draft/A3.30N_*.md`) form a meaningful contrast or echo
 
 <!-- Audiodraft polish task — only present when OUTPUT_MODE is audiobook or both in constitution.md ## X -->
-<!-- - [ ] T033 Audiodraft: Review all SSML files for pronunciation, break timing, and delivery hints against constitution.md ## X -->
+<!-- - [ ] T035 Audiodraft: Review all SSML files for pronunciation, break timing, and delivery hints against constitution.md ## X -->
