@@ -52,7 +52,7 @@ Perform a **non-blocking inventory scan** — read each file if present, note it
 
 | File | Signals to extract |
 |---|---|
-| `.specify/memory/constitution.md` | Exists? Style mode set? Plot structure set? Version? |
+| `.specify/memory/constitution.md` | Exists? Style mode set? Plot structure set? Version? `Author Bio (Short)` filled (not `[PLACEHOLDER]`)? |
 | `FEATURE_DIR/spec.md` | Exists? Contains `[NEEDS CLARIFICATION]`? Character arc count? Series position? |
 | `FEATURE_DIR/plan.md` | Exists? Phase 0 docs generated? Story Bible Check results (any ❌ VIOLATION)? Scene outline count? |
 | `FEATURE_DIR/tasks.md` | Exists? Total tasks, checked tasks, next unchecked task ID? `[FEEDBACK]` tasks open? |
@@ -70,8 +70,9 @@ Perform a **non-blocking inventory scan** — read each file if present, note it
 | `FEATURE_DIR/relationships.md` | Exists? Any `REL-NNN` entries with missing arc beats or no draft coverage? |
 | `FEATURE_DIR/series-bible.md` or `series/series-bible.md` | Exists? Current book registered? Open `SX-NNN` contradictions? |
 | `FEATURE_DIR/synopsis.md` | Exists? |
-| `FEATURE_DIR/pacing-arc.md` | Exists? (output of `speckit.pacing`) |
+| `FEATURE_DIR/pacing-arc.md` | Exists? (`speckit.pacing` primarily renders a Mermaid tension chart inline; this file is only present if explicitly saved — treat as absent unless the file actually exists) |
 | `FEATURE_DIR/query-letter.md` | Exists? Submission tracker rows present? |
+| `FEATURE_DIR/cover-brief.md` | Exists? Platform field set? Image generation prompt present? |
 
 ---
 
@@ -180,6 +181,9 @@ Things that are not on the critical path but would strengthen the manuscript:
 - `OUTPUT_MODE` is `audiobook` or `both` AND stale or missing audiodrafts exist → `speckit.export audio` to review manifest and identify gaps before synthesis
 - All chapters polished but no sensitivity review on record (no session note or annotation in `constitution.md`) → `speckit.sensitivity` (recommend before querying, especially for work featuring communities outside author's experience)
 - `subplots.md` exists with SP entries marked unresolved and draft is past Act II → `speckit.subplot resolve` to close dramatic questions before synopsis/query
+- `Author Bio (Short)` in `constitution.md` is `[PLACEHOLDER]` or absent → `speckit.bio draft` (becomes a hard blocker before query submission; surface as URGENT in Phase 6)
+- `cover-brief.md` absent AND project is Phase 5 or later → `speckit.cover` (platform-ready visual brief for cover design or AI-assisted image generation)
+- All chapters polished but `speckit.statistics` never run → `speckit.statistics` (word-count and POV/act breakdown for submission metadata and pacing audit)
 
 ### Section F — Phase-Relevant Command Cheatsheet
 
@@ -209,7 +213,7 @@ Use these per-phase command sets:
 `speckit.polish`, `speckit.pacing`, `speckit.sensitivity`, `speckit.versions list`, `speckit.glossary check`, `speckit.continuity`
 
 **Phase 6 (Submission prep):**
-`speckit.synopsis`, `speckit.export`, `speckit.query`, `speckit.pacing`, `speckit.sensitivity`, `speckit.feedback`, `speckit.series update`, `speckit.versions tag`
+`speckit.synopsis`, `speckit.export`, `speckit.query`, `speckit.pacing`, `speckit.sensitivity`, `speckit.feedback`, `speckit.bio`, `speckit.cover`, `speckit.statistics`, `speckit.series update`, `speckit.versions tag`
 
 ---
 

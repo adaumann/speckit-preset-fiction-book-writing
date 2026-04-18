@@ -45,6 +45,8 @@ Consider user input before proceeding. Accepted arguments:
 
 1. **Setup**: Run `{SCRIPT}` from repo root. Parse `FEATURE_DIR`.
 
+   **Language scope**: The `Language` field in `constitution.md § VII` affects the *content written into the query letter or Exposé file* and the submission format convention. All command output, status messages, and conversational responses during this command remain in English regardless of the Language setting.
+
    **Market detection**: Read `constitution.md § VII Language`. If Language is not `en`, determine the submission convention for that market before proceeding:
    - `de` (German): Standard format is a **German Exposé** — a formal 3–5 page synopsis followed by the first 3 sample chapters. The short US-style query letter (hook + body + comp titles in 300 words) is not standard in German-speaking publishing. Generate an Exposé cover letter instead (see note at the end of Step 4).
    - `fr`, `it`, `es`, `pt`: Query formats vary by publisher — generate the standard US-style structure but add a note: `ℹ️ Query letter conventions differ in [MARKET]. Verify the target publisher's submission guidelines before sending.`

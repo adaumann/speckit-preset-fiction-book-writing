@@ -94,7 +94,7 @@ Suggest next steps:
 
 ## Mode: Draft
 
-Interactive bio creation. All bios are written in `constitution.md § VII Language` (default: English).
+Interactive bio creation. All bio text written *into constitution.md* is in the language specified in `constitution.md § VII Language` (default: English). **All questions, prompts, confirmations, and conversational responses during this command remain in English.**
 
 ### Draft Step 1 — Gather raw material
 
