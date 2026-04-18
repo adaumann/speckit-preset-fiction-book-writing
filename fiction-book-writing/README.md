@@ -2,10 +2,20 @@
 
 **Version 1.6.0** · Part of [Spec Kit](https://github.com/adaumann/speckit-preset-fiction-book-writing)
 
+A Spec-Driven Development preset purpose-built for novel and long-form fiction writing. It applies the discipline of structured software development to creative fiction: story bibles instead of architecture docs, scene tasks instead of tickets, quality gates instead of CI checks.
 
-A Spec-Driven Development preset purpose-built for novel and long-form fiction writing with single POV or multi POV. It replaces software engineering terminology with storytelling craft: features become story elements, specs become story briefs, plans become story structures, and tasks become scene-by-scene writing tasks.
+**Key features at a glance:**
 
-Can write full prose or stays with book story outlines in order to write your own prose against the structure.
+- **Story Bible governance** — `constitution.md` is the single source of truth for voice, tense, prose profile, tone, target audience, and language. Every command reads from it; no style drift across sessions.
+- **Full story pipeline** — 27 AI commands from first idea (`speckit.specify`) through structural planning (`speckit.plan`, `speckit.outline`), drafting (`speckit.implement`), quality loop (`speckit.checklist`, `speckit.revise`, `speckit.polish`), feedback (`speckit.feedback`), and submission (`speckit.synopsis`, `speckit.query`, `speckit.export`).
+- **Multi-POV architecture** — 9 POV modes including alternating, dual, braided, ensemble, mosaic, frame, chorus, and first-person-multiple. `speckit.pov` designs and audits the POV schedule and information asymmetry map.
+- **All major plot structures** — Three-Act, Save the Cat, Hero's Journey, Story Circle, Fichtean Curve, Kishōtenketsu, Freytag's Pyramid, Five-Act, and custom. `speckit.plan` adapts the chapter map to your chosen framework.
+- **Two style modes** — `author-sample` (extract 8 voice markers from your own prose) or `humanized-ai` (built-in craft ruleset: 5 prose profiles, sensory grounding, filter word purge, off-balance endings, Triple Purpose).
+- **Multilingual** — set `Language` (BCP-47) in the story bible once; prose drafting, SSML output, export metadata, and English-specific prose checks all adapt automatically. 12 languages supported.
+- **Submission-ready export** — pandoc-based DOCX, EPUB (KDP / IngramSpark / D2D), and LaTeX output. Author name, language, copyright, and "About the Author" back matter all read from the story bible automatically.
+- **Audiobook pipeline** — SSML / ElevenLabs audiodraft generation, voice assignments, pronunciation lexicon (W3C PLS 1.0), and stale-draft detection.
+- **Cover design** — `speckit.cover` generates a platform-specific cover brief, 3 AI image prompts, and typography placement notes for KDP, IngramSpark, D2D, and social media. 10 style presets.
+- **Author bio management** — `speckit.bio` drafts, refines, and generates context-specific bio variants (agent query, reader back matter, platform, social, first-person, press kit). Stored in the story bible; consumed automatically by `speckit.query` and `speckit.export`.
 
 ---
 
@@ -26,12 +36,15 @@ Can write full prose or stays with book story outlines in order to write your ow
   - [Processing Feedback](#processing-feedback)
   - [Synopsis & Query Letter](#synopsis--query-letter)
   - [Export](#export)
+  - [Glossary, Research & Versions](#glossary-research--versions)
 - [Workflow Sequence Diagram](#workflow-sequence-diagram)
 - [POV Modes Reference](#pov-modes-reference)
 - [Plot Structure Support](#plot-structure-support)
 - [Style Modes](#style-modes)
 - [Export Formats](#export-formats)
 - [Language Support](#language-support)
+- [Comparable Products](#comparable-products)
+- [Related Resources](#related-resources)
 
 ---
 
@@ -42,7 +55,7 @@ The Fiction Book Writing preset applies the Spec-Driven Development methodology 
 - **27 AI commands** covering every stage from idea to submission-ready manuscript
 - **21 templates** for all supporting story documents
 - **1 export script** (pandoc-based) for DOCX, EPUB, and LaTeX output
-- Support for **8 POV modes** (single, alternating, dual, braided, ensemble, mosaic, frame, chorus, first-person-multiple)
+- Support for **9 POV modes** (single, alternating, dual, braided, ensemble, mosaic, frame, chorus, first-person-multiple)
 - Support for all major **plot structure frameworks** (Three-Act, Save the Cat, Hero's Journey, Story Circle, etc.)
 - Two **style modes**: author voice sample extraction or humanized AI prose principles
 
@@ -1088,7 +1101,7 @@ If `Language` is not set, the export defaults to `en`. Run `speckit.bio draft` t
 
 The following diagram shows the full lifecycle from initial idea to submission-ready manuscript, including the pre-draft quality gates, the per-chapter quality loop, and the post-draft feedback cycle.
 
-![Workflow]("SPEC KIT Fictional Book Writing.svg" "Workflow")
+![Workflow](SPEC%20KIT%20Fictional%20Book%20Writing.svg)
 
 
 ---
@@ -1243,7 +1256,7 @@ The CLI `--lang` flag overrides `constitution.md` for a single export run withou
 /speckit.export epub --lang de
 ```
 
-## Comparable products
+## Comparable Products
 
 **General-purpose LLMs (ChatGPT, Claude, Gemini direct)**
 
