@@ -37,7 +37,6 @@ A Spec-Driven Development preset purpose-built for novel and long-form fiction w
   - [Synopsis & Query Letter](#synopsis--query-letter)
   - [Export](#export)
   - [Glossary, Research & Versions](#glossary-research--versions)
-- [Workflow Sequence Diagram](#workflow-sequence-diagram)
 - [POV Modes Reference](#pov-modes-reference)
 - [Plot Structure Support](#plot-structure-support)
 - [Style Modes](#style-modes)
@@ -1095,13 +1094,6 @@ If `Language` is not set, the export defaults to `en`. Run `speckit.bio draft` t
 | `--platform kdp-print-6x9` | LaTeX | KDP Print 6"×9" |
 | `--platform ingramspark-6x9` | LaTeX | IngramSpark 6"×9" (PDF/X-1a notes) |
 
----
-
-## Workflow Sequence Diagram
-
-The following diagram shows the full lifecycle from initial idea to submission-ready manuscript, including the pre-draft quality gates, the per-chapter quality loop, and the post-draft feedback cycle.
-
-![Workflow](SPEC%20KIT%20Fictional%20Book%20Writing.svg)
 
 
 ---
