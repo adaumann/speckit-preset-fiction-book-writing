@@ -6,6 +6,40 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ---
 
+## [1.6.0] - 2026-04-18
+
+### Added
+- `speckit.bio` command — author bio manager: `draft` (interactive canonical short ≤50w + long 100–150w bios), `refine`, `variant` (agent / reader / platform / social / first-person / long), `list`, `set short`, `set long`
+- `constitution-template.md` — `author_bio_short` and `author_bio_long` YAML front-matter fields
+- `constitution-template.md` — `Author Bio (Short)` and `Author Bio (Long)` rows in Section VII Stylistic Parameters table with guidance blocks (word count, person, tone dos/don'ts)
+- `constitution-template.md` — `author_name` YAML field and `Author Name` option block in Section VII
+- `constitution-template.md` — `language` YAML field (BCP-47) and `Language` option block in Section VII with full code list
+- `constitution-template.md` — `copyright` YAML field and `Copyright` option block with 5 selectable formats (All rights reserved / CC BY 4.0 / CC BY-NC 4.0 / CC0 / custom)
+- `export.py` — `read_constitution_meta()` reads `author_name`, `language`, `copyright`, `author_bio_short`, `author_bio_long` from `constitution.md` YAML front-matter
+- `export.py` — `--lang`, `--rights`, `--author-bio`, `--no-author-bio` CLI arguments
+- `export.py` — `build_combined_markdown()` accepts `author_bio` parameter; appends `# About the Author` section after final chapter when set
+- `export.py` — console report line: `Bio: N words ("About the Author" appended)`
+- `README.md` — Language Support section with BCP-47 code table and per-command effect table
+- `README.md` — Export Metadata Resolution table in Export tutorial (author, language, copyright, bio back matter)
+- `README.md` — Export Platform Presets table in Export tutorial
+
+### Changed
+- `speckit.query` — bio paragraph now reads `Author Bio (Short)` from `constitution.md § VII` when set; generation from scratch is the fallback; suggests `speckit.bio draft` when bio is absent
+- `speckit.export` — documents `About the Author` back matter resolution from `Author Bio (Long)` and `--no-author-bio` suppression flag
+- `speckit.implement` — prose language instruction: all drafting in language specified in `constitution.md § VII Language`
+- `speckit.outline` — outline text language instruction: all outline text in language from `constitution.md § VII Language`
+- `speckit.polish` — English-only rules (WR-001, WR-004, DI-001, DI-002) gated behind Language = `en`; suppressed with explanatory note for other languages
+- `speckit.statistics` — Flesch–Kincaid score suppressed when Language ≠ `en`
+- `speckit.audiobook` — `xml:lang` attribute on `<speak>` and `<lexicon>` SSML elements set from Language; voice model warning for non-English
+- `speckit.cover` — tagline length: ≤8 words for analytic languages; ≤4 compound words for agglutinative languages (`de`, `nl`, `fi`, `hu`, `tr`)
+- `speckit.query` — Language `de` triggers German Exposé format (Anschreiben + Exposé body 3–5 pages + Leseprobe); non-`en` non-`de` emits advisory note
+- `audiobook-draft-template.md` — `xml:lang` placeholder replaces hardcoded `en-US`
+- `preset.yml` — `speckit.bio` registered
+- `catalog.community.json` — command count updated to 27; `updated_at` bumped to 2026-04-18
+- `README.md` — command count updated to 27; `speckit.bio` added to commands table and sub-commands reference; `speckit.export` sub-commands expanded with `--author`, `--lang`, `--rights`, `--author-bio`, `--no-author-bio`, `--title`; `speckit.constitution` sub-commands expanded; Comparable Products section updated for ChatGPT/Claude Projects
+
+---
+
 ## [1.5.0] - 2026-04-17
 
 ### Added

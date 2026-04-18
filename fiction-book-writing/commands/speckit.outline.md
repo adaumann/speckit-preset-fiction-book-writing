@@ -41,7 +41,7 @@ Accepted arguments:
 
 2. **Load source documents**:
    - **Required**: `plan.md` (the `## Scene Outline` section is the authoritative source for scene content), `spec.md` (character arcs, scene beats)
-   - **Required**: `.specify/memory/constitution.md` (plot structure prefix, POV rules, thematic contract)
+   - **Required**: `.specify/memory/constitution.md` (plot structure prefix, POV rules, thematic contract, **Tone** `§VII`, **Target Audience** `§VII`). Tone shapes the beat sequence's emotional register and closing beat type. Target Audience constrains content complexity, vocabulary in dialogue requirements, and how explicitly themes may be stated in the outline notes.
    - **Optional**: `characters.md` and `characters/[name].md` profiles (voice signatures, micro-obsessions, arc progression table)
    - **Optional**: `locations.md` (sensory anchors, Dirt Rule options, atmosphere blocks)
    - **Optional**: `timeline.md` (timeline position, elapsed time)

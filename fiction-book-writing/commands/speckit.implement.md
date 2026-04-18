@@ -70,7 +70,10 @@ You **MUST** consider the user input before proceeding (if not empty).
 3. **Load context**:
    - Read `tasks.md` — identify the first group of unchecked tasks (respect `[P]` markers for parallel drafting)
    - Read `plan.md` for the full beat sheet and scene outlines (the `## Plot Beat Sheet` and `## Scene Outline` sections are the primary drafting brief)
-   - Read `.specify/memory/constitution.md` for story bible (style mode, stylistic parameters, story-specific Anti-AI phrases, series context, audiobook config)
+   - Read `.specify/memory/constitution.md` for story bible (style mode, stylistic parameters, story-specific Anti-AI phrases, series context, audiobook config). Explicitly extract:
+     - **Tense** (`§VII Tense`) — every sentence of prose must be in this tense; do not drift to a different tense even when summarising backstory or writing internal monologue unless the tense is `mixed` and the rule for when to switch is specified
+     - **Sentence Rhythm** (`§VII Sentence Rhythm`) — apply the story-specific rhythm pattern (e.g. "short/jagged during panic; long/winding during reflection") as the baseline; the active prose profile may override for specific scenes
+     - **Tone** (`§VII Tone`) and **Target Audience** (`§VII Target Audience`) — these govern emotional register, vocabulary ceiling, content complexity, and how explicit themes, violence, or sexuality may be rendered. If Tone is set, every scene must sustain it. If Target Audience is set, content, vocabulary register, and prose complexity must stay appropriate for that audience.
    - Read `.specify/memory/craft-rules.md` for craft rules (Sections II–VI: Dirt Rule, Physical Feedback, Triple Purpose, Oblique Dialogue, universal Anti-AI Filter, active prose profile definition)
    - Read `characters.md` (index) and the POV character's profile at `characters/[name].md` if present (voice signatures, micro-obsessions)
    - Read the relevant section of `timeline.md` for the chapters being drafted

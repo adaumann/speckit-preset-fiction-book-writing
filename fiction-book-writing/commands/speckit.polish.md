@@ -71,7 +71,7 @@ Expected format: a chapter ID (e.g., `A1.101`) or a range (e.g., `A1.101–A1.10
    - For each target file, verify the most recent checklist in `checklists/` has `Verdict: PASS`. If FAIL: abort that file with: `⛔ <CHAPTER_ID>: checklist is FAIL — run speckit.revise before polishing.`
 
 3. **Load context**:
-   - Read `.specify/memory/constitution.md`: style mode, vocabulary register, story-specific Anti-AI phrases (`§VII`), em-dash cap rule, **Language** (`§VII Language`)
+   - Read `.specify/memory/constitution.md`: style mode, vocabulary register, story-specific Anti-AI phrases (`§VII`), em-dash cap rule, **Language** (`§VII Language`), **Tone** (`§VII Tone`), **Target Audience** (`§VII Target Audience`), **Tense** (`§VII Tense`), **Sentence Rhythm** (`§VII Sentence Rhythm`). Tone governs emotional temperature and irony during polish — do not neutralise a scene's intended dark humour, bleakness, or warmth while fixing rhythm. Target Audience governs vocabulary ceiling — do not replace simple diction with elevated synonyms when audience is middle-grade or young-adult. Tense governs the required narrative tense; flag any tense drift found during polish as a separate WARNING rather than silently correcting it. Sentence Rhythm provides the story-specific baseline for the rhythm checks (SR-001, SR-002) — apply the author's stated pattern, not a generic alternation rule.
    - Read `.specify/memory/craft-rules.md`: universal Anti-AI Filter phrases, active prose profile rules, voice register standards
    - Read `characters/[pov-character-name].md`: vocabulary pool, vocabulary register, verbal tics, speech-under-stress patterns
 

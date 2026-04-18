@@ -1,6 +1,6 @@
 # Spec Kit Fiction Book Writing Preset
 
-**Version 1.5.0** · Part of [Spec Kit](https://github.com/adaumann/speckit-preset-fiction-book-writing)
+**Version 1.6.0** · Part of [Spec Kit](https://github.com/adaumann/speckit-preset-fiction-book-writing)
 
 
 A Spec-Driven Development preset purpose-built for novel and long-form fiction writing with single POV or multi POV. It replaces software engineering terminology with storytelling craft: features become story elements, specs become story briefs, plans become story structures, and tasks become scene-by-scene writing tasks.
