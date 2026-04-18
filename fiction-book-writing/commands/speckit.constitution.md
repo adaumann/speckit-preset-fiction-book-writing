@@ -55,11 +55,46 @@ You **MUST** consider the user input before proceeding (if not empty).
    - Direct questions to the user (ask only what cannot be inferred)
 
    Fields to resolve in order:
+   - `[AUTHOR_NAME]` — the publishing byline (used by `speckit.cover`, `speckit.query`, and `speckit.export`). Ask if not already set.
+   - `[COPYRIGHT]` — ask the user to choose a format or enter custom text:
+     > "Which copyright notice?
+     > (a) © [YEAR] [AUTHOR_NAME]. All rights reserved.
+     > (b) © [YEAR] [AUTHOR_NAME]. Licensed under CC BY 4.0.
+     > (c) © [YEAR] [AUTHOR_NAME]. Licensed under CC BY-NC 4.0.
+     > (d) CC0 — public domain dedication
+     > (e) Custom — enter your own text
+     > (f) Skip — omit from export metadata"
+     
+     Written into `dc:rights` in EPUB/DOCX/LaTeX exports. If skipped, the field is omitted from the exported file.
+   - `[LANGUAGE]` — BCP-47 code. Ask if not already set:
+     > "What language is this story written in? (e.g. en, de, fr, es, it, pt, nl, ja, zh, fi, hu, tr)"
+     
+     Controls prose drafting language, SSML `xml:lang`, export `dc:language`, and gates English-only prose checks.
    - `[PLOT_STRUCTURE]` — if not set, present the 7 options with a brief description of each and ask the user to choose
    - `[DRAMATIC_QUESTION]` — one sentence, the story's spine
    - `[THEME]` — stated as a question, not an answer
    - `[POV_STRATEGY]` and `[TENSE]` — from style mode or user input
-   - `[WORD_COUNT_TARGET]`, `[GENRE]`, `[TARGET_AUDIENCE]`, `[SERIES_POSITION]`
+   - `[TONE]` — ask if `STYLE_MODE` is `humanized-ai` and not already set:
+     > "What is the emotional register of this story?
+     > (a) **warm-dark** — emotional intimacy with genuine threat and consequence
+     > (b) **dry-ironic** — deadpan distance, situational irony, understatement
+     > (c) **bleak-unflinching** — no comfort, no rescue, consequences are final
+     > (d) **elevated-lyrical** — prose beauty is foregrounded; emotional intensity through image
+     > (e) **neutral-controlled** — flat affect, reader infers; Flesch target 60–70"
+     
+     If `STYLE_MODE` is `author-sample`, Tone is derived from the extracted markers — confirm the inferred value rather than asking from scratch.
+   - `[TARGET_AUDIENCE]` — ask if not already set:
+     > "Who is the primary audience?
+     > (a) **adult** — no content ceiling; vocabulary unrestricted
+     > (b) **new-adult** — 18–25; mature themes permitted; extreme graphic content discouraged
+     > (c) **young-adult** — 13–18; sexual content limited to non-explicit; violence permitted with consequence
+     > (d) **middle-grade** — 8–12; no sexual content; violence must be consequence-free or off-page
+     > (e) **literary** — adult literary fiction readership; elevated register, ambiguity permitted"
+   - `[WORD_COUNT_TARGET]`, `[GENRE]`, `[SERIES_POSITION]`
+   - `[AUTHOR_BIO_SHORT]` and `[AUTHOR_BIO_LONG]` — both optional at this stage. Inform the user:
+     > "Author bios are optional now. Run `/speckit.bio draft` at any time to generate and save them. They are consumed automatically by `speckit.query` (short bio) and `speckit.export` (long bio as 'About the Author' back matter)."
+     
+     If the user wants to set them now: accept free-text for each. Otherwise write `[PLACEHOLDER]` as the value.
    - If `[SERIES_POSITION]` is anything other than `standalone`: check whether `series/series-bible.md` exists.
      - If it **exists**: load it, populate `## IX. Series Context` — copy the active SC-NNN and STC-NNN rows relevant to this book, confirm `Series title` and `Series POV strategy`/`Series tense`, and compare against this constitution's `[POV_STRATEGY]`/`[TENSE]`. Any mismatch → log in the Series Variance Log with a `[reason]` placeholder for the author to fill.
      - If it **does not exist yet**: emit `⚠️ series/series-bible.md not found — it will be created by speckit.plan. Populate ## IX. Series Context with [TBD] placeholder values for now.`
@@ -136,6 +171,11 @@ You **MUST** consider the user input before proceeding (if not empty).
 
 8. **Validate the final constitution**:
    - No unresolved `[NEEDS CLARIFICATION]` tokens remain
+   - `[AUTHOR_NAME]` is set (not `[PLACEHOLDER]`) — warn if absent: `⚠️ Author Name not set — required by speckit.cover, speckit.query, and speckit.export`
+   - `[LANGUAGE]` is a valid BCP-47 code from the supported list — warn if absent, default will be `en`
+   - `[COPYRIGHT]` is set or explicitly skipped — info note if absent: `ℹ️ Copyright not set — dc:rights will be omitted from exports`
+   - `[TONE]` is one of the 5 supported values when `STYLE_MODE` is `humanized-ai`
+   - `[TARGET_AUDIENCE]` is one of the 5 supported values
    - `[RATIFICATION_DATE]` and `[LAST_AMENDED_DATE]` are ISO format (`YYYY-MM-DD`)
    - Style mode is explicitly set
    - If `humanized-ai` mode: `[PROSE_PROFILE]` is one of the 5 supported values: `commercial`, `literary`, `thriller`, `atmospheric`, `dark-realist`
