@@ -39,6 +39,12 @@ Run after `speckit.tasks` has produced a complete `tasks.md`. Does not require a
 2. **Load documents**:
    - Required: `spec.md`, `plan.md`, `tasks.md`, `.specify/memory/constitution.md`
    - Also load: `characters.md` (index) and `characters/` profiles, `timeline.md`, `world-building.md`, `subplots.md` (if present), `relationships.md` (if present)
+   - **Large project optimization** (if `.specify/index/` exists): if the combined character profile files would exceed context capacity, query the index for the key arc and constraint data rather than loading every profile in full:
+     ```
+     python scripts/python/index.py query "character arc wound false belief dramatic question" --type character --top 8
+     python scripts/python/index.py query "world rules constraints forbidden" --type world --top 5
+     python scripts/python/index.py query "subplot beats resolution" --type subplot --top 5
+     ```
    - Abort with a clear error if any required document is missing
    - Do **not** scan `draft/` — this command is pre-draft only. If draft files are present, note their count in the report but do not analyze them.
 

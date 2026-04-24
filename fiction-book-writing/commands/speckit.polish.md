@@ -197,3 +197,8 @@ Expected format: a chapter ID (e.g., `A1.101`) or a range (e.g., `A1.101–A1.10
    - If no issues were found: `✅ <CHAPTER_ID>: prose is clean — no polish changes needed.`
 
 10. **Check for extension hooks** (after polishing): check `hooks.after_polish` in `.specify/extensions.yml`. Process as standard hook block. Skip silently if absent.
+
+11. **Update search index** (optional — large projects):
+    - If `.specify/index/` exists, run: `python scripts/python/index.py update` from the project root.
+    - Polished draft files are re-indexed incrementally so continuity and research checks query the final prose.
+    - If the command fails or the index does not exist, skip silently.

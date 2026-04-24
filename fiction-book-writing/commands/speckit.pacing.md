@@ -64,6 +64,11 @@ Run `{SCRIPT}` from repo root. Parse `FEATURE_DIR`.
 Load:
 - Required: `plan.md` (act structure, chapter list), `tasks.md` (scene intent)
 - Required: all `draft/*.md` files in scope — abort if no draft files exist
+- **Large project optimization** (if `.specify/index/` exists and project has >50 drafted chapters): instead of loading all `draft/*.md` simultaneously, query the index to retrieve tension-bearing passages per chapter. The index stores `chapter_id` and `act_phase` metadata on each chunk, which is sufficient to compute the tension arc without loading full chapter prose:
+  ```
+  python scripts/python/index.py query "conflict stakes tension threat revelation" --type draft --top 100
+  ```
+  Group returned chunks by `chapter_id`, derive a tension score from each group, then plot the arc. Fall back to full file loading for any chapter where the index returns fewer than 2 chunks.
 - Optional: `spec.md` (central dramatic question, emotional arc intent), `constitution.md` (style mode — affects expected tension baseline)
 
 ### Step 2 — Score each chapter

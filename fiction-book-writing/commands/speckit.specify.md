@@ -69,3 +69,8 @@ Given that story idea, do this:
      - If series position is `standalone`: leave Series title and Series bible path fields blank.
 
 6. **Report**: Output the path to the created `spec.md`, the short name used, and any items left as `[NEEDS CLARIFICATION]`.
+
+7. **Update search index** (optional — large projects):
+   - If `.specify/index/` exists, run: `python scripts/python/index.py update` from the project root.
+   - This indexes the new `spec.md` so `speckit.constitution` can query it for genre, tone, and theme inference.
+   - If the command fails or the index does not exist, skip silently.

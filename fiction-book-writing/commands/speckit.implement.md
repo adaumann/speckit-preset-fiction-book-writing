@@ -23,6 +23,12 @@ You **MUST** consider the user input before proceeding (if not empty).
 - If it exists, read it and look for entries under the `hooks.before_implement` key
 - Process as standard hook block (Optional/Mandatory). Skip silently if absent.
 
+**Update search index** (large projects):
+- Check whether `scripts/python/index.py` exists and `.specify/index/` exists (index has been built).
+- If both exist, run: `python scripts/python/index.py update` from the project root before drafting begins.
+- This ensures semantic search reflects the latest draft files and supporting documents.
+- If the command fails or either path is absent, skip silently.
+
 ## Outline
 
 1. **Setup**: Run `{SCRIPT}` from repo root and parse `FEATURE_DIR` and available documents list.
@@ -80,6 +86,13 @@ You **MUST** consider the user input before proceeding (if not empty).
    - Read the `LOC-NNN` block(s) in `locations.md` matching the chapter's setting — load: Sensory Anchors, Atmosphere by Time/Condition row matching `timeline_position`, Character Relationships for the POV character, Dirt Rule detail options, prohibited uses. If `locations.md` does not exist or the location has no entry, continue without it but flag it in the draft notes block.
    - If user specified a chapter ID or range in `$ARGUMENTS` (e.g., `A1.101` or `A1.101–A1.103` for three-act, `JO3.201–JO3.203` for Hero's Journey), use that range
    - If no argument given, use the first unchecked task that has a `draft/` output path
+   - **Large project optimization** (if `.specify/index/` exists and project has >30 drafted chapters): instead of loading all `characters/*.md` profiles and full `world-building.md`, run targeted queries scoped to this chapter's POV character and setting:
+     ```
+     python scripts/python/index.py query "[POV_CHARACTER] voice register micro-obsession stress tells" --type character --top 3
+     python scripts/python/index.py query "[SETTING_NAME] sensory anchors atmosphere" --type world --top 2
+     python scripts/python/index.py query "[CHAPTER_ID] [POV_CHARACTER]" --type outline --top 1
+     ```
+     Use returned chunks to supplement or replace loading full files when combined file size approaches context limits.
 
 4. **Resolve the target chapter outline**:
    - **Priority order for the working brief**:

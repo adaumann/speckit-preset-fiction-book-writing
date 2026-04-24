@@ -139,6 +139,12 @@ Before proceeding to the file existence check, look for `{FEATURE_DIR}/brainstor
   ```
   Summarise the document in 2–3 bullets (key decisions already locked in) so the user can confirm AI read it correctly before questions begin.
 
+  - **Additional index context** (if `.specify/index/` exists): query for related project content scattered across files other than the canonical file for this topic:
+    ```
+    python scripts/python/index.py query "[SESSION.topic]" --top 8
+    ```
+    Surface any connections, constraints, or prior decisions from `character`, `world`, `draft`, `research`, or `series` doc types that are relevant to the brainstorm topic. Present any conflicts with the loaded canonical file as Change Candidates for the user to resolve — do not silently override.
+
 - **File not found**: Set `SESSION.has_context = false`. Display:
   ```
   ✗ No [filename] found — I'll start from scratch with foundational questions.

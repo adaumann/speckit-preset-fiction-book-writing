@@ -134,7 +134,27 @@ Confirm:
                The book directory will be named specs/001-book-1-[title]/ automatically.
 ```
 
-Display the handoff to `speckit.specify`.
+**Handoff — init mode only**: Display the full Book 1 sequence:
+```
+Next steps for Book 1 (in order):
+
+  Step 1: speckit.constitution
+    Set the story bible — style mode, prose profile, plot structure, POV strategy, tone.
+    series/series-bible.md is now present: genre, audience, POV strategy, and tense
+    will be pre-filled from it. You will only be asked to confirm or override.
+    speckit.plan reads constitution.md as a required input; run this before plan.
+
+  Step 2: speckit.specify
+    Create the story brief for Book 1.
+    Series title and Book 1 position will be pre-filled from series/series-bible.md.
+    The story brief is shaped by the craft rules established in Step 1.
+
+  Step 3: speckit.plan
+    Build the structure plan (beat sheet, scene outline, supporting docs).
+    Verifies series/series-bible.md and adds Book 1 to the Books in Series table.
+```
+
+Do not display the audit, update, or status handoffs at this stage — they are not relevant until a book exists.
 
 ---
 
@@ -367,7 +387,35 @@ Fill the values.
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ```
 
-Display the handoffs to `speckit.specify` and `speckit.plan`.
+**Handoff — update mode only**: Display the following next-steps in order. The audit step is mandatory before briefing the next book:
+
+```
+Recommended next steps for Book [N+1]:
+
+  Step 1 (mandatory): speckit.series audit
+    Run a full cross-book continuity audit before writing the next brief.
+    This ensures character states, world canon, and unresolved threads from
+    Book [N] are correct before they become constraints on Book [N+1].
+    Fix any CRITICAL issues in series/series-bible.md first.
+
+  Step 2: speckit.constitution
+    Set the story bible for Book [N+1], incorporating series context.
+    Genre, audience, POV strategy, and tense will be pre-filled from
+    series/series-bible.md — confirm or override per-book as needed.
+    speckit.plan reads constitution.md as a required input; run this before plan.
+
+  Step 3: speckit.specify
+    Create the story brief for Book [N+1].
+    Series title, position, and opening character states will be
+    pre-filled automatically from series/series-bible.md.
+    The brief is shaped by the craft rules established in Step 2.
+
+  Step 4: speckit.plan
+    Build the structure plan. speckit.plan will verify the series bible
+    and add Book [N+1] to the Books in Series table automatically.
+```
+
+Do not display the status or init handoffs at this stage.
 
 ---
 
@@ -432,3 +480,8 @@ If there are any `OPEN` `SX-NNN` contradictions or more than 0 `CRITICAL` issues
 
 Check for extension hooks after execution:
 - Look for `hooks.after_series` in `.specify/extensions.yml`. Process as standard hook block. Skip silently if absent.
+
+**Update search index** (optional — large projects):
+- If `.specify/index/` exists, run: `python scripts/python/index.py update` from the project root.
+- Updated `series/series-bible.md` and all `series/*.md` files are re-indexed so `speckit.continuity` and `speckit.constitution` queries reflect the latest series canon.
+- If the command fails or the index does not exist, skip silently.

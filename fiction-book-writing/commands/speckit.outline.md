@@ -47,8 +47,13 @@ Accepted arguments:
    - **Optional**: `timeline.md` (timeline position, elapsed time)
    - **Optional**: `themes.md` (active motif registry — which motifs are scheduled for each phase)
    - **Optional**: `pov-structure.md` (POV schedule — which character holds this chapter)
-
-3. **Determine target chapters**:
+   - **Large project optimization** (if `.specify/index/` exists): for each target scene, query the index for the POV character’s arc state and the setting’s sensory anchors before loading those full files:
+     ```
+     python scripts/python/index.py query "[POV_CHARACTER] arc progression wound belief" --type character --top 3
+     python scripts/python/index.py query "[SETTING_NAME] sensory anchors dirt rule atmosphere" --type world --top 2
+     python scripts/python/index.py query "[active_motif_name]" --type theme --top 2
+     ```
+     Use returned chunks to populate the outline’s Character Beats, Sensory Anchors, and Thematic Work sections when full files are too large to load.
    - If `$ARGUMENTS` is empty: find the first chapter in `plan.md ## Scene Outline` whose `status` is `outline` (not yet started) and for which no file exists at `outlines/<CHAPTER_ID>_<ChapterName>-outline.md`
    - If `$ARGUMENTS` is a chapter ID: use that scene
    - If `$ARGUMENTS` is a range: use all scenes in that range
@@ -116,4 +121,10 @@ Accepted arguments:
    - Change `status: DRAFT` → `status: APPROVED` when satisfied, or `status: SKIP` to write the chapter themselves
    - Run `/speckit.implement` once outlines are approved
 
-7. **Check for extension hooks** (after generation): check `hooks.after_outline`.
+7. **Update search index** (large projects):
+   - If `.specify/index/` exists, run: `python scripts/python/index.py update` from the project root.
+   - This incrementally indexes all newly created outline files (`outlines/` glob, doc type `outline`).
+   - Outline chunks allow later `speckit.implement` and `speckit.continuity` runs to query beat sequences by meaning: e.g. `query "confrontation scene Act II" --type outline`.
+   - If the command fails or the index does not exist, skip silently.
+
+8. **Check for extension hooks** (after generation): check `hooks.after_outline`.

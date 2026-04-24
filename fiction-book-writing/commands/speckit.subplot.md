@@ -271,3 +271,13 @@ Subplots with TBD beats: [list or "none"]
 
 Run speckit.subplot check for full detail.
 ```
+
+---
+
+## Post-Execution Index Update
+
+**Update search index** (optional — large projects, applies to all write modes: `add`, `update`, `resolve`):
+- If `.specify/index/` exists, run: `python scripts/python/index.py update` from the project root after any mode that modifies `subplots.md`.
+- Updated subplot entries are re-indexed so `speckit.continuity` and `speckit.implement` can query subplot beats by meaning.
+- `status` mode makes no file writes — skip the index update for that mode.
+- If the command fails or the index does not exist, skip silently.

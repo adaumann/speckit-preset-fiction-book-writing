@@ -21,6 +21,17 @@ You **MUST** consider the user input before proceeding (if not empty).
 - If it exists, read it and look for entries under the `hooks.before_constitution` key
 - Process as standard hook block (Optional/Mandatory). Skip silently if absent.
 
+**Query search index for existing project context** (optional — large projects):
+- If `.specify/index/` exists, query the index before loading documents to identify which files contain relevant context for constitution fields:
+  ```
+  python scripts/python/index.py query "genre tone protagonist arc" --top 8
+  python scripts/python/index.py query "world rules setting premise" --type spec --top 5
+  python scripts/python/index.py query "theme dramatic question" --type spec --top 5
+  ```
+- Use returned passages as supplementary context when inferring `[GENRE]`, `[TONE]`, `[THEME]`, `[DRAMATIC_QUESTION]`, and `[STORY_SPECIFIC_PRINCIPLES]` from existing project files.
+- This is especially useful when `spec.md` is large or when characters/world-building files already contain implicit constitutional constraints.
+- If the index does not exist, skip silently and proceed with direct file loading.
+
 ## Outline
 
 **Goal**: Create or update `.specify/memory/constitution.md` (the Story Bible) from user input or inference from existing project files.
@@ -55,6 +66,13 @@ You **MUST** consider the user input before proceeding (if not empty).
    - Direct questions to the user (ask only what cannot be inferred)
 
    Fields to resolve in order:
+   - **Series pre-fill** (before asking any field): if `series/series-bible.md` exists, read its `## Series Parameters` table and silently pre-fill the following fields as defaults — do not ask the user for these from scratch; instead confirm or offer to override:
+     - `[GENRE]` ← Series Parameters `Genre`
+     - `[TARGET_AUDIENCE]` ← Series Parameters `Target audience`
+     - `[POV_STRATEGY]` ← Series Parameters `Series POV strategy`
+     - `[TENSE]` ← Series Parameters `Series tense`
+     Emit: `ℹ️ Series bible detected — genre, audience, POV strategy, and tense pre-filled from series/series-bible.md. Confirm or override below.`
+     Per-book overrides are valid; any variance will be logged in the Series Variance Log.
    - `[AUTHOR_NAME]` — the publishing byline (used by `speckit.cover`, `speckit.query`, and `speckit.export`). Ask if not already set.
    - `[COPYRIGHT]` — ask the user to choose a format or enter custom text:
      > "Which copyright notice?
@@ -102,7 +120,57 @@ You **MUST** consider the user input before proceeding (if not empty).
    - `[STORY_SPECIFIC_PRINCIPLES]` — 3–5 rules unique to this story
    - `[ADDITIONAL_PROHIBITED_PHRASES]` — story/genre-specific additions to the Anti-AI filter
 
-3b. **Resolve Audiobook Production section** (Section X of constitution.md):
+3b. **RAG Index System** — ask after `[WORD_COUNT_TARGET]` is known:
+
+   Determine the target word count from the resolved `[WORD_COUNT_TARGET]` field (or from `$ARGUMENTS` if not yet set). Compare against 80,000 words to form the recommendation label.
+
+   Ask the user:
+
+   > "Do you want to enable the RAG semantic search index for this project?
+   > It allows `speckit.implement`, `speckit.continuity`, `speckit.research`, and other commands to retrieve relevant passages from your entire project without loading all files into context.
+   > *(Your target is [WORD_COUNT_TARGET] words — **recommended** for projects over 80,000 words / optional for smaller projects)*
+   > (a) **Yes** — initialize the index now
+   > (b) **No** — skip (can be enabled later with `python scripts/python/index.py build`)"
+
+   If the user chooses **(b)**: skip silently and continue.
+
+   If the user chooses **(a)**:
+
+   1. **Check if already initialized**: inspect whether `.specify/index/chroma/` exists in the project root.
+      - If it exists → emit `ℹ️ ChromaDB index already initialized at .specify/index/ — skipping build.` and continue without re-running build.
+
+   2. **Check if dependencies are installed** (only if not already initialized):
+      Run:
+      ```
+      python -m pip show chromadb sentence-transformers
+      ```
+      - If both packages are found → proceed to build.
+      - If either is missing → ask if a virtual environment is preferred:
+        > "ChromaDB and sentence-transformers are not installed.
+        > (a) **Install to global/user site** — `python -m pip install chromadb sentence-transformers`
+        > (b) **Create and use .venv** (Recommended) — creates a `.venv/` folder and installs there"
+      
+      - If the user chooses **(b)**:
+        1. Run `python -m venv .venv`
+        2. Activate (Windows: `.venv\Scripts\Activate.ps1`, Unix: `source .venv/bin/activate`)
+        3. Run `python -m pip install chromadb sentence-transformers`
+      - Else if **(a)** or fallback:
+        Run:
+        ```
+        python -m pip install chromadb sentence-transformers
+        ```
+        - On success → proceed to build.
+        - On failure → emit: `⚠️ Installation failed. Ensure Python is on the PATH and try running manually: python -m pip install chromadb sentence-transformers` and stop.
+
+   3. **Build the index**:
+      Run from the project root:
+      ```
+      python scripts/python/index.py build
+      ```
+      - On success → emit: `✓ RAG index initialized at .specify/index/ — semantic search is now active for all project files.`
+      - On failure → emit: `⚠️ Index build failed. Check that Python is available and dependencies are installed. You can retry later with: python scripts/python/index.py build`
+
+3c. **Resolve Audiobook Production section** (Section X of constitution.md):
 
    If `[OUTPUT_MODE]` is `[NEEDS CLARIFICATION]` or absent, ask:
 
@@ -191,3 +259,8 @@ You **MUST** consider the user input before proceeding (if not empty).
      - If `multi` speaker mode: at least one character row present in Speaker Configuration — warn if none
 
 8. **Report**: Summarize all resolved fields, the new version number, and any remaining items requiring attention.
+
+9. **Update search index** (optional — large projects):
+   - If `.specify/index/` exists, run: `python scripts/python/index.py update` from the project root.
+   - This re-indexes the updated `.specify/memory/constitution.md` so that subsequent `speckit.implement`, `speckit.continuity`, and `speckit.research` queries reflect the latest story bible rules.
+   - If the command fails or the index does not exist, skip silently.

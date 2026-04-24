@@ -392,6 +392,48 @@ constitution_version: [CONSTITUTION_VERSION]
 
 ---
 
+## Tooling
+
+<!-- Optional. Configure project-specific tooling settings here.
+     These values are read by speckit commands that invoke scripts (e.g. index.py).
+     Leave a field as [NOT CONFIGURED] to use the command's default.
+     Remove this section entirely if you are not using any script integrations. -->
+
+### Search Index (RAG)
+
+<!-- Semantic / keyword search index for large projects (50k+ words).
+     Powered by scripts/python/index.py.
+
+     Installation (one-time, optional — enables semantic search):
+       pip install chromadb sentence-transformers
+
+     If not installed, the script auto-falls-back to keyword (BM25) search.
+     If rank-bm25 is also absent, it uses a zero-dependency built-in TF scorer.
+
+     Backends in priority order:
+       1. chromadb + sentence-transformers  → vector/semantic search (recommended for 500k+ words)
+       2. rank-bm25                         → keyword BM25 scoring   (pip install rank-bm25)
+       3. built-in TF                       → zero-dependency fallback (no install needed)
+
+     Commands:
+       python scripts/python/index.py build           # full build (run once after plan)
+       python scripts/python/index.py update          # incremental update (run after each draft/outline)
+       python scripts/python/index.py query "..."     # search
+       python scripts/python/index.py status          # staleness report
+       python scripts/python/index.py purge           # wipe and rebuild
+-->
+
+| Setting | Value |
+|---|---|
+| **Search Index Enabled** | <!-- yes / no --> [NOT CONFIGURED] |
+| **Backend Preference** | <!-- auto / chroma / keyword --> auto |
+| **Index Path** | <!-- relative to project root --> `.specify/index/` |
+| **Embedding Model** | <!-- change only if you have a preferred model --> `all-MiniLM-L6-v2` |
+| **Chunk Size (tokens)** | <!-- 200–600 recommended --> 300 |
+| **Top-K Default** | <!-- results returned per query --> 5 |
+
+---
+
 ## Governance
 
 This Story Bible overrides all writing prompts and templates.

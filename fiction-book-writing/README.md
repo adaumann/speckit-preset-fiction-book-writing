@@ -29,6 +29,7 @@ A Spec-Driven Development preset purpose-built for novel and long-form fiction w
 - [Tutorials](#tutorials)
   - [Single POV Novel](#tutorial-single-pov-novel)
   - [Multi-POV Novel](#tutorial-multi-pov-novel)
+  - [Series Workflow](#series-workflow)
   - [The Planning Process](#the-planning-process)
   - [Analyze Before You Draft](#analyze-before-you-draft)
   - [Drafting Scenes with Tasks](#drafting-scenes-with-tasks)
@@ -689,6 +690,154 @@ Generates the outline file for the next scene and stops. No `draft/` files are w
 This loop is identical whether the prose was AI-drafted or author-written.
 
 Repeat for each chapter. Run `speckit.status` at any time for a dashboard view.
+
+---
+
+### Series Workflow
+
+Planning a multi-book series from scratch adds one persistent authority document — `series/series-bible.md` — that governs canon, character state, and continuity constraints across all books. Every per-book command reads from it automatically.
+
+#### One-Time Series Setup
+
+Run this once before any individual book is planned:
+
+```
+/speckit.series init
+```
+
+This gathers the series-level parameters interactively:
+
+| Parameter | Purpose |
+|---|---|
+| Series title | Used to pre-fill every book's spec and constitution |
+| Total book count | Can be `open series` if undetermined |
+| Genre + Target audience | Pre-filled into each book's constitution — confirm or override per book |
+| Overarching dramatic question | The series-level spine; must not be fully answered until the final book |
+| Overarching theme | Stated as a question |
+| Series POV strategy | Consistency rule across all books |
+| Series tense | Consistency rule across all books |
+| Series ending contract | What the ending must feel like or resolve — not what happens |
+
+Creates: `series/series-bible.md`
+
+#### Per-Book Cycle
+
+Repeat these steps for every book. The order is fixed — each step feeds the next.
+
+```
+Step 1 — speckit.constitution
+```
+Reads `series/series-bible.md` and pre-fills genre, audience, POV strategy, and tense — you only confirm or override. Set style mode, prose profile, plot structure, and tone.
+
+```
+Step 2 — speckit.specify
+```
+Reads `series/series-bible.md` and pre-fills series title, book position, and opening character states. The story idea is written as a brief shaped by the craft rules from Step 1.
+
+```
+Step 3 — speckit.plan
+```
+Reads both `spec.md` and `constitution.md` (both required). Generates all supporting documents in Phase 0, then builds the beat sheet and scene outline in Phases 1–3. Verifies `series/series-bible.md` and adds the new book entry automatically.
+
+```
+Step 4 — speckit.analyze
+```
+Pre-draft structural alignment check — confirms spec ↔ plan ↔ tasks consistency before any prose is written. Read-only.
+
+Then follow the standard [drafting loop](#drafting-scenes-with-tasks): `outline → implement → checklist → revise → polish`.
+
+#### Between Books
+
+After a book's draft is finalized:
+
+```
+/speckit.series update N
+```
+
+Syncs `series/series-bible.md` with what actually happened in Book N — new world canon, new continuity constraints, resolved threads, and updated character arc closing states that become Book N+1's opening states.
+
+Then, before writing anything for Book N+1:
+
+```
+/speckit.series audit
+```
+
+Cross-book continuity check across all books. **This is a mandatory gate** — CRITICAL issues in the series bible must be fixed before the next brief is written. Validates:
+- Character state chain: closing state of Book N must match opening state in Book N+1
+- World canon consistency: every `SC-NNN` rule across all drafts
+- Continuity constraint chain: `STC-NNN` constraints forward from their establishment book
+- Unresolved series threads: open `ST-NNN` items with no pay-off book assigned
+
+Once audit is clean, start the per-book cycle again at Step 1.
+
+#### Full Lifecycle
+
+```
+series init
+    │
+    ▼
+constitution ◄─────────────────────────────────────────────────────────────┐
+    │                                                                        │
+    ▼                                                                        │
+specify                                                                      │
+    │                                                               series audit
+    ▼                                                                        ▲
+plan → analyze                                                               │
+    │                                                               series update
+    ▼                                                                        ▲
+outline → implement → checklist → revise → polish                           │
+    │                                                                        │
+    └──────────────── continuity ─────────────────────────────────────────── ┘
+                           (repeat for each book)
+```
+
+#### Workspace Structure
+
+A series project uses this layout:
+
+```
+<workspace-root>/
+├── series/
+│   └── series-bible.md              ← series-level canon, shared across all books
+│
+└── specs/
+    ├── 001-book-1-[title]/           ← created by speckit.specify
+    │   ├── spec.md
+    │   ├── plan.md
+    │   ├── tasks.md
+    │   ├── characters/               ← each profile has a Series Arc State table
+    │   ├── draft/
+    │   ├── outlines/
+    │   └── .specify/memory/
+    │       └── constitution.md       ← has ## IX. Series Context mirroring series-bible.md
+    │
+    └── 002-book-2-[title]/
+        └── ...
+```
+
+Book directory names (`NNN-book-N-[title]`) are created automatically by `speckit.specify` for non-standalone books.
+
+#### Switching Between Books
+
+To work on a different book in the series, open its folder as the VS Code workspace root:
+
+```
+File → Open Folder → specs/002-book-2-[title]/
+```
+
+All commands resolve `.specify/memory/constitution.md`, `spec.md`, `draft/`, `outlines/`, and all other paths relative to the active workspace root — so the correct book's files become active automatically. Commands that need `series/series-bible.md` look one level up from the book root to find it.
+
+Each book's constitution is isolated in its own `.specify/memory/constitution.md`. Reopening a previous book's folder restores its full context exactly as you left it.
+
+#### Authority Hierarchy
+
+| Document | Scope | Wins over |
+|---|---|---|
+| `series/series-bible.md` | All books | Any per-book decision on canon, world rules, character state |
+| `.specify/memory/constitution.md` | One book | Any scene, outline, or draft within that book |
+| `spec.md` | One book | `plan.md` on story intent |
+| `plan.md` | One book | `outlines/*.md` on structural beats |
+| `outlines/*.md` | One scene | `draft/*.md` on beat sequence |
 
 ---
 

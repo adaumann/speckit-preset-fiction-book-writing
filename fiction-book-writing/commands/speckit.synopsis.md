@@ -60,6 +60,14 @@ Both formats **reveal the ending**. A synopsis is not a blurb. Every major plot 
    - `FEATURE_DIR/spec.md` — extract: title, genre, logline, protagonist, central dramatic question, theme, word count target
    - `FEATURE_DIR/plan.md` — extract: act breakdown, chapter map, phase summaries
    - `FEATURE_DIR/draft/*.md` — if present, read for actual plot events (post-draft mode)
+   - **Large project optimization** (if `.specify/index/` exists and project has >30 drafted chapters): instead of loading all draft files, query the index for the key structural passages at each arc section:
+     ```
+     python scripts/python/index.py query "inciting incident point of no return" --type draft --top 3
+     python scripts/python/index.py query "midpoint reversal first act break" --type draft --top 3
+     python scripts/python/index.py query "darkest moment all is lost crisis" --type draft --top 3
+     python scripts/python/index.py query "climax resolution closing image" --type draft --top 3
+     ```
+     Use returned chunks (with `chapter_id` and `section` metadata) to identify the actual prose events for each arc section. Load those specific chapter files in full for accurate quotation. Supplement with `plan.md` for any section not covered by the index.
    - If `FEATURE_DIR/synopsis.md` already exists: load it and report in `update` or `check` mode
 
 3. **Determine mode**:

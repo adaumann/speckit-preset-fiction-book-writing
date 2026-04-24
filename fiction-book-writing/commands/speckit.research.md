@@ -67,6 +67,12 @@ Accepted arguments:
 - If it exists, read it and look for entries under the `hooks.before_research` key.
 - Process as standard hook block (Optional/Mandatory). Skip silently if absent.
 
+**Search index** (large projects — optional):
+- For `add` mode: after logging a new research item, check whether `.specify/index/` exists. If so, run `python scripts/python/index.py update` to keep the index current.
+- For `check` mode: if `.specify/index/` exists, you MAY query the index to surface draft passages that may contain unresearched claims:
+  > `python scripts/python/index.py query "[claim text]" --type draft --top 5`
+  Use results as supplementary input — do not replace the full `check` scan.
+
 ---
 
 ## Step 1 — Setup and Mode Resolution

@@ -377,3 +377,8 @@ If all entries are complete and no open violations exist:
 
 Check for extension hooks after execution:
 - Look for `hooks.after_glossary` in `.specify/extensions.yml`. Process as standard hook block. Skip silently if absent.
+
+**Update search index** (optional — large projects):
+- If `.specify/index/` exists, run: `python scripts/python/index.py update` from the project root.
+- Updated `glossary.md` is re-indexed so semantic queries return current terminology and constraints.
+- If the command fails or the index does not exist, skip silently.

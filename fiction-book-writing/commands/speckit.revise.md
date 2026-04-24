@@ -66,8 +66,11 @@ Rewrite only the passages in a drafted chapter that are failing checklist items 
    - Read `plan.md ## Scene Outline` entry for this chapter — opening hook, key beats, closing beat
    - Read `characters/[pov-character-name].md` — voice register, vocabulary pool, micro-obsession state, stress tells, self-deception pattern
    - Read `characters.md` (index) for any secondary characters present in the scene
-
-5. **Pre-revision audit** — for each failing item, identify the exact passage(s) responsible:
+   - **Large project optimization** (if `.specify/index/` exists): query the index to find the 3 most semantically similar already-drafted scenes for cross-scene consistency comparison:
+     ```
+     python scripts/python/index.py query "[SCENE_CONTEXT: POV character, setting, dominant action]" --type draft --top 3
+     ```
+     Review returned passages for: shared locations (check sensory consistency), shared characters (check voice consistency), shared world rules (check factual consistency). — for each failing item, identify the exact passage(s) responsible:
    - Quote the specific sentence(s) or paragraph(s) that cause the failure
    - State which checklist item / continuity issue each passage violates and why
    - If a passage cannot be found (item failed due to *absence* of something — e.g., no Dirt Rule imperfection present), note what must be *added* and where
@@ -181,3 +184,8 @@ Rewrite only the passages in a drafted chapter that are failing checklist items 
 
 10. **Check for extension hooks (after revision)**:
     - Look for `hooks.after_revise` in `.specify/extensions.yml`. Process as standard hook block. Skip silently if absent.
+
+11. **Update search index** (optional — large projects):
+    - If `.specify/index/` exists, run: `python scripts/python/index.py update` from the project root.
+    - Revised draft files are re-indexed incrementally (only changed files are re-processed).
+    - If the command fails or the index does not exist, skip silently.

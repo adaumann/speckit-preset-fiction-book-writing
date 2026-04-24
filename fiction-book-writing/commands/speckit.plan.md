@@ -138,4 +138,11 @@ You **MUST** consider the user input before proceeding (if not empty).
 
 4. **Stop and report**: Command ends after Phase 3. Report: `IMPL_PLAN` path, total beats generated, total chapters outlined, word count distribution across acts, any remaining `[NEEDS CLARIFICATION]` markers, open threads count.
 
-5. **Check for extension hooks** (after planning): check `hooks.after_plan` and process as standard hook block.
+5. **Build search index** (large projects):
+   - Check whether `scripts/python/index.py` exists in the preset scripts directory.
+   - If it exists, run: `python scripts/python/index.py build` from the project root.
+   - This indexes all supporting documents generated in Phase 0 for offline semantic search during drafting.
+   - If ChromaDB / sentence-transformers are not installed, the script falls back to keyword search automatically.
+   - If the script is absent or fails, skip silently and note: `ℹ️ Search index not built — run python scripts/python/index.py build manually when ready.`
+
+6. **Check for extension hooks** (after planning): check `hooks.after_plan` and process as standard hook block.
