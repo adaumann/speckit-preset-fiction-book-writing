@@ -6,6 +6,19 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ---
 
+## [1.7.0] - 2026-04-24
+
+### Added
+- `scripts/python/index.py` — Offline semantic and keyword search index (RAG) for large fiction projects.
+- Support for multiple indexing backends:
+    - **ChromaDB**: Vector/semantic search using `sentence-transformers` (optional: `pip install chromadb sentence-transformers`).
+    - **BM25**: Keyword-based scoring (optional: `pip install rank-bm25`).
+    - **TF**: Zero-dependency fallback keyword search.
+- Adaptive chunking for project files (specs, plans, drafts, characters, world-building, etc.).
+- Metadata-aware search: Filter results by document type, characters, or locations.
+- `constitution-template.md` — New **Search Index (RAG)** configuration section in Tooling.
+- Incremental updates: `index.py update` only processes changed files based on mtime manifest.
+
 ## [1.6.0] - 2026-04-18
 
 ### Added

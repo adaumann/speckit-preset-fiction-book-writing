@@ -2,7 +2,7 @@ schema_version: "1.0"
 preset:
   id: "fiction-book-writing"
   name: "Fiction Book Writing"
-  version: "1.6.0"
+  version: "1.7.0"
   description: "Spec-Driven Development for novel and book writing. Replaces software engineering terminology with storytelling craft: features become story elements, specs become story briefs, plans become story structures, and tasks become scene-by-scene writing tasks. Supports multiple plot structure frameworks, multi-POV architecture (alternating, dual, braided, ensemble, mosaic, frame, chorus, first-person-multiple), and two style modes: author voice sample or humanized AI prose principles."
   author: "Spec Kit Community"
   repository: "https://github.com/adaumann/speckit-preset-fiction-book-writing"

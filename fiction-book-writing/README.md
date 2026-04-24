@@ -1,6 +1,6 @@
 # Spec Kit Fiction Book Writing Preset
 
-**Version 1.6.0** · Part of [Spec Kit](https://github.com/adaumann/speckit-preset-fiction-book-writing)
+**Version 1.7.0** · Part of [Spec Kit](https://github.com/adaumann/speckit-preset-fiction-book-writing)
 
 A Spec-Driven Development preset purpose-built for novel and long-form fiction writing. It applies the discipline of structured software development to creative fiction: story bibles instead of architecture docs, scene tasks instead of tickets, quality gates instead of CI checks.
 
