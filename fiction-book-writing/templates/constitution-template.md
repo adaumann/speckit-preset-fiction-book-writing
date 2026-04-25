@@ -404,8 +404,8 @@ constitution_version: [CONSTITUTION_VERSION]
 <!-- Semantic / keyword search index for large projects (50k+ words).
      Powered by scripts/python/index.py.
 
-     Installation (one-time, optional — enables semantic search):
-       pip install chromadb sentence-transformers
+     Installation (one-time, optional — enables semantic and/or keyword search):
+       pip install chromadb sentence-transformers rank-bm25
 
      If not installed, the script auto-falls-back to keyword (BM25) search.
      If rank-bm25 is also absent, it uses a zero-dependency built-in TF scorer.
@@ -426,7 +426,7 @@ constitution_version: [CONSTITUTION_VERSION]
 | Setting | Value |
 |---|---|
 | **Search Index Enabled** | <!-- yes / no --> [NOT CONFIGURED] |
-| **Backend Preference** | <!-- auto / chroma / keyword --> auto |
+| **Backend Preference** | <!-- auto / chroma / bm25 / keyword --> auto |
 | **Index Path** | <!-- relative to project root --> `.specify/index/` |
 | **Embedding Model** | <!-- change only if you have a preferred model --> `all-MiniLM-L6-v2` |
 | **Chunk Size (tokens)** | <!-- 200–600 recommended --> 300 |

@@ -25,10 +25,9 @@ Options:
     --index-dir PATH      Override index storage path (default: .specify/index/)
 
 Primary backend requirements:
-    pip install chromadb sentence-transformers
+    pip install chromadb sentence-transformers rank-bm25
 
-Fallback backend requirements (auto-detected, no install needed):
-    rank_bm25  (optional: pip install rank-bm25)
+Fallback backend requirements (auto-detected):
     Built-in keyword search is used if neither chromadb nor rank_bm25 is available.
 """
 

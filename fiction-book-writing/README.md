@@ -16,6 +16,8 @@ A Spec-Driven Development preset purpose-built for novel and long-form fiction w
 - **Audiobook pipeline** — SSML / ElevenLabs audiodraft generation, voice assignments, pronunciation lexicon (W3C PLS 1.0), and stale-draft detection.
 - **Cover design** — `speckit.cover` generates a platform-specific cover brief, 3 AI image prompts, and typography placement notes for KDP, IngramSpark, D2D, and social media. 10 style presets.
 - **Author bio management** — `speckit.bio` drafts, refines, and generates context-specific bio variants (agent query, reader back matter, platform, social, first-person, press kit). Stored in the story bible; consumed automatically by `speckit.query` and `speckit.export`.
+- **Offline semantic search index** - for large fiction projects. Walks all project markdown files, chunks them into ~300-token segments with
+metadata (file, section, character IDs, location IDs, date tags), and stores embeddings in a local ChromaDB index (no external services — fully offline). Primary backend  : ChromaDB + sentence-transformers (semantic / vector search). Fallback backend : BM25 keyword search (pure Python, zero ML dependencies)
 
 ---
 
@@ -65,11 +67,38 @@ Each specification run (/speckit.specify) will generate one book, it is a 1:1 re
 
 ---
 
+## Prerequisites
+
+This preset requires the following tools installed on your system:
+
+- **[Spec Kit CLI](https://github.com/adaumann/specify)**: The core engine for running commands.
+- **Python 3.10+**: Required for export and search indexing scripts.
+- **Pandoc**: Required by `speckit.export` for DOCX, EPUB, and LaTeX generation.
+- **(Optional) Node.js**: Required if you use certain MCP servers for extended capabilities.
+
+---
+
+## Installation
+
+1.  **Install the Spec Kit CLI**:
+    ```powershell
+    # Windows (PowerShell)
+    iwr -useb https://raw.githubusercontent.com/adaumann/specify/main/install.ps1 | iex
+    ```
+
+2.  **Initialize a new project with this preset**:
+    ```powershell
+    mkdir my-new-novel
+    cd my-new-novel
+    specify init --preset fiction-book-writing
+    ```
+---
+
 ## Quick Start
 
 ```bash
 # 1. Install Spec Kit and apply the preset
-specify init --preset fiction-book-writing
+# (See Installation section above)
 
 # 2. Create your story bible first
 /speckit.constitution
@@ -1116,6 +1145,53 @@ After feedback ingestion:
 ```
 
 Unresolved HIGH-priority research items before drafting those chapters are flagged as blockers by `speckit.help`.
+
+---
+
+### Search Index (RAG)
+
+For large projects (50k+ words), maintaining a mental map of every character mention, world detail, and subplot beat becomes difficult. The Fiction Book Writing preset includes a local **Search Index (RAG)** powered by `scripts/python/index.py` to provide offline semantic and keyword search.
+
+#### How it Works
+
+The indexer chunks your project files (specs, plans, drafts, world-building, etc.) into manageable pieces and stores them in a local vector or keyword database (`.specify/index/`).
+
+- **Semantic Search**: Understands meaning (e.g., searching for "sadness" finds "tears on her cheek"). Requires `chromadb` and `sentence-transformers`.
+- **Keyword Search**: Uses BM25 or basic TF scoring as a zero-dependency fallback.
+
+#### Commands
+
+NOTE: These CLI commands are included in the SpeckIt commands. Just for reference
+
+The RAG index is managed via terminal commands (using your Python environment):
+
+```powershell
+# 1. Build the initial index (run once your core planning is done)
+python scripts/python/index.py build
+
+# 2. Incrementally update the index (run after drafting or significant edits)
+python scripts/python/index.py update
+
+# 3. Query the index
+python scripts/python/index.py query "how does the protagonist react to fire?"
+python scripts/python/index.py query "ancient magic rules" --type world
+python scripts/python/index.py query "Elowen" --type draft --top 10
+
+# 4. Check status and staleness
+python scripts/python/index.py status
+```
+
+#### Backends
+
+1.  **ChromaDB** (Recommended): Provides true semantic search. Enabled by installing:
+    `pip install chromadb sentence-transformers`
+2.  **BM25**: Better than basic keyword search. Enabled by installing:
+    `pip install rank-bm25`
+3.  **Basic TF**: A built-in, zero-dependency keyword search that works out-of-the-box.
+
+You can configure your backend preference and path in the **Tooling** section of your `constitution.md`.
+
+---
 
 #### Managing Draft Versions
 
