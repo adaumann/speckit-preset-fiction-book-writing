@@ -1,6 +1,6 @@
-﻿# Series Bible: [SERIES_NAME]
+# Series Bible: [SERIES_NAME]
 
-<!-- SERIES-LEVEL CANON — governs all entries in the series.
+<!-- SERIES-LEVEL CANON � governs all entries in the series.
      Each individual entry has its own spec.md, flowmap.md, variables.md, and constitution.md.
      This file is the authority on anything that spans entries.
      When a per-entry decision contradicts this file, this file wins.
@@ -12,27 +12,27 @@
 
 ```
 <workspace-root>/
-├── series/
-│   └── series-bible.md              ← this file: series-level canon, shared across all entries
-│
-└── specs/
-    ├── entry-1-[title]/              ← Entry 1
-    │   ├── spec.md
-    │   ├── flowmap.md
-    │   ├── variables.md
-    │   ├── endings.md
-    │   ├── constitution.md
-    │   ├── nodes/
-    │   ├── outlines/
-    │   └── characters/
-    │
-    └── entry-2-[title]/              ← Entry 2
-        └── ...
++-- series/
+�   +-- series-bible.md              ? this file: series-level canon, shared across all entries
+�
++-- specs/
+    +-- entry-1-[title]/              ? Entry 1
+    �   +-- spec.md
+    �   +-- flowmap.md
+    �   +-- variables.md
+    �   +-- endings.md
+    �   +-- constitution.md
+    �   +-- nodes/
+    �   +-- outlines/
+    �   +-- characters/
+    �
+    +-- entry-2-[title]/              ? Entry 2
+        +-- ...
 ```
 
 **Authority hierarchy**:
 - `series/series-bible.md` wins over any per-entry decision on canon, world rules, and NPC state.
-- Each entry's `constitution.md` mirrors relevant series constraints — do not edit those sections manually; use `speckit.series update` to sync them.
+- Each entry's `constitution.md` mirrors relevant series constraints � do not edit those sections manually; use `speckit.series update` to sync them.
 - Each NPC's state table in `characters/` is the per-entry view; the NPC Survival Registry in this file is the series-level authority.
 
 ---
@@ -48,9 +48,9 @@
 | Target audience | [NEEDS CLARIFICATION] |
 | Engine target | [Sugarcube / Ink / other] |
 | Carry-over strategy | [save-file / questionnaire / both] |
-| Overarching dramatic question | [The series-level spine — one sentence. Must not be fully answered until the final entry.] |
+| Overarching dramatic question | [The series-level spine � one sentence. Must not be fully answered until the final entry.] |
 | Overarching theme | [Stated as a question. Each entry explores it from a different angle.] |
-| Series ending contract | [What the final entry MUST resolve — not what happens, but what it must feel like.] |
+| Series ending contract | [What the final entry MUST resolve � not what happens, but what it must feel like.] |
 
 ---
 
@@ -72,7 +72,7 @@
 
 | Rule ID | Rule | Introduced In | Must Hold Through |
 |---|---|---|---|
-| SWR-001 | [e.g., "Magic has a permanent physical cost — no exceptions"] | Entry 1 | All entries |
+| SWR-001 | [e.g., "Magic has a permanent physical cost � no exceptions"] | Entry 1 | All entries |
 | SWR-002 | [NEEDS CLARIFICATION] | | |
 
 ### Named Entity Registry
@@ -114,7 +114,7 @@
 
 ## Canonical Import State
 
-<!-- The "default save" — assumed choices when player starts Entry N fresh without importing.
+<!-- The "default save" � assumed choices when player starts Entry N fresh without importing.
      This is the canon used for marketing material, sequels that don't support import, etc. -->
 
 ### Fresh Start Defaults (Entry 2)
@@ -124,7 +124,7 @@ canonical_import:
   npc_[name]_state: alive          # [RATIONALE]
   flag_[name]: false               # [RATIONALE]
   trust_[npc]: 65                  # [RATIONALE]
-  ending_imported: END-A           # [RATIONALE — which ending is "canon"]
+  ending_imported: END-A           # [RATIONALE � which ending is "canon"]
 ```
 
 ---
@@ -136,7 +136,7 @@ canonical_import:
 
 | Entry | Canon Ending | Supported Carry-Over Endings | Notes |
 |---|---|---|---|
-| 1 | END-A | END-A, END-B | END-C (secret) not supported — too divergent |
+| 1 | END-A | END-A, END-B | END-C (secret) not supported � too divergent |
 | 2 | [TBD] | | |
 
 ---
@@ -147,7 +147,7 @@ canonical_import:
 
 | Element | Entry 1 State | Entry 2 State (canon) | Entry 2 State (alt carry-over) |
 |---|---|---|---|
-| [LOCATION_NAME] | [STATE] | [STATE] | [STATE — if END-B imported] |
+| [LOCATION_NAME] | [STATE] | [STATE] | [STATE � if END-B imported] |
 | [NPC_NAME] | alive | dead (END-A) | alive (END-B carry-over) |
 | [FACTION_NAME] | neutral | allied | hostile |
 
@@ -163,7 +163,7 @@ canonical_import:
 
 | After Entry | Alive / Dead | Location | Faction alignment | Trust range | Notes |
 |---|---|---|---|---|---|
-| Entry 1 | alive | [LOCATION] | [FACTION] | 0–100 | |
+| Entry 1 | alive | [LOCATION] | [FACTION] | 0�100 | |
 | Entry 2 (canon) | | | | | |
 | Entry 2 (conditional) | dead | | | | if END-B imported |
 
@@ -178,7 +178,7 @@ canonical_import:
 
 **Overarching dramatic question**: [SERIES_DRAMATIC_QUESTION]
 
-**Series ending contract**: [What the final entry MUST resolve — not what happens, but what it must feel like.]
+**Series ending contract**: [What the final entry MUST resolve � not what happens, but what it must feel like.]
 
 ### Per-Entry Arc Contribution
 

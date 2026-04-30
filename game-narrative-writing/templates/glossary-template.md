@@ -1,4 +1,4 @@
-ï»¿# Glossary: [GAME_TITLE]
+# Glossary: [GAME_TITLE]
 
 <!-- Feature: [FEATURE_DIR] | Generated: [GENERATION_DATE] -->
 <!-- Consistency reference for all invented terms, proper nouns, variable names, and
@@ -37,15 +37,15 @@
 
 | Field | Value |
 |---|---|
-| Spelling | [exact spelling â€” case-sensitive where relevant] |
+| Spelling | [exact spelling — case-sensitive where relevant] |
 | Plural | [plural form, or "uncountable"] |
 | Part of speech | [noun / verb / adjective / proper noun] |
-| In-world definition | [what it means to characters who use it â€” their understanding, not the author's] |
+| In-world definition | [what it means to characters who use it — their understanding, not the author's] |
 | Author definition | [the full meaning the author intends, including subtext characters don't know] |
-| Register | [formal / informal / technical / archaic / slang â€” which characters use it and how] |
+| Register | [formal / informal / technical / archaic / slang — which characters use it and how] |
 | First introduced | NODE-[N] |
 | Usage example | "[Direct quote from draft or planned prose]" |
-| Constraints | [What this term must NOT be used to mean or do â€” prevents drift] |
+| Constraints | [What this term must NOT be used to mean or do — prevents drift] |
 
 ---
 
@@ -55,7 +55,7 @@
 
 ---
 
-## II. Proper Nouns â€” Characters & Titles
+## II. Proper Nouns — Characters & Titles
 
 <!-- All named characters, titles of address, and honorifics.
      Spelling and capitalization are enforced across all node drafts. -->
@@ -66,18 +66,18 @@
 
 ---
 
-## III. Proper Nouns â€” Places
+## III. Proper Nouns — Places
 
 <!-- All named locations, regions, buildings, and geographic features.
      Cross-reference with world-building.md for sensory anchors. -->
 
 | Name | Spelling | Abbreviation / informal form | Type | Notes |
 |---|---|---|---|---|
-| [Place name] | [exact] | [e.g., "The Hold"] | [district / building / region / landmark] | [e.g., "never 'the [Name]' â€” no article"] |
+| [Place name] | [exact] | [e.g., "The Hold"] | [district / building / region / landmark] | [e.g., "never 'the [Name]' — no article"] |
 
 ---
 
-## IV. Proper Nouns â€” Factions, Institutions & Objects
+## IV. Proper Nouns — Factions, Institutions & Objects
 
 <!-- Named groups, organizations, artifacts, or any named object that recurs across nodes. -->
 
@@ -95,7 +95,7 @@
 
 | Variable Name | Human Label | Type | Description |
 |---|---|---|---|
-| $trust_[name] | [NPC] Trust | trust | How much [NPC] trusts the player (0â€“100) |
+| $trust_[name] | [NPC] Trust | trust | How much [NPC] trusts the player (0–100) |
 | $inv_[item] | [ITEM_NAME] | inventory | Whether player holds [ITEM_DESCRIPTION] |
 | $flag_[name] | [EVENT_NAME] | flag | Whether [EVENT] has occurred |
 | $npc_[name]_state | [NPC] State | npc_state | Current condition of [NPC] |

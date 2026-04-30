@@ -1,4 +1,4 @@
-ï»¿# Character Profile: [CHARACTER_NAME]
+# Character Profile: [CHARACTER_NAME]
 
 <!-- NPC ID: [NPC_ID] | First Node: [FIRST_NODE_ID] | Last Node: [LAST_NODE_ID] -->
 
@@ -9,18 +9,18 @@
 ## I. Core Identity
 
 **Psychological Profile**:
-- **Dominant Trait**: [The most defining personality trait â€” specific, e.g., "Controlled paranoia masking grief" not just "suspicious"]
-- **Strength**: [What this character genuinely does well â€” visible in behavior, not just stated]
-- **Flaw**: [The specific failure mode â€” what goes wrong when their trait is under pressure]
-- **Drive**: [What they are actively pursuing â€” the want, from their own perspective]
-- **Fear**: [What they are avoiding â€” the wound's surface expression]
+- **Dominant Trait**: [The most defining personality trait — specific, e.g., "Controlled paranoia masking grief" not just "suspicious"]
+- **Strength**: [What this character genuinely does well — visible in behavior, not just stated]
+- **Flaw**: [The specific failure mode — what goes wrong when their trait is under pressure]
+- **Drive**: [What they are actively pursuing — the want, from their own perspective]
+- **Fear**: [What they are avoiding — the wound's surface expression]
 
 **Background Foundation**:
-<!-- 3â€“5 sentences. The formative facts that explain who they are NOW.
+<!-- 3–5 sentences. The formative facts that explain who they are NOW.
      Every sentence should connect to the flaw, drive, or fear above. -->
-- [Formative experience 1 â€” connects to flaw or fear]
-- [Formative experience 2 â€” connects to drive or wound]
-- [Formative experience 3 â€” explains a key relationship or default behavior]
+- [Formative experience 1 — connects to flaw or fear]
+- [Formative experience 2 — connects to drive or wound]
+- [Formative experience 3 — explains a key relationship or default behavior]
 
 **Internal Arc**:
 - **Wound / False belief**: [What they believe about themselves or the world that is not quite true]
@@ -36,13 +36,13 @@
 <!-- The goal: a node written in this character's voice should be unmistakably theirs
      even without the name tag. Dialogue at every trust level must sound like the same person. -->
 - **Primary register**: [Formal / Clinical / Casual / Street / Academic / Poetic / etc.]
-- **Recurring word clusters**: [2â€“3 semantic fields this character orbits â€” e.g., "control language," "precision language," "sensory-emotional language"]
+- **Recurring word clusters**: [2–3 semantic fields this character orbits — e.g., "control language," "precision language," "sensory-emotional language"]
 - **Intensifiers / verbal habits**: [Specific fillers, qualifiers, or emphasis words they overuse]
-- **Contractions**: [Heavy / moderate / rare â€” and what that signals]
+- **Contractions**: [Heavy / moderate / rare — and what that signals]
 
 **Example Vocabulary Pool**:
 <!-- ~15 words or short phrases characteristic of this character.
-     Include a few words they would NEVER use â€” negative space is also voice. -->
+     Include a few words they would NEVER use — negative space is also voice. -->
 [word], [word], [word], [word], [word], [word], [word], [word], [word], [word]
 
 *Words they avoid*: [word], [word], [word]
@@ -56,17 +56,17 @@
 
 ### Sample Dialogue
 
-**[Context 1 â€” e.g., low trust / first meeting]**:
+**[Context 1 — e.g., low trust / first meeting]**:
 - "[Sample line]"
 - Tone: [descriptor]
 - Subtext: "[What they really mean / want / fear]"
 
-**[Context 2 â€” e.g., neutral trust / collaborative moment]**:
+**[Context 2 — e.g., neutral trust / collaborative moment]**:
 - "[Sample line]"
 - Tone: [descriptor]
 - Subtext: "[What they really mean]"
 
-**[Context 3 â€” e.g., high trust / moment of vulnerability]**:
+**[Context 3 — e.g., high trust / moment of vulnerability]**:
 - "[Sample line]"
 - Tone: [descriptor]
 - Subtext: "[What they really mean]"
@@ -83,21 +83,21 @@
 
 ### Voice Examples
 
-**[Situation 1 â€” e.g., a moment of desire or discovery]**:
-> [3â€“5 sentences in this character's internal voice. Match vocabulary register.
+**[Situation 1 — e.g., a moment of desire or discovery]**:
+> [3–5 sentences in this character's internal voice. Match vocabulary register.
 >  Show the self-deception or blind spot in action if possible.]
 
-**[Situation 2 â€” e.g., a moment of conflict or confrontation]**:
-> [3â€“5 sentences. The inner voice must feel distinct from all other characters'.]
+**[Situation 2 — e.g., a moment of conflict or confrontation]**:
+> [3–5 sentences. The inner voice must feel distinct from all other characters'.]
 
-**[Situation 3 â€” e.g., a decision moment]**:
-> [3â€“5 sentences. Show how they rationalize or commit.]
+**[Situation 3 — e.g., a decision moment]**:
+> [3–5 sentences. Show how they rationalize or commit.]
 
 ---
 
 ## IV. Physical Expression
 
-- **Micro-obsession**: [The recurring habit that escalates under stress â€” must appear across multiple nodes]
+- **Micro-obsession**: [The recurring habit that escalates under stress — must appear across multiple nodes]
 - **Stress tell**: [The involuntary physical reaction under pressure before they can control it]
 - **Comfort behavior**: [What they do when relaxed or among allies]
 - **Authority posture**: [How their body language shifts when in control vs. not]
@@ -111,11 +111,11 @@
 
 | Emotion | Trigger | Visible as | Masks |
 |---|---|---|---|
-| [Emotion 1 â€” baseline] | [What reliably triggers it] | [Visible behavior] | [What deeper feeling it covers] |
+| [Emotion 1 — baseline] | [What reliably triggers it] | [Visible behavior] | [What deeper feeling it covers] |
 | [Emotion 2] | | | |
 | [Emotion 3] | | | |
 | [Emotion 4] | | | |
-| [Emotion 5 â€” suppressed] | | [How it leaks despite suppression] | |
+| [Emotion 5 — suppressed] | | [How it leaks despite suppression] | |
 
 - **Default channel**: [Direct expression / Displacement / Intellectualization / Physical action / Humor]
 - **Overflow pattern**: [What breaks first when they can't contain an emotion]
@@ -130,13 +130,13 @@
 ## VI. Relationship to Player & Other Characters
 
 ### With the Player Character
-- **Communication pattern**: [How they talk to the player â€” not what they say but how]
+- **Communication pattern**: [How they talk to the player — not what they say but how]
 - **Subtext**: [What this character is really always asking for from the player]
-- **Dynamic**: [The repeating loop â€” what they do -> player response -> escalation pattern]
+- **Dynamic**: [The repeating loop — what they do -> player response -> escalation pattern]
 - **Trust variable**: `$trust_[name]`
 - **Arc**: [How does this relationship change across the branch range?]
 
-### With [NPC Name] â€” [Relationship label]
+### With [NPC Name] — [Relationship label]
 - **Communication pattern**: [NEEDS CLARIFICATION]
 - **Subtext**: [NEEDS CLARIFICATION]
 - **Dynamic**: [NEEDS CLARIFICATION]
@@ -151,11 +151,11 @@
 
 | Score Range | State Label | Dialogue Register | Available Choices Unlocked |
 |---|---|---|---|
-| 0â€“25 | hostile | Cold, clipped, suspicious. Minimal words. | Basic options only |
-| 26â€“49 | cautious | Guarded, non-committal. No personal information. | Standard options |
-| 50â€“74 | neutral | Polite, professional. Answers direct questions. | Most options |
-| 75â€“89 | friendly | Warm, forthcoming. Shares context unprompted. | Friendly options |
-| 90â€“100 | ally | Loyal, direct. Reveals hidden information. | All options including secret |
+| 0–25 | hostile | Cold, clipped, suspicious. Minimal words. | Basic options only |
+| 26–49 | cautious | Guarded, non-committal. No personal information. | Standard options |
+| 50–74 | neutral | Polite, professional. Answers direct questions. | Most options |
+| 75–89 | friendly | Warm, forthcoming. Shares context unprompted. | Friendly options |
+| 90–100 | ally | Loyal, direct. Reveals hidden information. | All options including secret |
 
 **Starting trust**: [N]
 
@@ -164,30 +164,30 @@
 ## VIII. Dialogue Register by Trust State
 
 <!-- How this character speaks at each trust level.
-     Calibrate from the voice established in Section II â€” same person, different armour. -->
+     Calibrate from the voice established in Section II — same person, different armour. -->
 
-### Hostile (0â€“25)
-[Description â€” how Section II voice sounds when armoured, suspicious, closed]
+### Hostile (0–25)
+[Description — how Section II voice sounds when armoured, suspicious, closed]
 
 **Sample line**: "[SAMPLE_HOSTILE_LINE]"
 
-### Cautious (26â€“49)
+### Cautious (26–49)
 [Description]
 
 **Sample line**: "[SAMPLE_CAUTIOUS_LINE]"
 
-### Neutral (50â€“74)
+### Neutral (50–74)
 [Description]
 
 **Sample line**: "[SAMPLE_NEUTRAL_LINE]"
 
-### Friendly (75â€“89)
+### Friendly (75–89)
 [Description]
 
 **Sample line**: "[SAMPLE_FRIENDLY_LINE]"
 
-### Ally (90â€“100)
-[Description â€” how Section II voice sounds when the armour is fully down]
+### Ally (90–100)
+[Description — how Section II voice sounds when the armour is fully down]
 
 **Sample line**: "[SAMPLE_ALLY_LINE]"
 
@@ -200,8 +200,8 @@
 
 | State Value | Label | Ink Integer | Description | Triggered In |
 |---|---|---|---|---|
-| alive | alive | 0 | Default â€” character present and interactable | â€” |
-| dead | dead | 1 | Character is dead â€” replaced by body/ghost/reference | NODE-[N] (choice [X]) |
+| alive | alive | 0 | Default — character present and interactable | — |
+| dead | dead | 1 | Character is dead — replaced by body/ghost/reference | NODE-[N] (choice [X]) |
 | hostile | hostile | 2 | Actively opposed to player | NODE-[N] (if trust < 25) |
 | absent | absent | 3 | Character has left the scene | NODE-[N] |
 | [CUSTOM] | [custom] | 4 | [DESCRIPTION] | NODE-[N] |
@@ -214,7 +214,7 @@
 ## X. Bark Lines
 
 <!-- Short ambient one-liners for exploration and incidental moments.
-     Not in dialogue trees â€” used for atmosphere and characterisation.
+     Not in dialogue trees — used for atmosphere and characterisation.
      Must be consistent with the voice in Section II. -->
 
 ### Greeting Barks
@@ -289,21 +289,21 @@
 [How sentence structure, vocabulary, or rhythm breaks under pressure]
 
 **What they never say** (but mean constantly):
-[The sentence this character could never bring themselves to say aloud â€” the core of their subtext]
+[The sentence this character could never bring themselves to say aloud — the core of their subtext]
 
 ---
 
 ## XV. Summary for Writers
 
-**Core Challenge**: [The hardest thing about writing this character well â€” what goes wrong if you are not careful]
+**Core Challenge**: [The hardest thing about writing this character well — what goes wrong if you are not careful]
 
-**Default Tone**: [2â€“3 words that sum up their register in a normal node]
+**Default Tone**: [2–3 words that sum up their register in a normal node]
 
-**Variance Points**: [The 2â€“3 circumstances where they break from their default â€” the moments that reveal depth]
+**Variance Points**: [The 2–3 circumstances where they break from their default — the moments that reveal depth]
 
 **Voice Homogeneity Test**: [A one-line statement that is unmistakably this character and no other. If another character could say it, rewrite until they could not.]
 
-**Success Indicator**: [What should the player feel about this character at the end? Not what happens to them â€” what the player *feels*.]
+**Success Indicator**: [What should the player feel about this character at the end? Not what happens to them — what the player *feels*.]
 
 ---
 

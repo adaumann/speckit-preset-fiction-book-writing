@@ -1,5 +1,5 @@
-ï»¿---
-description: Detect and resolve ambiguity and open design questions in the narrative design doc or game bible â€” branch logic gaps, mechanic coherence, variable states, and unresolved OQ-NNN items.
+---
+description: Detect and resolve ambiguity and open design questions in the narrative design doc or game bible — branch logic gaps, mechanic coherence, variable states, and unresolved OQ-NNN items.
 handoffs:
   - label: Rewrite Narrative Design Doc
     agent: speckit.specify
@@ -25,12 +25,12 @@ $ARGUMENTS
 You **MUST** consider the user input before proceeding (if not empty). Accepted input:
 - A specific open question reference (e.g. "resolve OQ-003")
 - A topic area (e.g. "clarify branch structure" or "clarify engine target")
-- No input â€” runs a full structured ambiguity scan across all scoped files
+- No input — runs a full structured ambiguity scan across all scoped files
 
 Optional flags:
-- `--scope narrative` â€” scan `specs/spec.md` only
-- `--scope constitution` â€” scan `.speckit/memory/constitution.md` only
-- `--all` â€” resolve all open questions in sequence (interactive mode)
+- `--scope narrative` — scan `specs/spec.md` only
+- `--scope constitution` — scan `.specify/memory/constitution.md` only
+- `--all` — resolve all open questions in sequence (interactive mode)
 
 ## Pre-Execution Checks
 
@@ -40,7 +40,7 @@ Optional flags:
 - Process as standard hook block (Optional/Mandatory). Skip silently if absent.
 
 Then:
-1. Locate `specs/spec.md` â€” if absent, suggest running `speckit.specify` first.
+1. Locate `specs/spec.md` — if absent, suggest running `speckit.specify` first.
 2. Count all `[NEEDS CLARIFICATION]` and `OQ-NNN` markers in scoped files.
 3. Report: "Found [N] open questions. Proceeding to resolution."
 
@@ -48,7 +48,7 @@ Then:
 
 **Goal**: Detect and reduce ambiguity or missing decision points in the active spec files, then write the answers directly back into the relevant file.
 
-**Note**: This clarification workflow should run BEFORE `speckit.plan`. If the user explicitly skips it, warn that downstream rework risk increases â€” then proceed.
+**Note**: This clarification workflow should run BEFORE `speckit.plan`. If the user explicitly skips it, warn that downstream rework risk increases — then proceed.
 
 ### Execution Steps
 
@@ -56,7 +56,7 @@ Then:
 
 2. **Load spec files**: Read `spec.md` (and `constitution.md` if in scope). Identify all `[NEEDS CLARIFICATION]` and `OQ-NNN` markers.
 
-3. **Run a structured ambiguity scan** across these domains â€” look for gaps or contradictions, not just explicit markers:
+3. **Run a structured ambiguity scan** across these domains — look for gaps or contradictions, not just explicit markers:
 
    | Domain | Questions to ask |
    |---|---|
@@ -70,7 +70,7 @@ Then:
    | **Continuity** | Are there timeline gaps or scene-order contradictions? Do introduced story elements (Chekhov items) have documented pay-off scenes? |
    | **Export / platform** | Are there engine, platform, or toolchain constraints that affect narrative structure but aren't yet captured in the spec? |
 
-4. **Select â‰¤5 questions** â€” the highest-value targeted clarifications. Prioritize:
+4. **Select =5 questions** — the highest-value targeted clarifications. Prioritize:
    - Questions that block planning or branch-map work (structural ambiguity)
    - Variable state contradictions (breaks implementation)
    - Character consistency gaps across branches
@@ -79,7 +79,7 @@ Then:
 
    Do NOT ask about things resolvable from context. Do NOT ask generic questions.
 
-5. **Present questions to the user** â€” one at a time, or as a numbered list if the user prefers batch mode. Wait for answers.
+5. **Present questions to the user** — one at a time, or as a numbered list if the user prefers batch mode. Wait for answers.
 
 6. **Write answers back into the relevant file**:
    - Replace `[NEEDS CLARIFICATION: ...]` markers with clarified content

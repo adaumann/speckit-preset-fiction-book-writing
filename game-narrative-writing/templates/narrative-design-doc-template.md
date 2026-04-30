@@ -1,4 +1,4 @@
-﻿# Narrative Design Document: [GAME_TITLE]
+# Narrative Design Document: [GAME_TITLE]
 
 <!-- Created: [CREATION_DATE] | Spec: specs/[FEATURE_DIR]/narrative-design-doc.md -->
 
@@ -34,7 +34,7 @@
 ## Player Arc
 
 <!-- What changes for the player character across the game.
-     In choice-IF the player IS the arc — their choices define it. -->
+     In choice-IF the player IS the arc � their choices define it. -->
 
 ### Starting State
 [PLAYER_START_STATE]
@@ -71,9 +71,9 @@
 
 | Act | Node Range | Narrative Purpose | Major Beat at Act Boundary | Convergence Node |
 |---|---|---|---|---|
-| Act 1 | NODE-001–NODE-[N] | Setup / inciting incident | [NEEDS CLARIFICATION] | NODE-[N] |
-| Act 2 | NODE-[N]–NODE-[N] | Rising action / complications | [NEEDS CLARIFICATION] | NODE-[N] |
-| Act 3 | NODE-[N]–NODE-[N] | Climax / endings | [NEEDS CLARIFICATION] | — |
+| Act 1 | NODE-001�NODE-[N] | Setup / inciting incident | [NEEDS CLARIFICATION] | NODE-[N] |
+| Act 2 | NODE-[N]�NODE-[N] | Rising action / complications | [NEEDS CLARIFICATION] | NODE-[N] |
+| Act 3 | NODE-[N]�NODE-[N] | Climax / endings | [NEEDS CLARIFICATION] | � |
 
 ---
 
@@ -85,7 +85,7 @@
 | NPC ID | Name | Role | First Node | Wound / False Belief | Want | Need | Relationship Arc | Trust Hook | State Hook |
 |---|---|---|---|---|---|---|---|---|---|
 | NPC-001 | [NAME] | [ROLE] | NODE-[N] | [NEEDS CLARIFICATION] | [NEEDS CLARIFICATION] | [NEEDS CLARIFICATION] | [start state] -> [range] | $trust_[name] | $npc_[name]_state |
-| NPC-002 | [NAME] | [ROLE] | NODE-[N] | [NEEDS CLARIFICATION] | [NEEDS CLARIFICATION] | [NEEDS CLARIFICATION] | [NEEDS CLARIFICATION] | — | $npc_[name]_state |
+| NPC-002 | [NAME] | [ROLE] | NODE-[N] | [NEEDS CLARIFICATION] | [NEEDS CLARIFICATION] | [NEEDS CLARIFICATION] | [NEEDS CLARIFICATION] | � | $npc_[name]_state |
 
 ---
 
@@ -110,7 +110,7 @@
 
 ## Key Scenes / Nodes
 
-<!-- Narrative obligations — these beats MUST appear regardless of branch path.
+<!-- Narrative obligations � these beats MUST appear regardless of branch path.
      Use Given/When/Then format. -->
 
 | Node ID | Scene Name | Act | Type | Arc Served | Branch Conditions |
@@ -127,7 +127,7 @@
      Given/When/Then for each key scene:
      Given [world state before this node],
      When  [player arrives / makes a choice],
-     Then  [what changes — consequence, information revealed, variable set]. -->
+     Then  [what changes � consequence, information revealed, variable set]. -->
 
 ---
 
@@ -171,7 +171,7 @@
 ## Player Experience Goals
 
 <!-- What the player MUST feel, discover, or experience. Measurable and testable.
-     These are design contracts — not vibe notes. -->
+     These are design contracts � not vibe notes. -->
 
 | Goal | How It Will Be Achieved | Success Signal |
 |---|---|---|
@@ -222,7 +222,7 @@
 | Target audience | [NEEDS CLARIFICATION] |
 | Tone | [NEEDS CLARIFICATION] |
 | Estimated play time | [N] minutes |
-| Series position | [standalone / series — entry N of M] |
+| Series position | [standalone / series � entry N of M] |
 | Series title | [NEEDS CLARIFICATION / N/A if standalone] |
 | Series bible path | [specs/series-bible.md / N/A if standalone] |
 | Sequel threads left open | [NEEDS CLARIFICATION] |

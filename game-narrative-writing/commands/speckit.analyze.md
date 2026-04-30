@@ -1,5 +1,5 @@
-ï»¿---
-description: Full structural analysis of all node files â€” branch integrity, variable coverage, endings reachability, and flowmap alignment. Run after node drafting phases; for per-node quality checks use speckit.checklist.
+---
+description: Full structural analysis of all node files — branch integrity, variable coverage, endings reachability, and flowmap alignment. Run after node drafting phases; for per-node quality checks use speckit.checklist.
 handoffs:
   - label: Fix Flagged Nodes
     agent: speckit.revise
@@ -22,7 +22,7 @@ scripts:
 
 ## Goal
 
-Verify that all drafted node files are structurally sound and internally consistent. Catch dead ends, unreachable nodes, undeclared variables, unreachable endings, and flowmap mismatches now â€” not after a full playtest cycle.
+Verify that all drafted node files are structurally sound and internally consistent. Catch dead ends, unreachable nodes, undeclared variables, unreachable endings, and flowmap mismatches now — not after a full playtest cycle.
 
 Run after node drafting phases. Does not modify any files. For per-node prose and dialogue quality checks, use `speckit.checklist` instead.
 
@@ -33,10 +33,10 @@ $ARGUMENTS
 ```
 
 You **MUST** consider the user input before proceeding (if not empty). Accepted arguments:
-- *(no argument)* â€” analyze all nodes in `nodes/`
-- `--act [N]` â€” scope analysis to a single act
-- `--check dead-ends|unreachable|variables|endings|flowmap|hooks` â€” run only one class of check
-- `--report` â€” write full analysis output to `analysis-report.md`
+- *(no argument)* — analyze all nodes in `nodes/`
+- `--act [N]` — scope analysis to a single act
+- `--check dead-ends|unreachable|variables|endings|flowmap|hooks` — run only one class of check
+- `--report` — write full analysis output to `analysis-report.md`
 
 ## Pre-Execution Checks
 
@@ -47,77 +47,77 @@ You **MUST** consider the user input before proceeding (if not empty). Accepted 
 
 Then:
 1. Confirm `nodes/` directory exists and contains at least one node file.
-2. Load `specs/flowmap.md` â€” required for reachability and alignment analysis.
-3. Load `specs/variables.md` â€” required for variable declaration check.
-4. Load `specs/endings.md` â€” required for endings reachability check.
-5. Load `.speckit/memory/constitution.md` â€” required for hook schema compliance check.
+2. Load `specs/flowmap.md` — required for reachability and alignment analysis.
+3. Load `specs/variables.md` — required for variable declaration check.
+4. Load `specs/endings.md` — required for endings reachability check.
+5. Load `.specify/memory/constitution.md` — required for hook schema compliance check.
 
 ## Operating Constraints
 
 **STRICTLY READ-ONLY**: Do not modify any files. Output a structured analysis report. Offer an optional remediation plan only if the user explicitly asks for one.
 
-**Constitution Authority**: `.speckit/memory/constitution.md` is non-negotiable. If a mechanic or structural principle needs to change, that requires a `speckit.constitution` update â€” not reinterpretation.
+**Constitution Authority**: `.specify/memory/constitution.md` is non-negotiable. If a mechanic or structural principle needs to change, that requires a `speckit.constitution` update — not reinterpretation.
 
 ## Execution Steps
 
 1. **Setup**: Run `{SCRIPT}` from repo root and parse JSON for spec file paths.
 
 2. **Load documents**:
-   - **Required**: `nodes/` (all drafted node files), `specs/flowmap.md`, `specs/variables.md`, `specs/endings.md`, `.speckit/memory/constitution.md`
+   - **Required**: `nodes/` (all drafted node files), `specs/flowmap.md`, `specs/variables.md`, `specs/endings.md`, `.specify/memory/constitution.md`
    - **Optional**: `outlines/` (for outline-gate compliance check), `specs/spec.md`, `specs/relationships.md` (for relationship beat coverage check), `specs/timeline.md` (for continuity constraint check)
    - Abort with a clear error if any required document is missing.
 
 3. **Run analysis across these dimensions**:
 
-   **A. Branch Integrity** (dead ends & unreachable nodes) â€” severity: CRITICAL if blocking
+   **A. Branch Integrity** (dead ends & unreachable nodes) — severity: CRITICAL if blocking
    - Find all non-terminal nodes with 0 outgoing choices
    - Find all nodes where all choice targets are referenced but no corresponding file exists
-   - Build the full nodeâ†’choiceâ†’node graph from all node files
+   - Build the full node?choice?node graph from all node files
    - Identify nodes with no incoming links (orphaned)
    - Cross-reference with `flowmap.md`: flag flowmap nodes with no drafted file; flag drafted nodes not in `flowmap.md`
 
    **B. Variable Coverage**
    - Scan all `variables_read` and `variables_set` frontmatter fields across all node files
-   - Check every variable against `specs/variables.md` â€” flag undeclared variables as CRITICAL
-   - Check for read-before-set: a variable read in a node that has no upstream node setting it on any path to that node â€” flag as CRITICAL
-   - Flag any variable declared in `specs/variables.md` that is never read or set in any node â€” WARNING
+   - Check every variable against `specs/variables.md` — flag undeclared variables as CRITICAL
+   - Check for read-before-set: a variable read in a node that has no upstream node setting it on any path to that node — flag as CRITICAL
+   - Flag any variable declared in `specs/variables.md` that is never read or set in any node — WARNING
 
    **C. Endings Reachability**
    - For each ending in `specs/endings.md`, trace whether its required variable conditions can be satisfied on at least one complete path from the opening node to the ending node
    - Flag any ending with no satisfiable path as CRITICAL
    - Flag any ending node referenced in `specs/endings.md` with no drafted node file as CRITICAL
 
-   **D. Flowmap â†” Node Alignment**
-   - List flowmap nodes that have no drafted file in `nodes/` â€” WARNING (or CRITICAL if gating an ending)
-   - List drafted node files not registered in `flowmap.md` â€” WARNING
-   - Verify act assignments in node frontmatter match the act assignments in `flowmap.md` â€” flag mismatches as WARNING
+   **D. Flowmap ? Node Alignment**
+   - List flowmap nodes that have no drafted file in `nodes/` — WARNING (or CRITICAL if gating an ending)
+   - List drafted node files not registered in `flowmap.md` — WARNING
+   - Verify act assignments in node frontmatter match the act assignments in `flowmap.md` — flag mismatches as WARNING
 
    **E. Outline Gate Compliance**
    - For each drafted node, check whether a corresponding `outlines/[NODE_ID].md` exists with `status: APPROVED`
    - Flag any node drafted without an APPROVED outline as WARNING (outline gating was bypassed)
 
    **F. Hook Schema Compliance**
-   - For each `variables_set` entry across all nodes, verify the hook type matches the valid hook types defined in `.speckit/memory/constitution.md` mechanic schemas
+   - For each `variables_set` entry across all nodes, verify the hook type matches the valid hook types defined in `.specify/memory/constitution.md` mechanic schemas
    - Flag invalid or unrecognised hook types as WARNING
    - Flag any NPC trust or state variable that exceeds its declared range in `specs/variables.md` as WARNING
 
    **G. Relationship Beat Coverage** *(skip if `specs/relationships.md` is absent)*
-   - For each REL-NNN in `specs/relationships.md`: verify that all five key beats have a mapped node ID (not `[NEEDS NODE]`) â€” flag any unmapped beat as WARNING
-   - Verify the mapped node exists in `specs/flowmap.md` â€” flag missing nodes as CRITICAL if the beat gates an ending
+   - For each REL-NNN in `specs/relationships.md`: verify that all five key beats have a mapped node ID (not `[NEEDS NODE]`) — flag any unmapped beat as WARNING
+   - Verify the mapped node exists in `specs/flowmap.md` — flag missing nodes as CRITICAL if the beat gates an ending
 
    **H. Timeline Constraint Check** *(skip if `specs/timeline.md` is absent)*
-   - For each TC-NNN in `specs/timeline.md`: verify no drafted node with a variable value that satisfies the "before" condition precedes the required fabula event â€” flag violations as CRITICAL
+   - For each TC-NNN in `specs/timeline.md`: verify no drafted node with a variable value that satisfies the "before" condition precedes the required fabula event — flag violations as CRITICAL
 
 4. **Output structured report**:
 
    ```
    ## Structural Analysis Report
 
-   ### CRITICAL Issues (blocking â€” fix before QA or export)
-   - [issue] â€” [node or file] â€” [remediation suggestion]
+   ### CRITICAL Issues (blocking — fix before QA or export)
+   - [issue] — [node or file] — [remediation suggestion]
 
    ### WARNINGS (quality risks, addressable before export)
-   - [issue] â€” [node or file] â€” [suggestion]
+   - [issue] — [node or file] — [suggestion]
 
    ### PASS (dimensions with no issues)
    - [dimension]: OK

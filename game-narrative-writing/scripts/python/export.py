@@ -14,7 +14,7 @@ Usage:
 Requires:
   - nodes/NODE-*.md: node files with YAML frontmatter and [MECHANIC:TYPE] hook blocks
   - variables.md: variable registry (for initialization blocks)
-  - .speckit/memory/constitution.md: engine target and POV configuration
+  - .specify/memory/constitution.md: engine target and POV configuration
 
 No third-party dependencies for core functionality.
 PyYAML is used for frontmatter parsing; falls back to manual parse if unavailable.

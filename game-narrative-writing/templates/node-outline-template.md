@@ -1,12 +1,12 @@
-﻿---
+---
 node_id: [NODE_ID]
 title: [NODE_TITLE]
 act: [ACT_NUMBER]
 status: DRAFT
 # status: DRAFT | APPROVED | SKIP
-# DRAFT    → speckit.implement gates — will not draft until changed to APPROVED
-# APPROVED → speckit.implement will draft prose for this node
-# SKIP     → speckit.implement skips this node entirely
+# DRAFT    ? speckit.implement gates � will not draft until changed to APPROVED
+# APPROVED ? speckit.implement will draft prose for this node
+# SKIP     ? speckit.implement skips this node entirely
 ---
 
 # Node Outline: [NODE_TITLE]
@@ -18,11 +18,11 @@ status: DRAFT
 ## Beat Summary
 
 [BEAT_SUMMARY]
-<!-- 1–3 sentences. What happens in this node? What is the player doing/deciding?
+<!-- 1�3 sentences. What happens in this node? What is the player doing/deciding?
      What narrative or mechanical purpose does this node serve? -->
 
 **Narrative purpose**: [decision / consequence / revelation / setup / hub / transition / climax / ending]
-**Tension level**: [1–10]
+**Tension level**: [1�10]
 **POV override**: [blank = use constitution.md default / or: second-person | third-person | first-person | character_name]
 **Thematic work**: [blank = none / or: motif MO-NNN appears | symbol [name] state changes | counter-theme voice present | theme-question advanced]
 
@@ -120,7 +120,7 @@ status: DRAFT
 - [ ] All variables in "Variables Read" are set by at least one upstream node in `flowmap.md`
 - [ ] All variables in "Variables Set" are declared in `variables.md`
 - [ ] At least 2 choices (or 0 for ending/terminal node)
-- [ ] No choice is obviously dominant — all have meaningful narrative cost or trade-off
+- [ ] No choice is obviously dominant � all have meaningful narrative cost or trade-off
 - [ ] All target node IDs exist in `flowmap.md`
 - [ ] Ending nodes registered in `endings.md`
 - [ ] Beat summary is specific enough to draft from without ambiguity

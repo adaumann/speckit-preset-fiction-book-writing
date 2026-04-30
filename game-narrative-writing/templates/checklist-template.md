@@ -1,30 +1,30 @@
-﻿# Node Quality Checklist: [NODE_ID]
+# Node Quality Checklist: [NODE_ID]
 
-<!-- Purpose: Quality gate for drafted node files — "unit tests for nodes"
+<!-- Purpose: Quality gate for drafted node files � "unit tests for nodes"
      Created: [CREATION_DATE] | Node: [NODE_ID] | Status: [DRAFT / APPROVED]
      Checklist file: nodes/checklists/[NODE_ID]-checklist.md -->
 
 <!-- IMPORTANT: This checklist validates node quality, not story events.
-     ✅ = satisfied  ❌ = needs revision  ⚠️ = marginal / discuss
+     ? = satisfied  ? = needs revision  ?? = marginal / discuss
 
      DO NOT check:
-     - ❌ Whether the node matches the flowmap
-     - ❌ Whether the plot is logical at this point
-     - ❌ Whether the choices are "good" design choices
+     - ? Whether the node matches the flowmap
+     - ? Whether the plot is logical at this point
+     - ? Whether the choices are "good" design choices
 
      DO check:
-     - ✅ Whether the node structure is valid (all targets exist, variables declared)
-     - ✅ Whether the prose works as prose
-     - ✅ Whether mechanic hooks are correctly declared
-     - ✅ Whether the node complies with the game bible -->
+     - ? Whether the node structure is valid (all targets exist, variables declared)
+     - ? Whether the prose works as prose
+     - ? Whether mechanic hooks are correctly declared
+     - ? Whether the node complies with the game bible -->
 
 ---
 
-## NR — Node Rules
+## NR � Node Rules
 
 | # | Check | Status | Notes |
 |---|---|---|---|
-| NR-001 | Non-terminal node has ≥ 2 choices under `## Choices` | | |
+| NR-001 | Non-terminal node has = 2 choices under `## Choices` | | |
 | NR-002 | All choice targets are valid node IDs (exist in `outlines/` or `nodes/`) | | |
 | NR-003 | All variables in `variables_read` and `variables_set` are declared in `variables.md` | | |
 | NR-004 | All mechanic hook blocks use valid syntax and registered hook types (per `mechanics.md`) | | |
@@ -36,7 +36,7 @@
 
 ---
 
-## PR — Prose Rules
+## PR � Prose Rules
 
 | # | Check | Status | Notes |
 |---|---|---|---|
@@ -45,18 +45,18 @@
 | PR-003 | Choice labels use active verb phrases; no meta-language (e.g. not "Select option") | | |
 | PR-004 | Dialogue register matches NPC trust state at this node's variable value | | |
 | PR-005 | Prose coheres without hook blocks (narrative reads as complete if mechanics are removed) | | |
-| PR-006 | At least one concrete sensory detail (sound, smell, texture, temperature — not visual only) | | |
+| PR-006 | At least one concrete sensory detail (sound, smell, texture, temperature � not visual only) | | |
 | PR-007 | No choice is telegraphed or trivialized by the prose (player's decision space is respected) | | |
 | PR-008 | Prose tense, sentence rhythm, and vocabulary register are consistent with Prose Style Mode (Section VII of `constitution.md`); anti-AI filter patterns are absent | | |
 
 ---
 
-## MC — Mechanic Compliance
+## MC � Mechanic Compliance
 
 | # | Check | Status | Notes |
 |---|---|---|---|
 | MC-001 | Every trust-shifting choice has narrative justification in prose | | |
-| MC-002 | No single choice dominates trivially — all choices are meaningful trade-offs | | |
+| MC-002 | No single choice dominates trivially � all choices are meaningful trade-offs | | |
 | MC-003 | Timer failure conditions are handled in a downstream node (or flagged `[NEEDS NODE]`) | | |
 | MC-004 | (--strict only) Tier 2 stub hooks include a `// TODO:` comment describing expected implementation | | |
 | MC-005 | No mechanic hook reads a variable not listed in `variables_read` in the frontmatter | | |
@@ -64,7 +64,7 @@
 
 ---
 
-## GB — Game Bible Compliance
+## GB � Game Bible Compliance
 
 | # | Check | Status | Notes |
 |---|---|---|---|
@@ -75,13 +75,13 @@
 
 ---
 
-## RTG — Overall Rating
+## RTG � Overall Rating
 
-<!-- Score each section 1–10 based on how many items pass.
+<!-- Score each section 1�10 based on how many items pass.
      Apply weights to compute the weighted total.
-     Score ≥ 7 is required to PASS. Hard-fail gates override the score. -->
+     Score = 7 is required to PASS. Hard-fail gates override the score. -->
 
-| Section | Weight | Score (1–10) | Rationale |
+| Section | Weight | Score (1�10) | Rationale |
 |---|---|---|---|
 | Node Rules (NR) | 30% | | |
 | Prose Rules (PR) | 25% | | |
@@ -92,15 +92,15 @@
 
 | Gate | Result |
 |---|---|
-| Score ≥ 7 | ✅ PASS / ❌ FAIL |
-| NR-002 — all choice targets valid | ✅ PASS / ❌ FAIL |
-| NR-006 — no unreadable variable | ✅ PASS / ❌ FAIL |
-| NR-009 — choices format correct for export.py | ✅ PASS / ❌ FAIL |
+| Score = 7 | ? PASS / ? FAIL |
+| NR-002 � all choice targets valid | ? PASS / ? FAIL |
+| NR-006 � no unreadable variable | ? PASS / ? FAIL |
+| NR-009 � choices format correct for export.py | ? PASS / ? FAIL |
 
-**Verdict**: [PASS — node may proceed to APPROVED / FAIL — must revise before approval]
+**Verdict**: [PASS � node may proceed to APPROVED / FAIL � must revise before approval]
 
 **Top revision priorities** (if FAIL or score < 8):
-1. [Highest-impact item to fix — cite rule code]
+1. [Highest-impact item to fix � cite rule code]
 2. [Second priority]
 3. [Third priority if applicable]
 

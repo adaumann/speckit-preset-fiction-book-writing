@@ -1,4 +1,4 @@
-ï»¿# World-Building Reference: [GAME_TITLE]
+# World-Building Reference: [GAME_TITLE]
 
 <!-- Living reference document for locations, objects, world rules, and ambient states.
      Updated throughout drafting. speckit.continuity checks node prose against these entries. -->
@@ -8,7 +8,7 @@
 ## World Overview
 
 [WORLD_OVERVIEW]
-<!-- 100â€“200 words. The setting's essential nature, tone, and rules.
+<!-- 100–200 words. The setting's essential nature, tone, and rules.
      What makes this world distinct? What constraints does it place on narrative? -->
 
 ---
@@ -28,7 +28,7 @@
 ### Narrative Boundaries
 
 <!-- What the player cannot do, access, or know in this world. Defines the edge of agency.
-     These are not mechanical gates â€” they are world-level constraints that make choices meaningful. -->
+     These are not mechanical gates — they are world-level constraints that make choices meaningful. -->
 
 | Boundary | Reason | Nodes where this matters |
 |---|---|---|
@@ -41,12 +41,12 @@
 
 <!-- One entry per location that appears in nodes. -->
 
-### [LOCATION_NAME] â€” [LOCATION_ID]
+### [LOCATION_NAME] — [LOCATION_ID]
 
 | Field | Value |
 |---|---|
 | Location ID | LOC-[N] |
-| State variable | $location_[name]_state (Tier 2 â€” stub only) |
+| State variable | $location_[name]_state (Tier 2 — stub only) |
 | First appears | NODE-[N] |
 | Connected to | [LOCATION_IDs] |
 
@@ -54,10 +54,10 @@
 [LOCATION_DESCRIPTION]
 
 **Sensory anchors**:
-- Sight: [SIGHT] â€” *"[Direct prose example â€” one sentence, second/third person per constitution.md]"*
-- Sound: [SOUND] â€” *"[Direct prose example]"*
-- Smell: [SMELL] â€” *"[Direct prose example]"*
-- Texture / touch: [TEXTURE] â€” *"[Direct prose example]"*
+- Sight: [SIGHT] — *"[Direct prose example — one sentence, second/third person per constitution.md]"*
+- Sound: [SOUND] — *"[Direct prose example]"*
+- Smell: [SMELL] — *"[Direct prose example]"*
+- Texture / touch: [TEXTURE] — *"[Direct prose example]"*
 
 **Atmosphere by time/state**:
 | State | Atmosphere | Sensory shift |
@@ -65,9 +65,9 @@
 | default | [ATMOSPHERE] | [what changes from baseline] |
 | [STATE] | [ATMOSPHERE] | |
 
-**Narrative function**: [What this location does for the story â€” tension source / sanctuary / decision point / revelation site / environmental pressure]
+**Narrative function**: [What this location does for the story — tension source / sanctuary / decision point / revelation site / environmental pressure]
 
-**Forbidden/off-limits**: [What the player cannot do or access here â€” creates boundaries and raises stakes]
+**Forbidden/off-limits**: [What the player cannot do or access here — creates boundaries and raises stakes]
 
 **Object inventory**:
 | Object ID | Object | State | Variable | Interactable |
@@ -82,7 +82,7 @@
 
 <!-- Objects that appear across multiple locations or have mechanical significance. -->
 
-### [OBJECT_NAME] â€” [OBJECT_ID]
+### [OBJECT_NAME] — [OBJECT_ID]
 
 | Field | Value |
 |---|---|
@@ -90,13 +90,13 @@
 | Location | LOC-[N] |
 | Portable | yes / no |
 | Inventory item | $inv_[name] (if portable) |
-| State variable | $object_[name]_state (Tier 2 â€” stub only) |
+| State variable | $object_[name]_state (Tier 2 — stub only) |
 
 **States**: [intact / broken / repaired / taken / combined]
 **Description**: [OBJECT_DESCRIPTION]
-**Sensory detail**: *"[Direct prose example â€” how this object looks, feels, or sounds when interacted with]"*
-**Narrative purpose**: [What this object does for the story â€” Chekhov item / gate / trust signal / world-rule demonstration]
-**Story function**: [1â€“2 sentences on symbolic or thematic role, if any]
+**Sensory detail**: *"[Direct prose example — how this object looks, feels, or sounds when interacted with]"*
+**Narrative purpose**: [What this object does for the story — Chekhov item / gate / trust signal / world-rule demonstration]
+**Story function**: [1–2 sentences on symbolic or thematic role, if any]
 **Appears in nodes**: NODE-[N], NODE-[N]
 
 ---

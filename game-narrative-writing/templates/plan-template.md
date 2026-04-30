@@ -1,4 +1,4 @@
-﻿# Flowmap: [GAME_TITLE]
+# Flowmap: [GAME_TITLE]
 
 <!-- Branch/Dir: [FEATURE_DIR] | Date: [PLAN_DATE] | Spec: specs/[FEATURE_DIR]/spec.md -->
 
@@ -35,13 +35,13 @@
 ## Game Bible Check
 
 <!-- Gates that MUST pass before node authoring begins.
-     Mark each: ✅ PASS / ⚠️ NEEDS WORK / ❌ VIOLATION + justification.
-     A ❌ VIOLATION blocks progression unless justified below. -->
+     Mark each: ? PASS / ?? NEEDS WORK / ? VIOLATION + justification.
+     A ? VIOLATION blocks progression unless justified below. -->
 
 <!-- Status values used by speckit.plan:
-     ✅ PASS        — gate satisfied
-     ⚠️ NEEDS WORK  — partially satisfied; action required before authoring
-     ❌ VIOLATION   — gate fails; blocks Phase 0 until justified below -->
+     ? PASS        � gate satisfied
+     ?? NEEDS WORK  � partially satisfied; action required before authoring
+     ? VIOLATION   � gate fails; blocks Phase 0 until justified below -->
 
 | Gate | Status | Notes |
 |---|---|---|
@@ -75,7 +75,7 @@
 |---|---|---|---|
 | Act 1 | [N] | NODE-1[NNN] | Setup, inciting incident, first branching decision |
 | Act 2 | [N] | NODE-2[NNN] | Rising action, complication, midpoint revelation |
-| Act 3 | [N] | — | Climax, diverge to endings |
+| Act 3 | [N] | � | Climax, diverge to endings |
 
 ---
 
@@ -83,7 +83,7 @@
 
 <!-- Text representation of the branch graph.
      Use speckit.flowmap to generate the Mermaid diagram.
-     Format: NODE-ID: [description] — choice text > NODE-ID | choice text > NODE-ID -->
+     Format: NODE-ID: [description] � choice text > NODE-ID | choice text > NODE-ID -->
 
 ### Act 1
 
@@ -132,7 +132,7 @@ NODE-3[N]: [CLIMAX]
 | Node ID | Information Revealed | Variable Set | Player Must Not Know Before |
 |---|---|---|---|
 | NODE-[N] | [INFO] | $flag_[name] | NODE-[N] |
-| NODE-[N] | [INFO] | $trust_[npc] >= 50 | — |
+| NODE-[N] | [INFO] | $trust_[npc] >= 50 | � |
 
 ---
 
@@ -156,9 +156,9 @@ NODE-3[N]: [CLIMAX]
 
 | Act | Decision Density | Avg Tension | Mechanic Trigger Nodes | Notes |
 |---|---|---|---|---|
-| Act 1 | low to rising | 3–5 | [N] | Establish world, introduce hooks |
-| Act 2 | high | 5–8 | [N] | Complications, NPC state changes |
-| Act 3 | very high to resolution | 7–10 | [N] | Endings diverge |
+| Act 1 | low to rising | 3�5 | [N] | Establish world, introduce hooks |
+| Act 2 | high | 5�8 | [N] | Complications, NPC state changes |
+| Act 3 | very high to resolution | 7�10 | [N] | Endings diverge |
 
 ---
 
@@ -166,7 +166,7 @@ NODE-3[N]: [CLIMAX]
 
 | Document | Purpose | Status |
 |---|---|---|
-| `specs/variables.md` | All state variables — types, defaults, read/write map, ending gates | [NEEDS CLARIFICATION] |
+| `specs/variables.md` | All state variables � types, defaults, read/write map, ending gates | [NEEDS CLARIFICATION] |
 | `specs/mechanics.md` | Hook schemas per mechanic type; engine-specific syntax | [NEEDS CLARIFICATION] |
 | `specs/endings.md` | Endings registry: gate conditions, thematic statements, final node IDs | [NEEDS CLARIFICATION] |
 | `characters.md` | Character index: NPC roster, trust variable registry, relationship map | [NEEDS CLARIFICATION] |
@@ -221,10 +221,10 @@ NODE-3[N]: [CLIMAX]
 
 | Field | Value |
 |---|---|
-| **Estimated word count** | [range, e.g., 300–600 words] |
+| **Estimated word count** | [range, e.g., 300�600 words] |
 | **Act** | [1 / 2 / 3] |
 | **Branch type** | [choice / converge / gate / terminal] |
-| **Player perspective** | [2nd-person / 3rd-person / uses $pov — omit if not a switching game] |
+| **Player perspective** | [2nd-person / 3rd-person / uses $pov � omit if not a switching game] |
 | **Location** | [location name from world-building.md] |
 | **Variables read** | [$var_name (condition)] |
 | **Variables written** | [$var_name = value] |
@@ -233,7 +233,7 @@ NODE-3[N]: [CLIMAX]
 
 **Opening hook**: [Sensory detail -- not summary. Drop the player into a moment.]
 
-**Key beats** (3–5 micro-events in causal order):
+**Key beats** (3�5 micro-events in causal order):
 1. [Beat 1 -- causal event]
 2. [Beat 2 -- complication or reveal]
 3. [Beat 3 -- NPC reaction or world response]

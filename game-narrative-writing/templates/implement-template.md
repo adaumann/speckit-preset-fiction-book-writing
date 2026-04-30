@@ -1,12 +1,12 @@
-﻿---
+---
 node_id: [NODE_ID]
 title: [NODE_TITLE]
 act: [ACT_NUMBER]
 status: DRAFT
 # status: DRAFT | APPROVED | SKIP
-# DRAFT    → speckit.implement will stop and request approval
-# APPROVED → speckit.implement will draft prose for this node
-# SKIP     → speckit.implement will skip this node entirely
+# DRAFT    ? speckit.implement will stop and request approval
+# APPROVED ? speckit.implement will draft prose for this node
+# SKIP     ? speckit.implement will skip this node entirely
 pov: [PLAYER_PERSPECTIVE_OVERRIDE]
 # Leave blank to use the default from constitution.md
 # Set to: second-person | third-person | first-person | [character_name] (when switching)
@@ -35,16 +35,16 @@ outline_ref: outlines/[NODE_ID].md
 
 [NODE_PROSE]
 <!-- Write the narrative prose here. Second/third/first person per constitution.md.
-     Keep prose coherent without the hook blocks — hooks are annotations only.
+     Keep prose coherent without the hook blocks � hooks are annotations only.
      Opening line MUST orient the player: where, who, what is at stake. -->
 
 ---
 
-<!-- ═══════════════════════════════════════════════════════
+<!-- -------------------------------------------------------
      MECHANIC HOOKS
      Each hook block is self-contained. Remove unused blocks.
      Prose must read coherently if all hook blocks are removed.
-     ═══════════════════════════════════════════════════════ -->
+     ------------------------------------------------------- -->
 
 [MECHANIC:VISITED set=[VARIABLE_NAME]]
 <!-- Marks this node as visited. Variable must be declared in variables.md as type: visited -->

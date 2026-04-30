@@ -1,4 +1,4 @@
-ï»¿---
+---
 description: Draft a full node from an APPROVED outline. Enforces hook declarations, POV rules, and craft rules from constitution.md.
 handoffs:
   - label: Generate Outline First
@@ -33,11 +33,11 @@ $ARGUMENTS
 ```
 
 You **MUST** consider the user input before proceeding (if not empty). Accepted arguments:
-- `[NODE_ID]` â€” draft a single node (e.g. `NODE-003`)
-- `[NODE_ID] [NODE_ID] ...` â€” draft a list of nodes in sequence
-- `--outline-only` â€” generate the outline only (delegates to `speckit.outline`; does not draft the node)
-- `--force` â€” redraft an existing node (prompts for confirmation)
-- *(no argument)* â€” draft the next APPROVED outline that has no corresponding node file
+- `[NODE_ID]` — draft a single node (e.g. `NODE-003`)
+- `[NODE_ID] [NODE_ID] ...` — draft a list of nodes in sequence
+- `--outline-only` — generate the outline only (delegates to `speckit.outline`; does not draft the node)
+- `--force` — redraft an existing node (prompts for confirmation)
+- *(no argument)* — draft the next APPROVED outline that has no corresponding node file
 
 ## Pre-Execution Checks
 
@@ -50,7 +50,7 @@ You **MUST** consider the user input before proceeding (if not empty). Accepted 
 - Scan all checklist files in `checklists/`
 - If ANY checklist has incomplete items, output a status table and **stop**:
   ```
-  âš ï¸ CHECKLIST GATE: Incomplete quality gates detected.
+  ?? CHECKLIST GATE: Incomplete quality gates detected.
 
   | Checklist | Total | Complete | Incomplete |
   |---|---|---|---|
@@ -64,10 +64,10 @@ You **MUST** consider the user input before proceeding (if not empty). Accepted 
 **Outline gate**:
 - Resolve the target node ID from `$ARGUMENTS` or `tasks.md` (first unchecked task with a `nodes/` output path).
 - Look for `outlines/[NODE_ID].md`:
-  - If absent â†’ halt: "No outline found. Run `speckit.outline [NODE_ID]` first."
-  - If `status: DRAFT` â†’ halt:
+  - If absent ? halt: "No outline found. Run `speckit.outline [NODE_ID]` first."
+  - If `status: DRAFT` ? halt:
     ```
-    âš ï¸ OUTLINE GATE: outlines/[NODE_ID].md has status: DRAFT.
+    ?? OUTLINE GATE: outlines/[NODE_ID].md has status: DRAFT.
 
     Review the node outline, edit beats and variable tables as needed, then set:
         status: APPROVED
@@ -77,11 +77,11 @@ You **MUST** consider the user input before proceeding (if not empty). Accepted 
 
     Then re-run speckit.implement
     ```
-  - If `status: SKIP` â†’ do not generate any prose. Instead:
-    - Report: `â­ SKIP: [NODE_ID] [title] â€” author will write this node. No prose generated.`
-    - Mark the corresponding task `[x]` in `tasks.md` with note: `[author-written â€” no AI draft]`
+  - If `status: SKIP` ? do not generate any prose. Instead:
+    - Report: `? SKIP: [NODE_ID] [title] — author will write this node. No prose generated.`
+    - Mark the corresponding task `[x]` in `tasks.md` with note: `[author-written — no AI draft]`
     - Advance to the next unchecked task and repeat the outline gate check.
-  - If `status: APPROVED` â†’ proceed.
+  - If `status: APPROVED` ? proceed.
 - If `nodes/NODE-NNN.md` already exists and `--force` not set: ask user to confirm overwrite.
 
 ## Execution Steps
@@ -97,12 +97,12 @@ You **MUST** consider the user input before proceeding (if not empty). Accepted 
 
 3. **Load context**:
    - **Required**: `outlines/[NODE_ID].md` (the APPROVED outline is the authoritative drafting brief)
-   - **Required**: `.speckit/memory/constitution.md` â€” extract: `player_perspective` (POV default), `tone`, active mechanic schemas, craft rules (NR-NNN, PR-NNN), prohibited phrases, Prose Style Mode (Section VII: tense, sentence rhythm, vocabulary register, sensory density, anti-AI filter active)
-   - **Required**: `specs/variables.md` â€” validate all `variables_read` and `variables_set` in the outline are registered; warn on any undeclared variable: `Variable $[name] is not in variables.md. Register it before drafting.`
-   - **Required**: `specs/mechanics.md` â€” hook syntax definitions for each hook type
-   - **Optional**: `specs/characters/[NPC_ID].md` â€” NPC trust thresholds, state values, bark line register, dialogue style (load for each NPC present in this node)
-   - **Optional**: `specs/world-building.md` â€” sensory anchors, atmosphere notes for the node's setting
-   - Read `tasks.md` â€” identify the first group of unchecked tasks (respect `[P]` markers for parallel drafting)
+   - **Required**: `.specify/memory/constitution.md` — extract: `player_perspective` (POV default), `tone`, active mechanic schemas, craft rules (NR-NNN, PR-NNN), prohibited phrases, Prose Style Mode (Section VII: tense, sentence rhythm, vocabulary register, sensory density, anti-AI filter active)
+   - **Required**: `specs/variables.md` — validate all `variables_read` and `variables_set` in the outline are registered; warn on any undeclared variable: `Variable $[name] is not in variables.md. Register it before drafting.`
+   - **Required**: `specs/mechanics.md` — hook syntax definitions for each hook type
+   - **Optional**: `specs/characters/[NPC_ID].md` — NPC trust thresholds, state values, bark line register, dialogue style (load for each NPC present in this node)
+   - **Optional**: `specs/world-building.md` — sensory anchors, atmosphere notes for the node's setting
+   - Read `tasks.md` — identify the first group of unchecked tasks (respect `[P]` markers for parallel drafting)
    - If the outline contains `[NEEDS CLARIFICATION]` markers, **pause** and resolve them with the user before drafting.
 
 4. **Draft the node**:
@@ -128,8 +128,8 @@ You **MUST** consider the user input before proceeding (if not empty). Accepted 
    **Before writing prose**:
    - Confirm POV from `constitution.md` (`player_perspective`) or outline `pov` override
    - Confirm all NPC profiles needed for this node are loaded (dialogue style, state values)
-   - Note the beat summary from the outline â€” the draft MUST open with an orienting line (where, who, what is at stake) and follow the beats causally
-   - Note the Choices table from the outline â€” the draft MUST include all choices
+   - Note the beat summary from the outline — the draft MUST open with an orienting line (where, who, what is at stake) and follow the beats causally
+   - Note the Choices table from the outline — the draft MUST include all choices
 
    **While writing**:
    - Apply craft rules (NR-NNN and PR-NNN from `constitution.md`)
@@ -142,16 +142,16 @@ You **MUST** consider the user input before proceeding (if not empty). Accepted 
    - Tier 1 hooks: insert fully
    - Tier 2 hooks: insert as stubs with `// TIER 2 STUB` comment
    - Verify each hook variable is declared in `specs/variables.md`
-   - **CURRENCY**: every `MECHANIC:CURRENCY` block MUST include `variable=[variable_name]`; the variable must be `type: currency` in `variables.md`. If `variable=` is absent, do not guess â€” warn: `âš ï¸ CURRENCY hook missing variable= â€” add the currency variable name before exporting.`
+   - **CURRENCY**: every `MECHANIC:CURRENCY` block MUST include `variable=[variable_name]`; the variable must be `type: currency` in `variables.md`. If `variable=` is absent, do not guess — warn: `?? CURRENCY hook missing variable= — add the currency variable name before exporting.`
    - **RANDOM**: every `MECHANIC:RANDOM` block MUST include `variable=[name] min=N max=N`; variable must be `type: counter` in `variables.md`. Warn if range is missing.
    - **CHOICE_MEMORY**: `variable=` must be `type: string` in `variables.md`; `value=` must be a quoted choice label. Ink targets: add a comment `// CHOICE_MEMORY: [label] will map to integer constant at export`.
-   - **CLUE**: `clue_id` must follow the `clue_` prefix convention and be declared as `type: flag` in `variables.md`. If a new clue is being added that is not yet in `variables.md`, warn: `âš ï¸ Clue [clue_id] not in variables.md â€” register it before export.`
-   - Warn: `âš ï¸ Timer hook type is seconds â€” Sugarcube requires a JS widget for this; Ink does not support real-time timers.` if a TIMER hook uses seconds
-   - Warn: `âš ï¸ Tier 2 stub [HOOK_TYPE] â€” will produce an UNSUPPORTED HOOK comment in export output.` for each Tier 2 hook used
+   - **CLUE**: `clue_id` must follow the `clue_` prefix convention and be declared as `type: flag` in `variables.md`. If a new clue is being added that is not yet in `variables.md`, warn: `?? Clue [clue_id] not in variables.md — register it before export.`
+   - Warn: `?? Timer hook type is seconds — Sugarcube requires a JS widget for this; Ink does not support real-time timers.` if a TIMER hook uses seconds
+   - Warn: `?? Tier 2 stub [HOOK_TYPE] — will produce an UNSUPPORTED HOOK comment in export output.` for each Tier 2 hook used
 
    **Write choices section**:
    - Minimum 2 choices unless node is terminal (ending node)
-   - Use a `## Choices` heading followed by one entry per choice â€” `export.py` requires this exact format:
+   - Use a `## Choices` heading followed by one entry per choice — `export.py` requires this exact format:
      ```
      ## Choices
 
@@ -173,9 +173,9 @@ You **MUST** consider the user input before proceeding (if not empty). Accepted 
      -->
      ```
    - Mark the corresponding task `[x]` in `tasks.md`
-   - Note any newly discovered variable states or branch conditions not in the outline â€” add to `outlines/[NODE_ID].md` Deviations section
+   - Note any newly discovered variable states or branch conditions not in the outline — add to `outlines/[NODE_ID].md` Deviations section
 
-   **If a new unplanned node is needed** (discovered during drafting â€” a missing transition, required setup, etc.):
+   **If a new unplanned node is needed** (discovered during drafting — a missing transition, required setup, etc.):
    - **STOP drafting**. Do not write the node yet.
    - Notify the user: "Drafting [NODE_ID] requires an unplanned node: [description]. Add it to `specs/flowmap.md` before drafting continues."
    - Add the new node to `specs/flowmap.md` with a `[NEEDS OUTLINE]` marker

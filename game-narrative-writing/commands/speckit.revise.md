@@ -1,5 +1,5 @@
-ï»¿---
-description: Targeted node revision â€” rewrites only the failing passages identified by speckit.checklist, speckit.analyze, or speckit.continuity without touching passing content. Produces a versioned node file with a diff summary.
+---
+description: Targeted node revision — rewrites only the failing passages identified by speckit.checklist, speckit.analyze, or speckit.continuity without touching passing content. Produces a versioned node file with a diff summary.
 scripts:
   sh: scripts/bash/check-prerequisites.sh --json
   ps: scripts/powershell/check-prerequisites.ps1 -Json
@@ -20,7 +20,7 @@ handoffs:
 
 # speckit.revise
 
-Revise a node file to address quality failures, structural issues, or authorial feedback. Rewrites only failing passages â€” does not touch passing content.
+Revise a node file to address quality failures, structural issues, or authorial feedback. Rewrites only failing passages — does not touch passing content.
 
 ## User Input
 
@@ -29,16 +29,16 @@ $ARGUMENTS
 ```
 
 You **MUST** consider the user input before proceeding (if not empty). Accepted formats:
-- `NODE-003` â€” revise the node; auto-load its most recent checklist failures
-- `NODE-003 NR-001 PR-004` â€” revise specific failure codes only
-- `NODE-003 FB-007` â€” revise a specific feedback issue from `feedback.md`
-- `NODE-003 "dead-end branch after choice B"` â€” revise from a quoted description
-- *(no argument)* â€” revise the node with the most recent open checklist failure
+- `NODE-003` — revise the node; auto-load its most recent checklist failures
+- `NODE-003 NR-001 PR-004` — revise specific failure codes only
+- `NODE-003 FB-007` — revise a specific feedback issue from `feedback.md`
+- `NODE-003 "dead-end branch after choice B"` — revise from a quoted description
+- *(no argument)* — revise the node with the most recent open checklist failure
 
 Optional flags:
-- `--checklist` â€” auto-load all open checklist failures for the node
-- `--feedback [ID]` â€” load a specific feedback issue from `feedback.md`
-- `--full` â€” full redraft (not targeted revision); requires confirmation
+- `--checklist` — auto-load all open checklist failures for the node
+- `--feedback [ID]` — load a specific feedback issue from `feedback.md`
+- `--full` — full redraft (not targeted revision); requires confirmation
 
 ## Pre-Execution Checks
 
@@ -51,7 +51,7 @@ Optional flags:
 
 **SURGICAL SCOPE**: Only modify prose, hooks, or choices that directly cause a flagged failure. Do not improve or tighten surrounding content. Scope creep corrupts the isolation of what changed and undermines the versioning model.
 
-**CONSTITUTION AUTHORITY**: `.speckit/memory/constitution.md` governs all prose and mechanic decisions. If a revision cannot fix the failure without violating the constitution, STOP and report the conflict â€” do not silently violate the constitution to pass a checklist item.
+**CONSTITUTION AUTHORITY**: `.specify/memory/constitution.md` governs all prose and mechanic decisions. If a revision cannot fix the failure without violating the constitution, STOP and report the conflict — do not silently violate the constitution to pass a checklist item.
 
 **OUTLINE AUTHORITY**: `outlines/[NODE_ID].md` is authoritative for the node's structural intent: beat sequence, choice set, and variable contract must remain intact. Only the *execution* changes.
 
@@ -63,7 +63,7 @@ Optional flags:
 
 2. **Identify the revision target**:
    - Parse `$ARGUMENTS` for node ID. Resolve to `nodes/[NODE_ID].md`.
-   - If no argument: scan `checklists/` for the most recently modified file with open failures â€” use its linked node as the target.
+   - If no argument: scan `checklists/` for the most recently modified file with open failures — use its linked node as the target.
    - Abort with a clear error if the node file does not exist or has no valid YAML frontmatter header.
 
 3. **Load failure context**:
@@ -76,12 +76,12 @@ Optional flags:
 
 4. **Load required context**:
    - Read `nodes/[NODE_ID].md` in full (prose + YAML frontmatter)
-   - Read `.speckit/memory/constitution.md` â€” craft rules (NR-NNN, PR-NNN), POV rules, prohibited phrases, tone, Prose Style Mode (Section VII)
-   - Read `outlines/[NODE_ID].md` â€” beat sequence, choices table, variable contract
-   - Read `specs/variables.md` â€” declared variables with types and value ranges
-   - Read `specs/characters/[NPC_ID].md` for each NPC present â€” dialogue style, trust thresholds, state values
+   - Read `.specify/memory/constitution.md` — craft rules (NR-NNN, PR-NNN), POV rules, prohibited phrases, tone, Prose Style Mode (Section VII)
+   - Read `outlines/[NODE_ID].md` — beat sequence, choices table, variable contract
+   - Read `specs/variables.md` — declared variables with types and value ranges
+   - Read `specs/characters/[NPC_ID].md` for each NPC present — dialogue style, trust thresholds, state values
 
-5. **Scope confirmation** â€” for each item in the failure scope, identify the exact passage or element responsible:
+5. **Scope confirmation** — for each item in the failure scope, identify the exact passage or element responsible:
    - Quote the specific sentence(s), hook block, or choice line that causes the failure
    - State which item / issue each one violates and why
    - If failure is due to *absence* (e.g. no VISITED hook declared), note what must be *added* and where
@@ -117,12 +117,12 @@ Optional flags:
    - **Do not alter** any content outside the confirmed revision scope
    - Reset `status` to `DRAFT` in YAML frontmatter if it was `APPROVED` (revision requires re-approval)
    - Update `variables_read` / `variables_set` in frontmatter if changed
-   - Increment `version` field (e.g. `version: 1` â†’ `version: 2`); add if absent
+   - Increment `version` field (e.g. `version: 1` ? `version: 2`); add if absent
    - Add `revised: [YYYY-MM-DD]` field to the YAML frontmatter
 
 8. **Write output**:
    - **Revised node**: save as `nodes/[NODE_ID]_v[N].md` (e.g. `nodes/NODE-003_v2.md`)
-   - **Keep the original** `nodes/[NODE_ID].md` unchanged â€” it is the v1 record
+   - **Keep the original** `nodes/[NODE_ID].md` unchanged — it is the v1 record
    - **Revision notes**: append a `<!-- REVISION NOTES` comment block at the top of the revised file (after YAML frontmatter):
      ```
      <!-- REVISION NOTES v[N]
@@ -144,13 +144,13 @@ Optional flags:
 
    | Item | Status | Change summary |
    |---|---|---|
-   | PR-002 | Fixed | Named emotion â†’ involuntary physical reaction |
-   | NR-001 | Fixed | Choice B retargeted: NODE-099 â†’ NODE-047 |
+   | PR-002 | Fixed | Named emotion ? involuntary physical reaction |
+   | NR-001 | Fixed | Choice B retargeted: NODE-099 ? NODE-047 |
    | MH-003 | Fixed | Added [MECHANIC:VISITED set=visited_NODE-003] after prose |
-   | FB-007 | Fixed | TRUST delta reduced: +30 â†’ +10 |
+   | FB-007 | Fixed | TRUST delta reduced: +30 ? +10 |
 
    Revised node: nodes/NODE-003_v2.md
-   Status reset to DRAFT â€” re-review and set status: APPROVED before next drafting run.
+   Status reset to DRAFT — re-review and set status: APPROVED before next drafting run.
    Recommendation: Run `speckit.checklist NODE-003` on the revised node to confirm all items pass.
    ```
 
@@ -162,7 +162,7 @@ Optional flags:
 
    If `specs/flowmap.md` was affected (target node IDs changed): note:
    ```
-   âš ï¸ flowmap.md may need updating â€” choice targets changed. Run speckit.analyze to verify branch integrity.
+   ?? flowmap.md may need updating — choice targets changed. Run speckit.analyze to verify branch integrity.
    ```
 
 10. **Check for extension hooks (after revision)**: check `hooks.after_revise`.
