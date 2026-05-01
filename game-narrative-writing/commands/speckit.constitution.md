@@ -65,11 +65,15 @@ Optional flags:
    **Interactive mode** (if `spec.md` is absent or incomplete):
    Work through each field in order, gathering values from user input or direct questions:
 
-   - **Engine target**: generic / sugarcube / ink � infer from narrative design doc, ask if absent:
+   - **Engine target**: twine/sugarcube, ink, renpy, ags, escoria, unity, generic — infer from narrative design doc, ask if absent:
      > "Which engine target?
-     > (a) **generic** � engine-agnostic prose and variables (decide during export)
-     > (b) **sugarcube** � Twine/SugarCube 2.x (passage macros, CSS)
-     > (c) **ink** � Inkle's ink scripting language (knots, stitches, diverts)"
+     > (a) **twine/sugarcube** — Twee 3 / Sugarcube 2 macros
+     > (b) **ink** — Inkle's scripting language
+     > (c) **renpy** — Python-based visual novel engine
+     > (d) **ags** — Adventure Game Studio script
+     > (e) **escoria** — Godot-based point-and-click (.esc)
+     > (f) **unity** — C# stubs / Yarn Spinner format
+     > (g) **generic** — Annotated Markdown (engine-agnostic prose with hook blocks)"
 
    - **Player perspective**: derive from narrative design doc; ask if absent:
      > "What is the player character's perspective?

@@ -10,8 +10,8 @@ genre: [GENRE]
 narrative_mode: [NARRATIVE_MODE]
 # NARRATIVE_MODE: linear | branching | point-and-click | emergent
 export_target: [EXPORT_TARGET]
-# EXPORT_TARGET: generic | sugarcube | ink
-# Use 'generic' to keep prose engine-agnostic until export.
+# EXPORT_TARGET: generic | sugarcube | ink | renpy | ags | escoria | unity
+# 'generic' outputs annotated Markdown with hook blocks.
 player_perspective: [PLAYER_PERSPECTIVE]
 pov_variable: [POV_VARIABLE]
 target_audience: [TARGET_AUDIENCE]
@@ -40,8 +40,8 @@ game_bible_version: [GAME_BIBLE_VERSION]
 | Tone | [TONE] |
 | Studio / Author | [STUDIO_NAME] / [AUTHOR_NAME] |
 
-<!-- EXPORT_TARGET: generic | sugarcube | ink
-     EXPORT_FORMAT: markdown (for generic) | twee3 (for sugarcube) | ink (for ink)
+<!-- EXPORT_TARGET: generic | sugarcube | ink | renpy | ags | escoria | unity
+     EXPORT_FORMAT: md | twee3 | ink | rpy | asc | esc | cs/yarn
      PLAYER_PERSPECTIVE: second-person | third-person | first-person | switching
      POV_VARIABLE: name of the variable used when switching (e.g. $pov) — leave blank if not switching -->
 
