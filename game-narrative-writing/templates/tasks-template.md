@@ -132,11 +132,9 @@ Verify before proceeding:
 
 ---
 
-## Phase 8 � Export
+## Phase 8 – Polish & Documentation
 
 | ID | Task | Output |
 |---|---|---|
-| T050 | Export to Twine/Sugarcube: `speckit.export --target sugarcube` | `export/[game].twee` |
-| T051 | Export to Ink: `speckit.export --target ink` | `export/[game].ink` |
-| T052 | Review export warnings � address any Tier 2 hook comments | � |
-| T053 | Dry-run validation: `speckit.export --dry-run` � confirm zero errors | � |
+| T050 | Review export warnings in node compiler output | – |
+| T051 | Document final variable state log | `variables.md` |

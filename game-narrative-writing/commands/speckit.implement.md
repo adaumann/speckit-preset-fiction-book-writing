@@ -102,35 +102,42 @@ You **MUST** consider the user input before proceeding (if not empty). Accepted 
 
 3. **Load context**:
    - **Required**: `outlines/[NODE_ID].md` (the APPROVED outline is the authoritative drafting brief)
-   - **Required**: `.specify/memory/constitution.md` - extract: `player_perspective` (POV default), `tone`, active mechanic schemas, craft rules (NR-NNN, PR-NNN), prohibited phrases, Prose Style Mode (Section VII: tense, sentence rhythm, vocabulary register, sensory density, anti-AI filter active), `export_target`
+   - **Required**: `.specify/memory/constitution.md` - extract: `export_engines` (list of target engines), `player_perspective` (POV default), enabled mechanics list (Section II), `tone`, `style_mode`, `prose_profile`, Prose Style Mode (Section VII: tense, sentence rhythm, vocabulary register, sensory density)
+   - **Required**: `specs/mechanics.md` - hook syntax definitions, tier levels, and translation tables for all hook types (including newly declared or promoted mechanics)
+   - **Required**: `specs/endings.md` — validate that any terminal choice target is a valid `END-NNN` entry
+   - **Required**: `specs/characters.md` index + `specs/characters/` profiles (NPC trust thresholds, state values, bark line register, dialogue style) — load for each NPC present in this node
+   - **Required if style_mode is humanized-ai**: `.specify/memory/craft-rules.md` - read active prose profile section, NPC Voice & Dialogue rules, Description & World rules, anti-AI clichés filter, prohibited phrases
    - **Required**: `specs/variables.md` - validate all `variables_read` and `variables_set` in the outline are registered; warn on any undeclared variable: `Variable $[name] is not in variables.md. Register it before drafting.`
-   - **Required**: `specs/mechanics.md` - hook syntax definitions for each hook type
-   - **Optional**: `specs/characters/[NPC_ID].md` - NPC trust thresholds, state values, bark line register, dialogue style (load for each NPC present in this node)
+   - **Optional**: `specs/glossary.md` — load if present; check terminology usage during drafting for consistency with registry
+   - **Optional**: `specs/locations.md` — load if present; pull sensory anchors and location rules for this node's setting (from outline's Setting Anchors field)
+   - **Optional**: `specs/themes.md` — load if present; check thematic work field in outline; ensure prose carries thematic payload (references to motifs/symbols if flagged in outline)
    - **Optional**: `specs/world-building.md` - sensory anchors, atmosphere notes for the node's setting
    - Read `tasks.md` - identify the first group of unchecked tasks (respect `[P]` markers for parallel drafting)
-   - If the outline contains `[NEEDS CLARIFICATION]` markers, **pause** and resolve them with the user before drafting.
+   - If the outline contains `[NEEDS CLARIFICATION]`, `[MISSING NODE]`, `[UNREGISTERED ENDING]`, or `[LOCATION PROFILE NEEDED]` markers, **pause** and resolve them with the user before drafting.
 
 4. **Draft the node**:
 
    **Output path**: `spec/<specname>/draft/[ENGINE]/[NODE_ID].[EXTENSION]`
    
-   Directory structure is organized by target engine:
-   - `spec/<specname>/draft/generic/` — for `.md` (annotated Markdown with hook blocks)
-   - `spec/<specname>/draft/sugarcube/` — for `.twee` (Twine/SugarCube)
-   - `spec/<specname>/draft/ink/` — for `.ink` format
-   - `spec/<specname>/draft/renpy/` — for `.rpy` (Ren'Py)
-   - `spec/<specname>/draft/escoria/` — for `.esc` (Godot Escoria)
-   - `spec/<specname>/draft/ags/` — for `.asc` (Adventure Game Studio)
-   - `spec/<specname>/draft/unity/` — for `.cs` or `.yarn` (Yarn spinner)
+   **Multi-Engine Generation**: For each engine in `export_engines`, generate a separate file:
    
-   Extension depends on `export_target` in `constitution.md`:
-   - `generic` -> `.md` (annotated Markdown with hook blocks)
-   - `twine` / `sugarcube` -> `.twee`
-   - `ink` -> `.ink`
-   - `renpy` -> `.rpy`
-   - `escoria` -> `.esc`
-   - `ags` -> `.asc`
-   - `unity` -> `.cs` or `.yarn`
+   Directory structure is organized by target engine:
+   - `spec/<specname>/draft/generic/NODE-NNN.[title].md` — for `.md` (annotated Markdown with hook blocks)
+   - `spec/<specname>/draft/sugarcube/NODE-NNN-[title].twee` — for `.twee` (Twine/SugarCube)
+   - `spec/<specname>/draft/ink/NODE-NNN-[title].ink` — for `.ink` format
+   - `spec/<specname>/draft/renpy/NODE-NNN-[title].rpy` — for `.rpy` (Ren'Py)
+   - `spec/<specname>/draft/escoria/NODE-NNN-[title].esc` — for `.esc` (Godot Escoria)
+   - `spec/<specname>/draft/ags/NODE-NNN-[title].asc` — for `.asc` (Adventure Game Studio)
+   - `spec/<specname>/draft/unity/NODE-NNN-[title].cs` or `.yarn` — for Yarn spinner
+   
+   File naming convention:
+   - `generic` -> `NODE-NNN.md`
+   - `sugarcube` -> `NODE-NNN-[title].twee`
+   - `ink` -> `NODE-NNN-[title].ink`
+   - `renpy` -> `NODE-NNN-[title].rpy`
+   - `escoria` -> `NODE-NNN-[title].esc`
+   - `ags` -> `NODE-NNN-[title].asc`
+   - `unity` -> `NODE-NNN-[title].cs` or `.yarn`
    
    Create the `spec/<specname>/draft/[ENGINE]/` directory if it does not exist.
 
@@ -164,11 +171,24 @@ You **MUST** consider the user input before proceeding (if not empty). Accepted 
    - Note the beat summary from the outline - the draft MUST open with an orienting line (where, who, what is at stake) and follow the beats causally
    - Note the Choices table from the outline - the draft MUST include all choices
 
+   **Pre-Draft Validation Checklist**:
+   - ✓ Ending gates: All terminal choices point to registered `END-NNN` entries
+   - ✓ Characters loaded: All NPCs in this node have character profiles available
+   - ✓ Location context: If Setting Anchors field is populated, location profile has been loaded
+   - ✓ Terminology registry: If `[GLOSSARY NOTE]` markers present, glossary.md has been loaded
+   - ✓ No blocking clarification markers present
+
    **While writing**:
-   - Apply craft rules (NR-NNN and PR-NNN from `constitution.md`)
-   - Apply Prose Style Mode (Section VII of `constitution.md`): match declared tense, sentence rhythm, vocabulary register, and sensory density; apply anti-AI filter if active; use extracted voice markers if style mode is `author-sample`
+   - Apply craft rules (NR-NNN and PR-NNN from `.specify/memory/craft-rules.md`)
+   - Apply active prose profile from `constitution.md` `prose_profile` field (dialogue-heavy, environmental, action-forward, atmospheric, minimalist)
+   - Apply Prose Style Mode from `constitution.md`: match declared tense, sentence rhythm, vocabulary register, and sensory density; apply anti-AI filter from craft-rules.md if style mode is `humanized-ai`; use extracted voice markers from constitution if style mode is `author-sample`
    - Match tone (from `constitution.md` `tone` field) and dialogue register to each NPC's profile
-   - Check prohibited phrases before finalising prose
+   - Check prohibited phrases from `.specify/memory/craft-rules.md` before finalising prose
+   - **Check terminology consistency** (if glossary.md loaded): When introducing specialized terms, cross-check against `specs/glossary.md` to ensure usage matches registered definitions
+   - **Apply location anchors** (if locations.md loaded): Use sensory details from Setting Anchors field; ensure descriptions match the location profile from `specs/locations.md`
+   - **Weave thematic elements** (if themes.md loaded): If outline flags thematic work for this node, embed motif references or symbol occurrences naturally into prose (from `specs/themes.md` registry)
+   - **Match NPC registers** (from characters.md): For each NPC in this node, pull their trust state (from Variables Read), then render dialogue at the correct register from `specs/characters/[NPC_ID].md` section "VIII. Dialogue Register by Trust State"
+   - **Generate Dialogue Tree** (if outline has `Dialogue Tree` field): Render each player dialogue option with NPC responses in sequence. Show multi-party reactions naturally with action beats between lines (not as list format). For Twine: structure as passages with inline responses. For Ink: use `*` for dialogue choices and `+` for sub-branches. Track dialogue choices via `CHOICE_MEMORY` hook if needed for later branches.
    - **Engine Synthesis**: If the target engine is not `generic`, translate all structural markers (headings, paragraphs, dialogue) into engine-native code (e.g., `say` commands for Escoria, `label` and `show` for Ren'Py, `=== knot ===` for Ink).
 
    **Insert mechanic hooks and logic**:
@@ -193,9 +213,9 @@ You **MUST** consider the user input before proceeding (if not empty). Accepted 
    - All target node IDs must exist in `specs/plan.md`.
 
    **After writing**:
-   - **Verification Step** - automatically run `speckit.verify [NODE_ID]`:
+   - **Verification Step** - automatically run `speckit.verify [NODE_ID]` for each generated engine file:
      - Runs structural unit tests (`test_nodes.py`) against the drafted file.
-     - Runs the engine compiler/linter (`validate_engine.py --target [EXPORT_TARGET]`).
+     - Runs the engine compiler/linter (`validate_engine.py --target [ENGINE]`) where ENGINE is from `export_engines`.
      - If errors are found, enter the **Self-Correction Loop** (max 3 attempts):
        1. Analyze compiler/test error output.
        2. Apply the minimal targeted fix to the node file.

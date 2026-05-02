@@ -90,7 +90,7 @@ Parse raw notes and populate the per-category issue tables.
 | "contradicts earlier", "NPC wrong state", "world rule broken", "remembered wrong" | CO — Continuity |
 | "crashed", "syntax error", "output broken", "wrong passage name", "unsupported tag" | EX — Export |
 
-**Node ID mapping**: when the tester references a passage name, scene label, or description, map to the closest `NODE-NNN` by cross-referencing node file titles and `specs/flowmap.md`. When no node is identifiable, mark as `NODE-UNKNOWN`.
+**Node ID mapping**: when the tester references a passage name, scene label, or description, map to the closest `NODE-NNN` by cross-referencing node file titles and `specs/plan.md`. When no node is identifiable, mark as `NODE-UNKNOWN`.
 
 **Severity assignment**:
 - CRITICAL: blocks progression, crashes export, breaks variable state, or creates unwinnable state

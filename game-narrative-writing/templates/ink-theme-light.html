@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>{title}</title>
+    <style>
+        :root {{
+            --color-bg: #faf8f3;
+            --color-bg-passage: #ffffff;
+            --color-text: #2c2416;
+            --color-text-heading: #1a1410;
+            --color-accent: #2563eb;
+            --color-link: #0d47a1;
+            --color-link-hover: #1565c0;
+            --font-body: 'Georgia', 'Cambria', serif;
+            --font-ui: 'Segoe UI', 'Helvetica Neue', sans-serif;
+            --font-size-base: 18px;
+            --prose-max-width: 680px;
+        }}
+
+        * {{
+            box-sizing: border-box;
+        }}
+
+        html {{
+            background: var(--color-bg);
+        }}
+
+        body {{
+            font-family: var(--font-body);
+            font-size: var(--font-size-base);
+            color: var(--color-text);
+            background: var(--color-bg);
+            margin: 0;
+            padding: 20px;
+            line-height: 1.8;
+        }}
+
+        #story {{
+            max-width: var(--prose-max-width);
+            margin: 0 auto;
+            background: var(--color-bg-passage);
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            border: 1px solid rgba(37, 99, 235, 0.1);
+        }}
+
+        h1, h2, h3, h4, h5, h6 {{
+            font-family: var(--font-ui);
+            color: var(--color-text-heading);
+            margin-top: 1.2em;
+            margin-bottom: 0.8em;
+        }}
+
+        h1 {{
+            font-size: 2em;
+            border-bottom: 2px solid var(--color-accent);
+            padding-bottom: 12px;
+            margin-bottom: 1.5em;
+        }}
+
+        a {{
+            color: var(--color-link);
+            text-decoration: none;
+            border-bottom: 1px dotted var(--color-link);
+            transition: color 0.2s;
+        }}
+
+        a:hover {{
+            color: var(--color-link-hover);
+            border-bottom-color: var(--color-link-hover);
+        }}
+
+        p {{
+            margin: 0 0 1em 0;
+            text-align: justify;
+        }}
+
+        .passage {{
+            margin-bottom: 2em;
+        }}
+
+        .choices {{
+            margin-top: 2em;
+            padding-top: 1.5em;
+            border-top: 1px solid rgba(37, 99, 235, 0.2);
+        }}
+
+        .choice {{
+            display: block;
+            margin: 12px 0;
+            padding: 12px 16px;
+            background: rgba(37, 99, 235, 0.08);
+            border: 1px solid rgba(37, 99, 235, 0.3);
+            border-radius: 4px;
+            color: var(--color-text);
+            font-family: var(--font-body);
+            font-size: 0.95em;
+            cursor: pointer;
+            transition: all 0.2s;
+        }}
+
+        .choice:hover {{
+            background: rgba(37, 99, 235, 0.12);
+            border-color: var(--color-accent);
+            color: var(--color-link-hover);
+        }}
+
+        #content {{
+            min-height: 200px;
+        }}
+
+        pre {{
+            background: rgba(37, 99, 235, 0.05);
+            padding: 12px;
+            border-radius: 4px;
+            overflow-x: auto;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 0.85em;
+            border-left: 3px solid var(--color-accent);
+        }}
+
+        .meta {{
+            font-family: var(--font-ui);
+            font-size: 0.9em;
+            color: rgba(44, 36, 22, 0.6);
+            margin-top: 2em;
+            padding-top: 1em;
+            border-top: 1px solid rgba(37, 99, 235, 0.2);
+        }}
+    </style>
+</head>
+<body>
+    <div id="story">
+        <h1>{title}</h1>
+        <div id="content">
+            <p>Loading story...</p>
+        </div>
+    </div>
+    <script>
+        const storyData = {story_json};
+        
+        document.getElementById('content').innerHTML = `
+            <div class="passage">
+                <p><strong>Story compiled with Ink!</strong></p>
+                <p>This is the compiled story data for <em>{title}</em>. Use an Ink runtime player to execute it.</p>
+            </div>
+            <div class="choices">
+                <p><strong>Ink Players:</strong></p>
+                <ul>
+                    <li><a href="https://github.com/inkle/ink-web" target="_blank">Ink Web Player</a> — web-based player</li>
+                    <li><a href="https://github.com/inkle/inky" target="_blank">Inky IDE</a> — interactive development environment</li>
+                </ul>
+            </div>
+            <div class="meta">
+                <p>Story data size: ${{(JSON.stringify(storyData).length / 1024).toFixed(1)}}KB</p>
+            </div>
+        `;
+    </script>
+</body>
+</html>

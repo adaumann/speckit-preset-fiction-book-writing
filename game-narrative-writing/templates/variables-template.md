@@ -1,4 +1,4 @@
-# Variable Registry: [GAME_TITLE]
+ï»¿# Variable Registry: [GAME_TITLE]
 
 <!-- All state variables used in this project.
      Every variable referenced in a node [MECHANIC:*] hook MUST be declared here.
@@ -47,7 +47,7 @@ Each entry:
 
 | Variable | Type | Scope | Default | Range | Description | Export (SC) | Export (Ink) | Set in | Read in |
 |---|---|---|---|---|---|---|---|---|---|
-| counter_[name] | counter | global | 0 | 0–[MAX] | [DESCRIPTION] | `$counter_[name]` | `~ counter_[name]` | NODE-[N] | NODE-[N] |
+| counter_[name] | counter | global | 0 | 0â€“[MAX] | [DESCRIPTION] | `$counter_[name]` | `~ counter_[name]` | NODE-[N] | NODE-[N] |
 
 ---
 
@@ -59,7 +59,7 @@ Each entry:
 |---|---|---|---|---|---|---|
 | inv_[item_name] | inventory | global | false | [ITEM_DESCRIPTION] | `$inv_[item_name]` (boolean flag) | `~ inv_[item_name]` |
 
-<!-- Export pattern: individual boolean flags per item — `$inv_item = true/false`.
+<!-- Export pattern: individual boolean flags per item â€” `$inv_item = true/false`.
      Sugarcube array alternative (manual): `<<set $inv.push("item")>>` / `<<if $inv.includes("item")>>`
      Use the array alternative only if you need to iterate or count items; write it as raw prose markup. -->
 
@@ -71,7 +71,7 @@ Each entry:
 
 | Variable | NPC ID | Scope | Default | Range | Export (SC) | Export (Ink) |
 |---|---|---|---|---|---|---|
-| trust_[npc_name] | NPC-[N] | global | 50 | 0–100 | `$trust_[npc_name]` | `~ trust_[npc_name]` |
+| trust_[npc_name] | NPC-[N] | global | 50 | 0â€“100 | `$trust_[npc_name]` | `~ trust_[npc_name]` |
 
 ---
 
@@ -89,7 +89,7 @@ Each entry:
 
 <!-- Enumerated states per NPC. Valid values defined in characters/NPC-NNN.md. -->
 
-| Variable | NPC ID | Scope | Default | Valid States | Export (SC) | Export (Ink — integer enum) |
+| Variable | NPC ID | Scope | Default | Valid States | Export (SC) | Export (Ink â€” integer enum) |
 |---|---|---|---|---|---|---|
 | npc_[name]_state | NPC-[N] | global | alive | alive / dead / hostile / absent | `$npc_[name]_state` | `~ npc_[name]_state` (0=alive,1=dead,2=hostile,3=absent) |
 
@@ -118,11 +118,11 @@ Each entry:
 ## Random Result Variables
 
 <!-- Variables used with MECHANIC:RANDOM. Declare as type: counter.
-     Roll results are integers in the declared min–max range. -->
+     Roll results are integers in the declared minâ€“max range. -->
 
 | Variable | Type | Scope | Default | Range | Description | Export (SC) | Export (Ink) |
 |---|---|---|---|---|---|---|---|
-| random_[name] | counter | session | 0 | [min]–[max] | [DESCRIPTION — e.g. "Luck roll result"] | `$random_[name]` | `~ random_[name]` |
+| random_[name] | counter | session | 0 | [min]â€“[max] | [DESCRIPTION â€” e.g. "Luck roll result"] | `$random_[name]` | `~ random_[name]` |
 
 > **Note**: Use `scope: session` unless the roll result needs to persist across saves. Random variables are re-rolled each time the hook executes.
 
@@ -134,7 +134,7 @@ Each entry:
      Follow the naming convention choice_[node_id_context].
      Ink targets: string values are mapped to integer CONST at export. -->
 
-| Variable | Type | Scope | Default | Possible Values | Description | Export (SC) | Export (Ink — CONST int) |
+| Variable | Type | Scope | Default | Possible Values | Description | Export (SC) | Export (Ink â€” CONST int) |
 |---|---|---|---|---|---|---|---|
 | choice_[name] | string | global | "" | "[label_a]" / "[label_b]" / ... | [DESCRIPTION] | `$choice_[name]` | `~ choice_[name]` (CONST) |
 
@@ -161,7 +161,7 @@ Each entry:
 
 ---
 
-## Tier 2 Variables (stubs — no export translation in v1.0)
+## Tier 2 Variables (stubs â€” no export translation in v1.0)
 
 <!-- Variables used with Tier 2 hooks. Exported with // UNSUPPORTED HOOK warning. -->
 

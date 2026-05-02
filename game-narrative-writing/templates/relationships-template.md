@@ -4,7 +4,7 @@
 <!-- Tracks the dynamic between key NPCs — how their states and relationships affect
      each other across branches. Player↔NPC relationships live in characters/[name].md
      Section VI. This file covers NPC↔NPC dynamics that create branch consequences.
-     speckit.analyze checks REL-NNN beat coverage in flowmap.md.
+     speckit.analyze checks REL-NNN beat coverage in plan.md.
      speckit.continuity checks that NPC state changes are consistent with active dynamics. -->
 
 ---

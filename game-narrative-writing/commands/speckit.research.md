@@ -1,5 +1,5 @@
----
-description: Research tracking command for game narrative. Four modes — add (log a new research item or source finding), resolve (mark an item answered and capture the finding), check (scan drafted nodes for claims not backed by research.md), and status (research dashboard showing open items ranked by project risk). Drives task generation in speckit.tasks. Run any time from first concept through export.
+ï»¿---
+description: Research tracking command for game narrative. Four modes â€” add (log a new research item or source finding), resolve (mark an item answered and capture the finding), check (scan drafted nodes for claims not backed by research.md), and status (research dashboard showing open items ranked by project risk). Drives task generation in speckit.tasks. Run any time from first concept through export.
 handoffs:
   - label: Generate Writing Tasks
     agent: speckit.tasks
@@ -15,7 +15,7 @@ handoffs:
     send: true
   - label: Continue Drafting
     agent: speckit.implement
-    prompt: Continue drafting — research phase complete
+    prompt: Continue drafting â€” research phase complete
     send: true
 scripts:
   sh: scripts/bash/check-prerequisites.sh --json --paths-only
@@ -31,16 +31,16 @@ $ARGUMENTS
 You **MUST** consider the user input before proceeding (if not empty).
 
 Accepted arguments:
-- *(no argument)* — display the research status dashboard (same as `status`)
-- `add [topic]` — open an interactive session to log a new research item (e.g. `add Cold War submarine hierarchy`)
-- `add [topic] --source "[source]"` — log a finding directly with a source (skips interactive prompts)
-- `resolve [R-ID]` — mark a research item resolved and capture findings (e.g. `resolve R003`)
-- `resolve [R-ID] --finding "[text]" --source "[source]"` — resolve inline
-- `check` — scan all drafted nodes for factual or world-rule claims not backed by any research item (read-only)
-- `check [NODE_ID]` — scope the check to a specific node
-- `status` — display the research dashboard
-- `status --open` — show only OPEN items
-- `status --resolved` — show only RESOLVED items
+- *(no argument)* â€” display the research status dashboard (same as `status`)
+- `add [topic]` â€” open an interactive session to log a new research item (e.g. `add Cold War submarine hierarchy`)
+- `add [topic] --source "[source]"` â€” log a finding directly with a source (skips interactive prompts)
+- `resolve [R-ID]` â€” mark a research item resolved and capture findings (e.g. `resolve R003`)
+- `resolve [R-ID] --finding "[text]" --source "[source]"` â€” resolve inline
+- `check` â€” scan all drafted nodes for factual or world-rule claims not backed by any research item (read-only)
+- `check [NODE_ID]` â€” scope the check to a specific node
+- `status` â€” display the research dashboard
+- `status --open` â€” show only OPEN items
+- `status --resolved` â€” show only RESOLVED items
 
 ---
 
@@ -61,7 +61,7 @@ Accepted arguments:
 
 **Scope of this command**:
 - Only reads/writes `research.md` and (in `check` mode) reads node files.
-- Does not revise prose — use `speckit.revise` to fix nodes where findings require changes.
+- Does not revise prose â€” use `speckit.revise` to fix nodes where findings require changes.
 - `check` is strictly read-only.
 
 ---
@@ -73,15 +73,15 @@ Accepted arguments:
 - If it exists, read it and look for entries under the `hooks.before_research` key.
 - Process as standard hook block (Optional/Mandatory). Skip silently if absent.
 
-**Search index** (large projects — optional):
+**Search index** (large projects â€” optional):
 - For `add` mode: after logging a new research item, check whether `.specify/index/` exists. If so, run `python scripts/python/index.py update` to keep the index current.
 - For `check` mode: if `.specify/index/` exists, you MAY query the index to surface node passages that may contain unresearched claims:
   > `python scripts/python/index.py query "[claim text]" --type node --top 5`
-  Use results as supplementary input — do not replace the full `check` scan.
+  Use results as supplementary input â€” do not replace the full `check` scan.
 
 ---
 
-## Step 1 — Setup and Mode Resolution
+## Step 1 â€” Setup and Mode Resolution
 
 Run `{SCRIPT}` from repo root and parse `FEATURE_DIR`.
 
@@ -90,34 +90,34 @@ Locate `FEATURE_DIR/research.md`. If the file does not exist:
 - For `resolve`, `check`, or `status` modes: abort with `? research.md not found. Run speckit.research add [topic] to create it.`
 
 Parse `$ARGUMENTS` for mode and any inline flags. Resolve mode:
-- `add …` ? **Mode: Add**
-- `resolve …` ? **Mode: Resolve**
-- `check …` ? **Mode: Check**
-- `status …` or *(empty)* ? **Mode: Status**
+- `add â€¦` ? **Mode: Add**
+- `resolve â€¦` ? **Mode: Resolve**
+- `check â€¦` ? **Mode: Check**
+- `status â€¦` or *(empty)* ? **Mode: Status**
 
 ---
 
 ## Mode: Add
 
-**Purpose**: Log a new research item — a knowledge gap that needs answering before or during drafting.
+**Purpose**: Log a new research item â€” a knowledge gap that needs answering before or during drafting.
 
-### Add Step 1 — Parse topic
+### Add Step 1 â€” Parse topic
 
 If `$ARGUMENTS` contains a topic after `add`: use it as the item title. Otherwise prompt:
 > `What topic needs research? (e.g. "Cold War submarine officer hierarchy", "symptoms of radiation exposure", "how Ink handles nested conditions")`
 
-### Add Step 2 — Context questions
+### Add Step 2 â€” Context questions
 
 Ask the following. Accept inline flags if provided (`--source`, `--finding`). Skip any question already answered by `$ARGUMENTS`:
 
 1. **Why does this matter?**
-   > `Which node, branch, or mechanic requires this knowledge? (e.g. "NODE-2003 — player must give correct orders in the control room")`
+   > `Which node, branch, or mechanic requires this knowledge? (e.g. "NODE-2003 â€” player must give correct orders in the control room")`
 
 2. **Specific questions to answer** (ask for up to 3):
    > `What specific factual questions need answers? Enter each on a new line:`
    Accept free-form text. Each non-empty line becomes one bullet in the `Questions to answer` list.
 
-3. **Authenticity risk** — is this an expert-visible error?
+3. **Authenticity risk** â€” is this an expert-visible error?
    > `Would a specialist player or reader catch it if this is wrong? (y/n)`
    If yes: add it to the `## Authenticity Flags` table with a risk description.
 
@@ -128,20 +128,20 @@ Ask the following. Accept inline flags if provided (`--source`, `--finding`). Sk
    > `Do you have a source already? If yes, paste or describe it. (leave blank to skip)`
    If a source is provided with a finding: jump to **Add Step 4** (resolve immediately).
 
-### Add Step 3 — Write the item
+### Add Step 3 â€” Write the item
 
 Auto-assign the next `R-NNN` ID (highest existing ID + 1, starting at `R001` if none exist).
 
 Append the new item to `research.md ## Research Items`:
 
 ```markdown
-### R[NNN] — [Topic Name]
+### R[NNN] â€” [Topic Name]
 **Why this matters**: [node/branch reference + explanation]
 **Questions to answer**:
 - [question 1]
 - [question 2]
 **Findings**: OPEN
-**Sources**: —
+**Sources**: â€”
 **Node impact**: [text or TBD]
 ```
 
@@ -153,13 +153,13 @@ If the item is an Authenticity Flag: also append a row to `## Authenticity Flags
 
 Confirm:
 ```
-? Added: R[NNN] — [Topic Name]   Status: OPEN
+? Added: R[NNN] â€” [Topic Name]   Status: OPEN
   Authenticity flag: [Yes / No]
   Next step: run `speckit.research resolve R[NNN]` when you have findings.
              Or: add it to tasks.md as a research task via `speckit.tasks`.
 ```
 
-### Add Step 4 — Immediate resolve (if source was provided)
+### Add Step 4 â€” Immediate resolve (if source was provided)
 
 If a source AND finding were provided in Add Step 2: call **Mode: Resolve** for this item inline. Do not prompt again.
 
@@ -169,7 +169,7 @@ If a source AND finding were provided in Add Step 2: call **Mode: Resolve** for 
 
 **Purpose**: Mark a research item answered and record the finding.
 
-### Resolve Step 1 — Locate item
+### Resolve Step 1 â€” Locate item
 
 Parse `R-ID` from `$ARGUMENTS`. Find the matching `### R[NNN]` block in `research.md`. If not found, abort:
 ```
@@ -179,7 +179,7 @@ Parse `R-ID` from `$ARGUMENTS`. Find the matching `### R[NNN]` block in `researc
 
 If the item already has `Status: RESOLVED`, warn and ask: `R[NNN] is already resolved. Update the finding? (y/n)`
 
-### Resolve Step 2 — Gather findings
+### Resolve Step 2 â€” Gather findings
 
 If `--finding` and `--source` were passed in `$ARGUMENTS`: use them directly.
 
@@ -187,14 +187,14 @@ Otherwise prompt:
 
 1. > `What did you find? (paste or summarise your research finding)`
 2. > `Source? (book title + page, URL, expert source, reference game, etc.)`
-3. > `Does this change anything in specs/flowmap.md, the spec, or drafted nodes?`
-   - If yes: prompt for a brief note. Append it to the finding block as `**Flowmap impact**: [note]` — this is not automatically applied; it is a flag for the author to act on.
+3. > `Does this change anything in specs/plan.md, the spec, or drafted nodes?`
+   - If yes: prompt for a brief note. Append it to the finding block as `**Flowmap impact**: [note]` â€” this is not automatically applied; it is a flag for the author to act on.
 
-### Resolve Step 3 — Update research.md
+### Resolve Step 3 â€” Update research.md
 
 In the `### R[NNN]` block:
 - Replace `**Findings**: OPEN` with `**Findings**: [finding text]`
-- Replace `**Sources**: —` with `**Sources**: [source text]`
+- Replace `**Sources**: â€”` with `**Sources**: [source text]`
 - Add or update `**Flowmap impact**: [note]` if applicable
 
 Move the block from `## Research Items` to `## Resolved Research` table:
@@ -205,9 +205,9 @@ If the item was in `## Authenticity Flags`: mark it as resolved by appending ` ?
 
 Confirm:
 ```
-? Resolved: R[NNN] — [Topic Name]
+? Resolved: R[NNN] â€” [Topic Name]
   Finding logged. Source: [source summary]
-  [Flowmap impact: (note) — review specs/flowmap.md and consider running speckit.continuity if nodes are drafted]
+  [Plan impact: (note) â€” review specs/plan.md and consider running speckit.continuity if nodes are drafted]
   Remaining OPEN items: [N]
 ```
 
@@ -217,7 +217,7 @@ Confirm:
 
 **Purpose**: Scan drafted nodes for specific, verifiable factual or world-rule claims that are not backed by a resolved R-item in `research.md`. Read-only.
 
-### Check Step 1 — Load assets
+### Check Step 1 â€” Load assets
 
 Load `research.md`. Build two lists:
 - **RESOLVED claims**: collect all findings from the `## Resolved Research` table. For each, extract: topic, node reference, key factual assertions from the finding text.
@@ -229,9 +229,9 @@ Determine the node scope:
 
 If no node files exist, abort: `? No node files found in nodes/. Run speckit.implement to generate drafts first.`
 
-### Check Step 2 — Scan for unsupported claims
+### Check Step 2 â€” Scan for unsupported claims
 
-For each node in scope, identify **specific factual or world-rule claims** — statements that assert:
+For each node in scope, identify **specific factual or world-rule claims** â€” statements that assert:
 - A real-world historical, technical, cultural, or geographic detail
 - A professional role, procedure, or institution that requires domain knowledge
 - A world rule stated as fact that should be backed by explicit design decision in `specs/world-building.md` or `.specify/memory/constitution.md`
@@ -245,7 +245,7 @@ For each detected claim:
    - **Open research pending** ? flag as `PENDING`
 3. No R-item covers it ? flag as `UNSUPPORTED`
 
-### Check Step 3 — Output report
+### Check Step 3 â€” Output report
 
 ```
 ???????????????????????????????????????????????????????
@@ -258,15 +258,15 @@ For each detected claim:
 ### UNSUPPORTED Claims (no R-item covers this)
 | Node | Claim | Risk | Suggested R-item |
 |---|---|---|---|
-| NODE-2003 | "She called out the correct ballast dive order" | HIGH — expert-visible | Add: R[next] — submarine dive order protocols |
+| NODE-2003 | "She called out the correct ballast dive order" | HIGH â€” expert-visible | Add: R[next] â€” submarine dive order protocols |
 
 ### PENDING Claims (OPEN R-item exists but not yet resolved)
 | Node | Claim | Linked R-item |
 |---|---|---|
-| NODE-1004 | "The 1991 coup was announced by radio first" | R004 — Soviet coup announcement sequence |
+| NODE-1004 | "The 1991 coup was announced by radio first" | R004 â€” Soviet coup announcement sequence |
 
 ### COVERED (mention in brief)
-N claims checked against resolved research — no issues found.
+N claims checked against resolved research â€” no issues found.
 
 ### Summary
 UNSUPPORTED: [N]  PENDING: [N]  COVERED: [N]
@@ -278,7 +278,7 @@ Recommended action: [run speckit.research add for each UNSUPPORTED claim / resol
 
 ## Mode: Status
 
-**Purpose**: Research dashboard — live view of all items, coverage, and risk.
+**Purpose**: Research dashboard â€” live view of all items, coverage, and risk.
 
 ```
 ???????????????????????????????????????????????????????
@@ -291,19 +291,19 @@ Recommended action: [run speckit.research add for each UNSUPPORTED claim / resol
 |-------|------------------------------------|-------------------|-------------------|
 | R003  | Submarine dive order protocols     | NODE-2003         | ?? HIGH           |
 | R007  | Soviet coup announcement sequence  | NODE-1004         | ?? HIGH           |
-| R011  | How Ink handles nested conditions  | All Act 2 gates   | —                 |
+| R011  | How Ink handles nested conditions  | All Act 2 gates   | â€”                 |
 
 ### Authenticity Flags (unresolved)
 | Flag                              | Node / Branch | Risk if wrong |
 |-----------------------------------|---------------|---------------|
 | Submarine dive order protocols    | NODE-2003     | Expert players will catch immediately |
-…
+â€¦
 
 ### Resolved Research Items
 | ID    | Topic                             | Finding (summary)          | Source |
 |-------|-----------------------------------|----------------------------|--------|
 | R001  | Ink passage-name conventions      | [one sentence summary]     | [source] |
-…
+â€¦
 
 Recommended action: [clear to draft / resolve HIGH flags before export / run speckit.research check]
 ???????????????????????????????????????????????????????

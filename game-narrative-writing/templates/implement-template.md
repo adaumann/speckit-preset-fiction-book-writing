@@ -1,4 +1,4 @@
----
+﻿---
 node_id: [NODE_ID]
 title: [NODE_TITLE]
 act: [ACT_NUMBER]
@@ -35,7 +35,7 @@ outline_ref: outlines/[NODE_ID].md
 
 [NODE_PROSE]
 <!-- Write the narrative prose here. Second/third/first person per constitution.md.
-     Keep prose coherent without the hook blocks � hooks are annotations only.
+     Keep prose coherent without the hook blocks — hooks are annotations only.
      Opening line MUST orient the player: where, who, what is at stake. -->
 
 ---

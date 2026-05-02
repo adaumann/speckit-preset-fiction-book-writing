@@ -1,4 +1,4 @@
-# Mechanic Hook Schemas: [GAME_TITLE]
+ï»¿# Mechanic Hook Schemas: [GAME_TITLE]
 
 <!-- Reference document for all mechanic hooks used in this project.
      Cross-referenced by speckit.implement, speckit.checklist, speckit.continuity, and export.py.
@@ -6,9 +6,9 @@
 
 ---
 
-## Tier 1 Hooks — Fully Exported (v1.0)
+## Tier 1 Hooks â€” Fully Exported (v1.0)
 
-### lag — Boolean State
+### lag â€” Boolean State
 
 `
 [MECHANIC:FLAG set=[variable_name] value=true|false]
@@ -26,7 +26,7 @@
 
 ---
 
-### counter — Integer Increment/Decrement
+### counter â€” Integer Increment/Decrement
 
 `
 [MECHANIC:COUNTER set=[variable_name] delta=+1|-1|N]
@@ -46,7 +46,7 @@
 
 ---
 
-### isited — Node Seen Tracking
+### isited â€” Node Seen Tracking
 
 `
 [MECHANIC:VISITED set=[variable_name]]
@@ -63,7 +63,7 @@
 
 ---
 
-### inventory — Item Management
+### inventory â€” Item Management
 
 `
 [MECHANIC:INVENTORY add=[item_variable]]
@@ -86,9 +86,9 @@
 
 ---
 
-## Tier 3 Hooks — Point-and-Click / High-Fidelity
+## Tier 3 Hooks â€” Point-and-Click / High-Fidelity
 
-### move — Actor Navigation
+### move â€” Actor Navigation
 
 | Engine | Syntax |
 |---|---|
@@ -98,7 +98,7 @@
 
 ---
 
-### udio — Sound Triggers
+### udio â€” Sound Triggers
 
 | Engine | Syntax |
 |---|---|

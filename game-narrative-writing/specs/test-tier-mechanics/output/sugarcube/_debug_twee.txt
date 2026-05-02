@@ -1,0 +1,53 @@
+:: StoryData
+{
+  "ifid": "550e8400-e29b-41d4-a716-446655440000",
+  "title": "Test Tier Mechanics",
+  "author": "Speckit Test Suite",
+  "version": "1.0.0",
+  "format": "SugarCube",
+  "description": "Test suite for Tier 1/2/3 mechanic system"
+}
+
+:: Start Node
+Welcome to the test story!
+
+<<run $store.variables.game_started = true>>
+<<run $store.counters['act_counter'] += 1>>
+<<run $store.inventory.push('rusty_key')>>
+
+You wake up in a mysterious room.
+
+<<link "Explore the room" "NODE-002-tier2-demo">><</link>>
+<<link "Check inventory" "NODE-003-tier3-demo">><</link>>
+
+:: Tier 2 Mechanics Demo
+You enter a library. There's a mysterious figure studying an ancient tome.
+
+<<run $store.knowledge['ancient_prophecy'] = true>>
+<<run $store.factions['scholars'] += 5>>
+<<run $store.locations['library'] = 'discovered'>>
+<<run $store.objects['ancient_tome'] = 'readable'>>
+<<run $store.clues['prophecy_fragment'] = true>>
+
+The scholar nods at you knowingly. You feel like something important just happened.
+
+<<link "Question the scholar" "NODE-001-start">><</link>>
+<<link "Examine the objects" "NODE-003-tier3-demo">><</link>>
+
+:: Tier 3 Mechanics Demo
+You step into a grand chamber. Interactive elements surround you.
+
+<<run $store.verbs['golden_statue'] = 'examine'>>
+<<run $store.positions['player'] = 'chamber_center'>>
+<<run $store.hotspots['statue_base'] = true>>
+<<run setup.audio.play('chamber_music')>>
+<<if $store.inventory.includes('rusty_key') and $store.inventory.includes('golden_ornament')>><<run $store.inventory.push('ornate_key')>><</if>>
+
+The statue glows with an ethereal light. You hear haunting music echo through the chamber.
+
+<!-- GATED_CHOICE: player_has_ornate_key (timeout 30s — SugarCube JS implementation required) -->
+
+What do you do?
+
+<<link "Use the ornate key" "NODE-001-start">><</link>>
+<<link "Leave the chamber" "NODE-002-tier2-demo">><</link>>

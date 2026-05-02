@@ -1,7 +1,7 @@
 ---
 description: Generate or update a Mermaid flowchart of the node graph with mechanic trigger annotations, ending markers, and act boundary labels.
 handoffs:
-  - speckit.plan: If the flowmap.md source is stale
+  - speckit.plan: If the plan.md source is stale
   - speckit.analyze: If unreachable nodes are visible in the diagram
 ---
 
@@ -12,7 +12,7 @@ Generate a Mermaid flowchart of the full node graph. Annotates mechanic triggers
 ## User Input
 
 Provide one of:
-- Nothing — generate full flowchart from all node files and `flowmap.md`
+- Nothing — generate full flowchart from all node files and `plan.md`
 - `--act [N]` — diagram one act only
 - `--endings` — highlight ending nodes only
 - `--hooks` — annotate mechanic trigger types on edges
@@ -25,9 +25,9 @@ Optional flags:
 
 ## Pre-Execution Checks
 
-1. Load `specs/flowmap.md` — authoritative node graph source.
+1. Load `specs/plan.md` — authoritative node graph source.
 2. Load all node files in `nodes/` to extract actual choice targets.
-3. If node files exist: prefer actual node file links over flowmap.md estimates.
+3. If node files exist: prefer actual node file links over plan.md estimates.
 
 ## Outline
 
@@ -37,7 +37,7 @@ Optional flags:
    - Gated choices: annotate the condition on the edge label (e.g. `-->|"Trust ≥ 75: Tell me"| NODE_005`)
    - Terminal/ending nodes: marked with double-bracket shape `NODE_END_A[[Ending A]]`
    - Act boundaries: add comment dividers `%% ACT 1 %%`
-   - **Hub nodes**: if a node is tagged `hub` in `flowmap.md`, render it with a stadium shape `NODE_HUB([Hub Label])` and annotate topic sub-nodes as `:::hub-topic`; add a `%% DIALOGUE HUB %%` comment above the hub node group
+   - **Hub nodes**: if a node is tagged `hub` in `plan.md`, render it with a stadium shape `NODE_HUB([Hub Label])` and annotate topic sub-nodes as `:::hub-topic`; add a `%% DIALOGUE HUB %%` comment above the hub node group
 
 2. **Mechanic annotations** (if `--hooks`):
    - Trust shift: append `[±N trust]` to edge label

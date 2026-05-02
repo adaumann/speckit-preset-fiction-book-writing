@@ -1,5 +1,5 @@
----
-description: Validate and compile drafted node files. Runs engine compiler, structural unit tests, and a self-correction loop up to 3 times before escalating to the user.
+﻿---
+description: Run comprehensive unit test suite on drafted nodes. Includes structural tests, engine compiler validation, and self-correction loops. Optional; speckit.compile includes basic validation automatically.
 handoffs:
   - label: Re-draft failing node
     agent: speckit.implement
@@ -10,13 +10,16 @@ handoffs:
     prompt: Show implement instructions
     send: false
 scripts:
-  sh: scripts/bash/check-prerequisites.sh --json
-  ps: scripts/powershell/check-prerequisites.ps1 -Json
+  sh: scripts/bash/verify.sh --json --spec $SPECNAME --engine $ENGINE
+  ps: scripts/powershell/verify.ps1 -Json -Spec $SPECNAME -Engine $ENGINE
+  py: scripts/python/verify.py --spec $SPECNAME --engine $ENGINE --all
 ---
 
 # speckit.verify
 
-Validate one or more drafted node files and run the self-correction loop until they are clean.
+Run comprehensive unit tests on drafted node files. 
+
+**When to use**: After `speckit.compile` if you want thorough validation. Not required for standard workflows.
 
 ## User Input
 
@@ -25,18 +28,18 @@ $ARGUMENTS
 ```
 
 Accepted arguments:
-- `[NODE_ID]` — validate a single node (e.g. `NODE-003`)
-- `[NODE_ID] [NODE_ID] ...` — validate a list of nodes
-- `--all` — validate every file in `nodes/`
-- `--unit-tests` — run the full cross-node unit test suite only (no compiler)
-- `--structural-only` — run only structural unit tests (no compiler/linter invocation)
-- *(no argument)* — validate every DRAFT node that has no `verified: true` flag in its header
+- `[NODE_ID]` â€” validate a single node (e.g. `NODE-003`)
+- `[NODE_ID] [NODE_ID] ...` â€” validate a list of nodes
+- `--all` â€” validate every file in `nodes/`
+- `--unit-tests` â€” run the full cross-node unit test suite only (no compiler)
+- `--structural-only` â€” run only structural unit tests (no compiler/linter invocation)
+- *(no argument)* â€” validate every DRAFT node that has no `verified: true` flag in its header
 
 ## What this command does
 
 `speckit.verify` runs two layers of validation in sequence:
 
-### Layer 1 — Structural Unit Tests (always runs)
+### Layer 1 â€” Structural Unit Tests (always runs)
 
 Executes `scripts/python/validation/test_nodes.py` against the target node(s).
 
@@ -53,7 +56,7 @@ Tests included:
 | T-08 | VAR-DECLARED | All hook variables are registered in `specs/variables.md` |
 | T-09 | CHOICE-TARGET | All choice link targets exist in `specs/plan.md` |
 
-### Layer 2 — Engine Compiler / Linter (skipped if `--structural-only`)
+### Layer 2 â€” Engine Compiler / Linter (skipped if `--structural-only`)
 
 Executes `scripts/python/validation/validate_engine.py [FILE] --target [EXPORT_TARGET]` where
 `EXPORT_TARGET` is read from `.specify/memory/constitution.md`.
@@ -67,7 +70,7 @@ Executes `scripts/python/validation/validate_engine.py [FILE] --target [EXPORT_T
 | `unity` (`.cs`) | `dotnet build` | .NET SDK |
 | `escoria` | `godot --check-only` | Godot on PATH |
 | `ags` | *(static analysis only)* | No CLI compiler available |
-| `generic` | *(structural tests only)* | — |
+| `generic` | *(structural tests only)* | â€” |
 
 Toolchain `[TOOLCHAIN]` warnings (binary not found) are reported but **do not fail** the build.
 Hard errors (syntax errors returned by the compiler) **do fail** the build and trigger the loop.
@@ -82,8 +85,8 @@ Attempt 1 of 3
   - Identify the specific lines / constructs causing the failure
   - Apply the minimal targeted fix to the node file
   - Re-run validate_engine.py
-  → If clean: mark as verified and continue
-  → If still failing: proceed to Attempt 2
+  â†’ If clean: mark as verified and continue
+  â†’ If still failing: proceed to Attempt 2
 ```
 
 The loop runs up to **3 attempts**. After 3 failed attempts:
@@ -91,7 +94,7 @@ The loop runs up to **3 attempts**. After 3 failed attempts:
 - Do **NOT** mark the node as verified
 - Prompt the user:
   ```
-  ⚠ VERIFY FAILED after 3 attempts: nodes/[NODE_ID].[EXT]
+  âš  VERIFY FAILED after 3 attempts: nodes/[NODE_ID].[EXT]
   
   Remaining errors:
   [error list]
@@ -106,7 +109,7 @@ The loop runs up to **3 attempts**. After 3 failed attempts:
 
 1. **Resolve target list**: From `$ARGUMENTS` or scan `nodes/` for files without `verified: true`.
 
-2. **Load constitution**: Read `.specify/memory/constitution.md` → extract `export_target`.
+2. **Load constitution**: Read `.specify/memory/constitution.md` â†’ extract `export_target`.
 
 3. **For each target node file**:
 
@@ -121,19 +124,19 @@ The loop runs up to **3 attempts**. After 3 failed attempts:
       python scripts/python/validation/validate_engine.py nodes/[NODE_ID].[EXT] --target [EXPORT_TARGET]
       ```
 
-   c. If errors found → enter **Self-Correction Loop** (max 3 attempts).
+   c. If errors found â†’ enter **Self-Correction Loop** (max 3 attempts).
 
    d. If clean after loop:
       - Add `verified: true` and `verified_at: [YYYY-MM-DD]` to the node's YAML header.
-      - Report: `✓ VERIFIED: [NODE_ID] — [n] attempt(s)`
+      - Report: `âœ“ VERIFIED: [NODE_ID] â€” [n] attempt(s)`
 
 4. **After all nodes processed**, print summary table:
    ```
    | Node     | Status   | Attempts | Errors |
    |----------|----------|----------|--------|
-   | NODE-001 | ✓ Clean  | 1        | 0      |
-   | NODE-002 | ✓ Fixed  | 2        | 0      |
-   | NODE-003 | ✗ Failed | 3        | 4      |
+   | NODE-001 | âœ“ Clean  | 1        | 0      |
+   | NODE-002 | âœ“ Fixed  | 2        | 0      |
+   | NODE-003 | âœ— Failed | 3        | 4      |
    ```
 
 5. If `--unit-tests` flag was passed (or after all individual nodes are verified), run the full
@@ -148,7 +151,7 @@ The loop runs up to **3 attempts**. After 3 failed attempts:
 If any `[TOOLCHAIN]` warning is emitted, print the following once per missing tool:
 
 ```
-ℹ  TOOLCHAIN MISSING: [tool]
+â„¹  TOOLCHAIN MISSING: [tool]
    Install: [install URL]
    Without it, only static/structural checks will run.
    Add [tool] to PATH and re-run speckit.verify to enable full compilation checks.

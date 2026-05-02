@@ -1,5 +1,5 @@
 ---
-description: Generate editable node outline files from flowmap.md. Authors review and approve each outline before AI drafting begins, or mark SKIP to write their own prose.
+description: Generate editable node outline files from plan.md. Authors review and approve each outline before AI drafting begins, or mark SKIP to write their own prose.
 handoffs:
   - label: Start Drafting
     agent: speckit.implement
@@ -29,8 +29,8 @@ You **MUST** consider the user input before proceeding (if not empty). Accepted 
 - `[NODE_ID] [NODE_ID] ...` � generate outlines for a list of nodes
 - `--act [N]` � outline all nodes for a given act
 - `--force` � regenerate an existing outline (overwrite)
-- `--batch` / `--all` � generate outlines for ALL nodes listed in `flowmap.md` that do not yet have an outline
-- *(no argument)* � outline the next unoutlined node from `flowmap.md`
+- `--batch` / `--all` — generate outlines for ALL nodes listed in `plan.md` that do not yet have an outline
+- *(no argument)* — outline the next unoutlined node from `plan.md`
 
 ## Pre-Execution Checks
 
@@ -40,8 +40,8 @@ You **MUST** consider the user input before proceeding (if not empty). Accepted 
 - Process as standard hook block (Optional/Mandatory). Skip silently if absent.
 
 Then:
-1. Confirm `specs/[FEATURE_DIR]/flowmap.md` and `.specify/memory/constitution.md` exist.
-2. For each requested node, verify it appears in `flowmap.md` � warn if not found.
+1. Confirm `specs/[FEATURE_DIR]/plan.md` and `.specify/memory/constitution.md` exist.
+2. For each requested node, verify it appears in `plan.md` — warn if not found.
 3. **Skip any node that already has an outline file with `status: APPROVED` or `status: SKIP`** � never overwrite approved or skipped outlines unless `--force` is set.
 4. Confirm `specs/[FEATURE_DIR]/variables.md` exists � hooks cannot be declared without it.
 
@@ -55,17 +55,23 @@ Then:
 1. **Setup**: Run `{SCRIPT}` from repo root and parse JSON for spec file paths.
 
 2. **Load source documents**:
-   - **Required**: `specs/flowmap.md` (node graph, branch dependencies, act breakdown), `specs/spec.md` (NPC profiles, variable registry, research gaps)
-   - **Required**: `.specify/memory/constitution.md` (mechanic schemas, hook types, world rules, tone, target platform)
-   - **Optional**: `specs/variables.md` (declared variables with types and value ranges)
-   - **Optional**: `specs/characters/` profiles (NPC trust thresholds, state behaviors, bark lines)
+   - **Required**: `specs/plan.md` (node graph, branch dependencies, act breakdown), `specs/spec.md` (NPC profiles, variable registry, research gaps)
+   - **Required**: `.specify/memory/constitution.md` (enabled mechanics list, world rules, tone, target platform, `prose_profile`)
+   - **Required**: `specs/mechanics.md` (hook schemas, tier levels, translations, parameter definitions for all declared hooks including newly added ones)
+   - **Required**: `specs/endings.md` (ending IDs, variable gates, thematic statements) -- needed to validate all choice targets
+   - **Required**: `specs/characters.md` index + `specs/characters/` profiles (NPC trust thresholds, state behaviors, bark lines, dialogue consistency)
+   - **Required if style_mode is humanized-ai**: `.specify/memory/craft-rules.md` (to tune beat language and dialogue register per active prose profile)
+   - **Optional**: `specs/variables.md` (declared variables with types and value ranges) -- validate Variables Read and Variables Set sections
+   - **Optional**: `specs/glossary.md` (terminology registry) -- load if present; check outline for any terminology that should be flagged for consistency checking during drafting
+   - **Optional**: `specs/locations.md` (sensory anchors, location rules) -- load if present; populate location context in outline if this node takes place in a key location
+   - **Optional**: `specs/themes.md` -- load if present; use to populate the Thematic work field in the outline Beat Summary: match the node's act to the Thematic Arc by Act table, and check whether any registered motif (MO-NNN) or symbol has a planned occurrence in this node
    - **Optional**: `specs/world-building.md` (location sensory anchors, world rules)
-   - **Optional**: `specs/themes.md` � load if present; use to populate the **Thematic work** field in the outline Beat Summary: match the node's act to the Thematic Arc by Act table, and check whether any registered motif (MO-NNN) or symbol has a planned occurrence in this node
+   - Note any missing required documents -- abort with clear error if `specs/endings.md` or `specs/characters.md` missing
    - Note any missing optional documents � affected outline sections are marked `[TBD � populate <document>]`
 
 3. **Determine target nodes**:
-   - If `$ARGUMENTS` is `--batch` or `--all`: find ALL nodes in `flowmap.md` that do not yet have an outline file and process them in order.
-   - If `$ARGUMENTS` is empty: find the first node in `flowmap.md` that has no outline file yet.
+   - If `$ARGUMENTS` is `--batch` or `--all`: find ALL nodes in `plan.md` that do not yet have an outline file and process them in order.
+   - If `$ARGUMENTS` is empty: find the first node in `plan.md` that has no outline file yet.
    - If `$ARGUMENTS` is a node ID or list: use those nodes.
    - If `$ARGUMENTS` is `--act N`: use all nodes in that act without an existing outline file.
    - Skip any node already outlined with `status: APPROVED` or `status: SKIP` (unless `--force`).
@@ -76,7 +82,7 @@ Then:
 
    Use `templates/node-outline-template.md` as the base structure. Populate each section from the source documents:
 
-   **Frontmatter** � pull from `flowmap.md` node entry:
+   **Frontmatter** — pull from `plan.md` node entry:
    - `node_id`, `title`, `act`, `status: DRAFT`, `pov` (from constitution.md default or node override)
 
    **Beat Summary** � derive from the flowmap node entry:
@@ -92,13 +98,22 @@ Then:
    - Each variable changed by this node, with hook type, new value/delta, and trigger condition
    - Flag any variable not yet declared in `variables.md` with `[UNDECLARED]`
 
-   **Choices** � derive all outgoing edges from `flowmap.md`:
+   **Choices** — derive all outgoing edges from `plan.md`:
    - Minimum 2 choices for non-terminal nodes; 0 for ending nodes
    - Each choice: label, condition (if conditional), target node ID, narrative consequence
    - Default path if no conditional choices are met
 
-   **Mechanic Hooks Summary** � derive from constitution.md hook schema:
-   - All hooks triggered in this node: type, variable, action, timing
+   **Dialogue Tree** — *only if node is flagged `(dialogue-centric)` or `(mixed)` in plan.md*:
+   - Structure player dialogue options and NPC responses within the node
+   - Each dialogue choice includes: player phrase, NPC responses by character, gating/variable effects
+   - Include all NPCs present in this node; each NPC uses their correct dialogue register from `specs/characters/[NPC_ID].md` Section VIII
+   - Multi-party reactions: both/all NPCs respond to the player's dialogue choice (shown in sequence)
+   - Dialogue sub-branches: indicate if a dialogue choice continues in-node or branches to a different node
+   - If no structured dialogue tree is needed, mark as `None`
+
+   **Mechanic Hooks Summary** — derive from `specs/mechanics.md` hook schema:
+   - All hooks triggered in this node: type, tier (1 or 2), variable, action, timing
+   - Include any custom hooks added via `speckit.mechanics declare`
 
    **Branch Logic Notes** � pull from flowmap annotations:
    - Any complex gate logic, reachability conditions, or POV overrides
@@ -109,17 +124,44 @@ Then:
    - Platform/engine limits on choice count or variable types
    - POV rules or tone requirements that apply
 
-   **Deviations from flowmap.md** � default to `None`. Only populate if the outline generation process identified an inconsistency (e.g. a variable read in this node that no upstream node sets).
+   **Deviations from plan.md** — default to `None`. Only populate if the outline generation process identified an inconsistency (e.g. a variable read in this node that no upstream node sets).
+
+   **Ending Gate Validation** — derive from `specs/endings.md`:
+   - For each choice in the Choices table:
+     - If the target node ID is a terminal node: verify it maps to a valid `END-NNN` entry in `specs/endings.md`
+     - Flag any choice target that is not in `plan.md` as `[MISSING NODE]`
+     - Flag any ending node reference that has no corresponding `END-NNN` in `specs/endings.md` as `[UNREGISTERED ENDING]`
+
+   **Location & Sensory Context** — load from `specs/locations.md` if present:
+   - If this node's title or POV mentions a location, find that location in `specs/locations.md`
+   - Populate a new **Setting Anchors** field in the outline with sensory and rule details from the location profile
+     - E.g., "Sanctuary Station: sterile white walls, hum of life support, restricted entry"
+   - If location is absent from locations.md, mark as `[LOCATION PROFILE NEEDED]`
+
+   **Terminology Cross-Check** — load from `specs/glossary.md` if present:
+   - Scan beat summary and choice labels for any specialized terminology
+   - If any term appears in both the outline and `specs/glossary.md`, cross-reference the definition in the Glossary section of the outline
+   - Flag any term used that is not in the glossary (for writer awareness during drafting) as `[GLOSSARY NOTE]`
 
 5. **Outline quality rules**:
    - Every beat must be one sentence � no prose
    - If a `[NEEDS CLARIFICATION]` marker is present in the flowmap entry, propagate it into the outline � do not invent a resolution
-   - A variable listed in Variables Read must be set by at least one upstream node in `flowmap.md` � flag otherwise
-   - No choice may target a node ID not present in `flowmap.md`
+   - A variable listed in Variables Read must be set by at least one upstream node in `plan.md` — flag otherwise
+   - No choice may target a node ID not present in `plan.md`
    - The outline is a brief, not a draft � no narrative prose, no dialogue text
 
-6. **Report**: List all outline files created with their output paths and `status: DRAFT`. Include a per-node summary: `[NODE_ID] [title] � [N] beats, [N] choices, [N] variables set, act [N]`. Flag any `[UNDECLARED]` variables or propagated `[NEEDS CLARIFICATION]` markers. Remind the author to:
+6. **Report**: List all outline files created with their output paths and `status: DRAFT`. Include a per-node summary: `[NODE_ID] [title] — [N] beats, [N] choices, [N] variables set, [ending gates], act [N]`. Flag any:
+   - `[UNDECLARED]` variables
+   - `[MISSING NODE]` choice targets
+   - `[UNREGISTERED ENDING]` terminal nodes
+   - `[LOCATION PROFILE NEEDED]` locations not in locations.md
+   - `[GLOSSARY NOTE]` terminology not in glossary.md
+   - Propagated `[NEEDS CLARIFICATION]` markers
+   
+   Remind the author to:
    - Review each outline file and edit beats, choices, and variable tables as needed
+   - Verify ending gates are correct (choice targets are valid ending IDs or intermediate nodes)
+   - Check sensory anchors for location-based nodes
    - Change `status: DRAFT` ? `status: APPROVED` when satisfied, or `status: SKIP` to write the node themselves
    - Run `speckit.implement` once outlines are approved
 

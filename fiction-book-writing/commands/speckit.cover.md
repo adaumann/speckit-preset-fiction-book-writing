@@ -1,13 +1,13 @@
----
-description: Cover design command — generates a detailed cover brief, AI image-generation prompt, and platform-specific technical specification for KDP (ebook + print), IngramSpark, Draft2Digital, and social media. Reads existing spec.md and constitution.md for title, author, genre, series, tone, and target audience. Outputs a cover-brief.md with element layout, typography direction, colour palette, style rationale, and a ready-to-paste prompt for Midjourney, DALL-E 3, Adobe Firefly, or Stable Diffusion.
+﻿---
+description: Cover design command â€” generates a detailed cover brief, AI image-generation prompt, and platform-specific technical specification for KDP (ebook + print), IngramSpark, Draft2Digital, and social media. Reads existing spec.md and constitution.md for title, author, genre, series, tone, and target audience. Outputs a cover-brief.md with element layout, typography direction, colour palette, style rationale, and a ready-to-paste prompt for Midjourney, DALL-E 3, Adobe Firefly, or Stable Diffusion.
 handoffs:
   - label: Export Manuscript (EPUB)
     agent: speckit.export
-    prompt: Export the manuscript to EPUB — the cover image has been placed at FEATURE_DIR/cover.jpg
+    prompt: Export the manuscript to EPUB â€” the cover image has been placed at FEATURE_DIR/cover.jpg
     send: false
   - label: Export Manuscript (Print PDF)
     agent: speckit.export
-    prompt: Export the manuscript to LaTeX/PDF for print — use the cover brief for the print canvas dimensions
+    prompt: Export the manuscript to LaTeX/PDF for print â€” use the cover brief for the print canvas dimensions
     send: false
   - label: Refine Story Bible
     agent: speckit.constitution
@@ -31,42 +31,42 @@ $ARGUMENTS
 You **MUST** consider the user input before proceeding (if not empty).
 
 Accepted arguments:
-- *(no argument)* — interactive mode: ask for platform, style, and elements step by step
-- `--platform [name]` — target platform: `kdp-ebook` *(default)*, `kdp-print`, `ingramspark`, `d2d`, `social`, `all`
-- `--style [name]` — visual style preset (see Style Catalogue below)
-- `--include [items]` — comma-separated list: `series-title`, `book-title`, `author`, `genre`, `tagline`, `extra-text`, `custom`
-- `--exclude [items]` — remove elements from the default set
-- `--tagline [text]` — override or add a tagline (short phrase on cover, ≤ 8 words)
-- `--extra [text]` — extra text element (e.g. series numbering label "Book One", award text)
-- `--custom [text]` — free-form text element (e.g. contributor note, foreword credit)
-- `refresh` — regenerate image prompt variations from the same brief (no re-read of spec)
-- `prompt-only` — output only the image generation prompt, no brief document
-- `brief-only` — generate the cover brief document without writing an image prompt
+- *(no argument)* â€” interactive mode: ask for platform, style, and elements step by step
+- `--platform [name]` â€” target platform: `kdp-ebook` *(default)*, `kdp-print`, `ingramspark`, `d2d`, `social`, `all`
+- `--style [name]` â€” visual style preset (see Style Catalogue below)
+- `--include [items]` â€” comma-separated list: `series-title`, `book-title`, `author`, `genre`, `tagline`, `extra-text`, `custom`
+- `--exclude [items]` â€” remove elements from the default set
+- `--tagline [text]` â€” override or add a tagline (short phrase on cover, â‰¤ 8 words)
+- `--extra [text]` â€” extra text element (e.g. series numbering label "Book One", award text)
+- `--custom [text]` â€” free-form text element (e.g. contributor note, foreword credit)
+- `refresh` â€” regenerate image prompt variations from the same brief (no re-read of spec)
+- `prompt-only` â€” output only the image generation prompt, no brief document
+- `brief-only` â€” generate the cover brief document without writing an image prompt
 
 ---
 
 ## Purpose
 
-`speckit.cover` does not generate images — it produces everything needed to commission or generate one:
+`speckit.cover` does not generate images â€” it produces everything needed to commission or generate one:
 
-1. **Cover Brief** (`FEATURE_DIR/cover-brief.md`) — a full creative and technical specification the author can hand to a designer or feed into an AI image tool
-2. **Image Generation Prompt** — a ready-to-paste prompt calibrated to the chosen style and platform ratio, with negative prompt and parameter flags
-3. **Platform Technical Sheet** — pixel dimensions, DPI, colour model, bleed, and file format requirements per target platform
-4. **Typography Direction** — font category pairings (title / author / series), hierarchy, placement zones
-5. **Colour Palette** — primary, accent, and background tones derived from genre, tone, and target audience signals in spec.md and constitution.md
+1. **Cover Brief** (`FEATURE_DIR/cover-brief.md`) â€” a full creative and technical specification the author can hand to a designer or feed into an AI image tool
+2. **Image Generation Prompt** â€” a ready-to-paste prompt calibrated to the chosen style and platform ratio, with negative prompt and parameter flags
+3. **Platform Technical Sheet** â€” pixel dimensions, DPI, colour model, bleed, and file format requirements per target platform
+4. **Typography Direction** â€” font category pairings (title / author / series), hierarchy, placement zones
+5. **Colour Palette** â€” primary, accent, and background tones derived from genre, tone, and target audience signals in spec.md and constitution.md
 
 **What `speckit.cover` reads from existing files**:
 
 | Source field | Where it reads |
 |---|---|
-| Book title | `spec.md` — first heading or `## Publication Details` |
+| Book title | `spec.md` â€” first heading or `## Publication Details` |
 | Author name | `spec.md ## Publication Details` |
 | Series title + position | `spec.md ## Series & Format` |
 | Genre | `spec.md ## Genre & Reader Experience` |
-| Tone | `spec.md ## Genre & Reader Experience` or `constitution.md § VII Tone` |
-| Target audience | `spec.md ## Publication Details` or `constitution.md § VII Target Audience` |
+| Tone | `spec.md ## Genre & Reader Experience` or `constitution.md Â§ VII Tone` |
+| Target audience | `spec.md ## Publication Details` or `constitution.md Â§ VII Target Audience` |
 | Logline / tagline seed | `spec.md ## Logline` |
-| Mood / atmosphere | `spec.md ## Premise` and `constitution.md § I Voice Markers` |
+| Mood / atmosphere | `spec.md ## Premise` and `constitution.md Â§ I Voice Markers` |
 | Key imagery / symbols | `spec.md ## Thematic Anchors` and `world-building.md` (if present) |
 
 ---
@@ -96,14 +96,14 @@ If no `--style` is given and the user does not select one interactively, infer t
 
 | Platform | Variant | Dimensions | DPI | Colour | Format | Bleed | Notes |
 |---|---|---|---|---|---|---|---|
-| `kdp-ebook` | Ebook cover | 2560 × 1600 px (portrait: 2560 × 1600 ratio 1.6:1) | 72+ | RGB | JPG or TIFF | None | Spine NOT included in ebook cover |
-| `kdp-print` | Print cover (6×9) | Calculated: back + spine + front + bleed | 300 | CMYK | PDF | 0.125 in all sides | Spine width = pages × 0.002252 in (60 gsm paper) |
-| `kdp-print` | Print cover (5×8) | Calculated: same formula, 5" wide | 300 | CMYK | PDF | 0.125 in | Same spine formula |
-| `ingramspark` | Ebook | 2500 × 1563 px minimum | 72+ | RGB | JPG/TIFF | None | ISBN barcode area on back cover |
-| `ingramspark` | Print cover | Calculated + bleed + barcode zone | 300 | CMYK preferred PDF/X-1a | PDF | 0.125 in | ISBN barcode reserved: 2 × 1.2 in lower-right back |
-| `d2d` | Ebook | 1600 × 2400 px minimum (ratio 1:1.5) | 72+ | RGB | JPG | None | D2D also accepts higher; no spine |
-| `social` | Feed post | 1080 × 1080 px | 72 | RGB | JPG/PNG | None | Crop-safe zone: 140 px each side |
-| `social` | Story / reel | 1080 × 1920 px | 72 | RGB | JPG/PNG | None | Title zone: upper 30% |
+| `kdp-ebook` | Ebook cover | 2560 Ã— 1600 px (portrait: 2560 Ã— 1600 ratio 1.6:1) | 72+ | RGB | JPG or TIFF | None | Spine NOT included in ebook cover |
+| `kdp-print` | Print cover (6Ã—9) | Calculated: back + spine + front + bleed | 300 | CMYK | PDF | 0.125 in all sides | Spine width = pages Ã— 0.002252 in (60 gsm paper) |
+| `kdp-print` | Print cover (5Ã—8) | Calculated: same formula, 5" wide | 300 | CMYK | PDF | 0.125 in | Same spine formula |
+| `ingramspark` | Ebook | 2500 Ã— 1563 px minimum | 72+ | RGB | JPG/TIFF | None | ISBN barcode area on back cover |
+| `ingramspark` | Print cover | Calculated + bleed + barcode zone | 300 | CMYK preferred PDF/X-1a | PDF | 0.125 in | ISBN barcode reserved: 2 Ã— 1.2 in lower-right back |
+| `d2d` | Ebook | 1600 Ã— 2400 px minimum (ratio 1:1.5) | 72+ | RGB | JPG | None | D2D also accepts higher; no spine |
+| `social` | Feed post | 1080 Ã— 1080 px | 72 | RGB | JPG/PNG | None | Crop-safe zone: 140 px each side |
+| `social` | Story / reel | 1080 Ã— 1920 px | 72 | RGB | JPG/PNG | None | Title zone: upper 30% |
 
 For `--platform all`, generate one brief that covers all variants and note per-variant adaptations.
 
@@ -111,20 +111,20 @@ For `--platform all`, generate one brief that covers all variants and note per-v
 
 ## Execution Steps
 
-### Step 1 — Load Spec and Constitution
+### Step 1 â€” Load Spec and Constitution
 
 Load the following files if they exist in `FEATURE_DIR/`:
 
-- `spec.md` — extract: title, author, series title, series position, genre, tone, logline, target audience, thematic anchors
-- `constitution.md` — extract: Tone field (§ VII), Target Audience field (§ VII), Voice Markers (§ I)
-- `world-building.md` — extract: key visual symbols, colours, motifs, dominant environment
-- `series/series-bible.md` — extract: series visual identity notes (if present)
+- `spec.md` â€” extract: title, author, series title, series position, genre, tone, logline, target audience, thematic anchors
+- `constitution.md` â€” extract: Tone field (Â§ VII), Target Audience field (Â§ VII), Voice Markers (Â§ I)
+- `world-building.md` â€” extract: key visual symbols, colours, motifs, dominant environment
+- `series/series-bible.md` â€” extract: series visual identity notes (if present)
 
 If `spec.md` is missing, emit:
 ```
-⚠️ No spec.md found. Cover brief will require manual fill-in for title, author, and genre.
+âš ï¸ No spec.md found. Cover brief will require manual fill-in for title, author, and genre.
 ```
-and continue — leave those fields as `[FILL IN]` placeholders.
+and continue â€” leave those fields as `[FILL IN]` placeholders.
 
 Build an internal **Cover Seed** object:
 ```
@@ -136,7 +136,7 @@ Genre:         [extracted or FILL IN]
 Tone:          [extracted or FILL IN]
 Audience:      [extracted or FILL IN]
 Logline seed:  [first 15 words of logline, or FILL IN]
-Mood words:    [3–5 adjectives from premise/voice markers, or FILL IN]
+Mood words:    [3â€“5 adjectives from premise/voice markers, or FILL IN]
 Key imagery:   [symbols, environments, objects from world-building/thematic anchors, or FILL IN]
 ```
 
@@ -144,32 +144,32 @@ Print the Cover Seed to the user for confirmation before proceeding.
 
 ---
 
-### Step 2 — Resolve Arguments
+### Step 2 â€” Resolve Arguments
 
 Parse `$ARGUMENTS` to set:
 
-- `platform` — default `kdp-ebook` if unset
-- `style` — infer from genre/tone if unset (see Style Catalogue)
-- `elements_include` — default set: `book-title`, `author`; add `series-title` if series position is not "standalone"
-- `elements_exclude` — remove from include list
-- `tagline` — use `--tagline` value if given; otherwise offer to generate one from the logline (see Step 4)
-- `extra_text` — use `--extra` value if given
-- `custom_text` — use `--custom` value if given
+- `platform` â€” default `kdp-ebook` if unset
+- `style` â€” infer from genre/tone if unset (see Style Catalogue)
+- `elements_include` â€” default set: `book-title`, `author`; add `series-title` if series position is not "standalone"
+- `elements_exclude` â€” remove from include list
+- `tagline` â€” use `--tagline` value if given; otherwise offer to generate one from the logline (see Step 4)
+- `extra_text` â€” use `--extra` value if given
+- `custom_text` â€” use `--custom` value if given
 
 If `$ARGUMENTS` is empty or style/platform are not specified, enter **interactive mode**:
 
 ```
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-  COVER DESIGN — Setup
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”
+  COVER DESIGN â€” Setup
+â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”
 
 Platform target:
-  1  kdp-ebook       — KDP ebook (2560×1600 RGB, no spine)
-  2  kdp-print       — KDP print (300 DPI CMYK, includes spine)
-  3  ingramspark     — IngramSpark (ebook or print)
-  4  d2d             — Draft2Digital (1600×2400 RGB)
-  5  social          — Social media (1:1 and 9:16 crops)
-  6  all             — All platforms (one brief, variant notes)
+  1  kdp-ebook       â€” KDP ebook (2560Ã—1600 RGB, no spine)
+  2  kdp-print       â€” KDP print (300 DPI CMYK, includes spine)
+  3  ingramspark     â€” IngramSpark (ebook or print)
+  4  d2d             â€” Draft2Digital (1600Ã—2400 RGB)
+  5  social          â€” Social media (1:1 and 9:16 crops)
+  6  all             â€” All platforms (one brief, variant notes)
 
 Enter number or name (default: kdp-ebook):
 ```
@@ -178,17 +178,17 @@ Wait for response, then:
 
 ```
 Visual style:
-  1  photorealistic  — cinematic photo composite
-  2  illustrated     — digital art, world-building detail
-  3  painterly       — oil/watercolour texture
-  4  minimalist      — type-led, near-no imagery
-  5  typographic     — bold type dominates
-  6  dark-moody      — atmospheric, low-key
-  7  cinematic       — epic wide-angle, hero silhouette
-  8  retro-pulp      — genre homage, aged palette
-  9  hand-drawn      — ink line art, sketch feel
- 10  abstract        — conceptual, no figurative element
- 11  auto            — infer from genre + tone [recommended]
+  1  photorealistic  â€” cinematic photo composite
+  2  illustrated     â€” digital art, world-building detail
+  3  painterly       â€” oil/watercolour texture
+  4  minimalist      â€” type-led, near-no imagery
+  5  typographic     â€” bold type dominates
+  6  dark-moody      â€” atmospheric, low-key
+  7  cinematic       â€” epic wide-angle, hero silhouette
+  8  retro-pulp      â€” genre homage, aged palette
+  9  hand-drawn      â€” ink line art, sketch feel
+ 10  abstract        â€” conceptual, no figurative element
+ 11  auto            â€” infer from genre + tone [recommended]
 
 Enter number or name:
 ```
@@ -196,26 +196,26 @@ Enter number or name:
 Wait for response, then:
 
 ```
-Cover elements (default set shown — toggle on/off):
-  ✓  book-title      — required
-  ✓  author          — required
-  [series position = non-standalone → ✓ series-title auto-added]
-  ○  genre           — genre label or category flag on cover
-  ○  tagline         — short phrase (≤ 8 words)
-  ○  extra-text      — series number label, award text, etc.
-  ○  custom          — anything else (enter text when prompted)
+Cover elements (default set shown â€” toggle on/off):
+  âœ“  book-title      â€” required
+  âœ“  author          â€” required
+  [series position = non-standalone â†’ âœ“ series-title auto-added]
+  â—‹  genre           â€” genre label or category flag on cover
+  â—‹  tagline         â€” short phrase (â‰¤ 8 words)
+  â—‹  extra-text      â€” series number label, award text, etc.
+  â—‹  custom          â€” anything else (enter text when prompted)
 
 Enter items to toggle (e.g. "tagline extra-text"), or press Enter to accept defaults:
 ```
 
 If `tagline` is toggled on and no `--tagline` value was given, ask:
 ```
-Tagline text (≤ 8 words — or press Enter to auto-generate from logline):
+Tagline text (â‰¤ 8 words â€” or press Enter to auto-generate from logline):
 ```
 
 If `extra-text` is toggled on and no `--extra` value was given, ask:
 ```
-Extra text (e.g. "Book One of the Ashfall Chronicles", "Winner — Best Debut 2024"):
+Extra text (e.g. "Book One of the Ashfall Chronicles", "Winner â€” Best Debut 2024"):
 ```
 
 If `custom` is toggled on and no `--custom` value was given, ask:
@@ -225,7 +225,7 @@ Custom text element:
 
 ---
 
-### Step 3 — Style Inference (if style = auto or not set)
+### Step 3 â€” Style Inference (if style = auto or not set)
 
 Apply the following inference rules in order:
 
@@ -243,48 +243,48 @@ Apply the following inference rules in order:
 
 When two options are listed, prefer the first unless tone is `clinical-precise` or `bureaucratic-deadpan` (prefer `typographic`) or tone is `literary-elevated` (prefer the more restrained option).
 
-Inform the user: `Style auto-selected: [style] — based on genre "[genre]" and tone "[tone]". Pass --style [other] to override.`
+Inform the user: `Style auto-selected: [style] â€” based on genre "[genre]" and tone "[tone]". Pass --style [other] to override.`
 
 ---
 
-### Step 4 — Colour Palette Construction
+### Step 4 â€” Colour Palette Construction
 
-Derive a palette of 3–5 colours from the Cover Seed:
+Derive a palette of 3â€“5 colours from the Cover Seed:
 
-**Primary colour** — the dominant cover ground:
+**Primary colour** â€” the dominant cover ground:
 - Dark fiction (horror, thriller, dark fantasy): near-black or deep jewel tone (e.g. `#0E0E14`, `#1A0A2E`)
 - Fantasy / adventure: rich saturated mid-tone (e.g. deep teal, burnt sienna, forest green)
 - Romance: warm rose, deep burgundy, warm cream
 - Literary fiction: muted neutral (warm grey, aged ivory, slate)
 - MG / cozy: cheerful mid-tone (sky blue, sage, warm yellow)
 
-**Accent colour** — title and key graphic element:
-- Contrast ≥ 4.5:1 against primary (WCAG AA)
+**Accent colour** â€” title and key graphic element:
+- Contrast â‰¥ 4.5:1 against primary (WCAG AA)
 - One vivid pop: gold, electric blue, crimson, white
 
-**Tertiary colour** — supporting graphic / author line:
+**Tertiary colour** â€” supporting graphic / author line:
 - Desaturated version of accent, or contrasting neutral
 
-**Mood words → palette modifiers**:
-- "gritty", "raw", "brutal" → desaturate primaries, reduce saturation 20–30%
-- "luminous", "ethereal", "dreamlike" → add luminosity, soft glow on edges
-- "warm", "nostalgic" → shift hue toward amber; add paper texture overlay suggestion
-- "cold", "isolated", "clinical" → cool all hues; steel-blue or grey-green bias
+**Mood words â†’ palette modifiers**:
+- "gritty", "raw", "brutal" â†’ desaturate primaries, reduce saturation 20â€“30%
+- "luminous", "ethereal", "dreamlike" â†’ add luminosity, soft glow on edges
+- "warm", "nostalgic" â†’ shift hue toward amber; add paper texture overlay suggestion
+- "cold", "isolated", "clinical" â†’ cool all hues; steel-blue or grey-green bias
 
 Output palette as:
 ```
-Primary:    [hex] — [description]
-Accent:     [hex] — [description]
-Tertiary:   [hex] — [description]
-Text:       [hex] — title colour (must contrast primary ≥ 4.5:1)
-Background: [hex] — back cover / spine ground (print only)
+Primary:    [hex] â€” [description]
+Accent:     [hex] â€” [description]
+Tertiary:   [hex] â€” [description]
+Text:       [hex] â€” title colour (must contrast primary â‰¥ 4.5:1)
+Background: [hex] â€” back cover / spine ground (print only)
 ```
 
 ---
 
-### Step 5 — Typography Direction
+### Step 5 â€” Typography Direction
 
-Based on style + genre, recommend font categories (do not name specific commercial fonts unless they are free/open-source — instead describe the typographic class):
+Based on style + genre, recommend font categories (do not name specific commercial fonts unless they are free/open-source â€” instead describe the typographic class):
 
 | Element | Recommendation |
 |---|---|
@@ -296,9 +296,9 @@ Based on style + genre, recommend font categories (do not name specific commerci
 
 **Placement zones** (relative to cover height, portrait orientation):
 - Zone A (top 15%): series title, series number
-- Zone B (top 20–40%): title (most common) or hero image region
-- Zone C (middle 40–60%): hero image focal point
-- Zone D (bottom 20–35%): author name
+- Zone B (top 20â€“40%): title (most common) or hero image region
+- Zone C (middle 40â€“60%): hero image focal point
+- Zone D (bottom 20â€“35%): author name
 - Zone E (bottom 10%): extra text, tagline (if bottom-placed)
 
 Specify whether title is top- or bottom-anchored based on style:
@@ -311,25 +311,25 @@ Specify whether title is top- or bottom-anchored based on style:
 
 ---
 
-### Step 6 — Image Generation Prompt Construction
+### Step 6 â€” Image Generation Prompt Construction
 
 Build three prompt variants (the user can choose or use all three as iterations):
 
-**Variant A — Hero Subject**: Foreground subject (character, object, environment) dominant
+**Variant A â€” Hero Subject**: Foreground subject (character, object, environment) dominant
 
 Template:
 ```
 [STYLE_MODIFIER], [SUBJECT_DESCRIPTION], [ENVIRONMENT_DESCRIPTION], [LIGHTING], [COLOUR_PALETTE], [MOOD_WORDS], book cover illustration, [PLATFORM_RATIO], highly detailed, no text, no letters, no watermark
 ```
 
-**Variant B — Environment / Atmosphere**: No human figure, environment and atmosphere dominant
+**Variant B â€” Environment / Atmosphere**: No human figure, environment and atmosphere dominant
 
 Template:
 ```
 [STYLE_MODIFIER], [ENVIRONMENT_DESCRIPTION], dramatic atmosphere, [LIGHTING], [COLOUR_PALETTE], [MOOD_WORDS], landscape composition, book cover, [PLATFORM_RATIO], cinematic quality, no figures, no text
 ```
 
-**Variant C — Object / Symbol**: Single iconic object or symbol from the story
+**Variant C â€” Object / Symbol**: Single iconic object or symbol from the story
 
 Template:
 ```
@@ -364,7 +364,7 @@ For each variant, also output:
 
 ---
 
-### Step 7 — Tagline (if included)
+### Step 7 â€” Tagline (if included)
 
 If `tagline` element is included and no `--tagline` text was given, generate three tagline options from the logline seed:
 
@@ -373,11 +373,11 @@ Rules:
 - **Agglutinative languages** (`Language = de`, `nl`, `fi`, `hu`, `tr`) or any language where a single token may represent a multi-word concept: Maximum 4 compound words (a compound noun like *Sternenstaub* counts as 1 word, not 2)
 - If Language is not set, apply the 8-word rule
 - Must not restate the title
-- Must create curiosity or dread — avoid describing the plot
+- Must create curiosity or dread â€” avoid describing the plot
 - Present tense or gerund preferred ("Some doors are meant to stay closed.")
-- Avoid clichés: "One man…", "In a world…", "A journey…"
+- Avoid clichÃ©s: "One manâ€¦", "In a worldâ€¦", "A journeyâ€¦"
 
-> **Image generation note**: AI image prompts (Steps 5–6) are ALWAYS written in English regardless of the publication Language setting — image generation models are English-prompt optimised. The Language setting only affects tagline word-count rules and cover copy text.
+> **Image generation note**: AI image prompts (Steps 5â€“6) are ALWAYS written in English regardless of the publication Language setting â€” image generation models are English-prompt optimised. The Language setting only affects tagline word-count rules and cover copy text.
 
 Present options:
 ```
@@ -391,39 +391,39 @@ Wait for selection. If user enters their own text, use that.
 
 ---
 
-### Step 8 — Print Spine Calculation (kdp-print / ingramspark only)
+### Step 8 â€” Print Spine Calculation (kdp-print / ingramspark only)
 
 If platform includes print variants, ask:
 ```
-Page count (approximate — needed for spine width calculation):
+Page count (approximate â€” needed for spine width calculation):
 Paper stock:
-  1  white (55 gsm / 20 lb) — 0.002252 in/page
-  2  cream (60 gsm / 24 lb) — 0.0025 in/page  [default]
-  3  colour (80 gsm)        — 0.003 in/page
+  1  white (55 gsm / 20 lb) â€” 0.002252 in/page
+  2  cream (60 gsm / 24 lb) â€” 0.0025 in/page  [default]
+  3  colour (80 gsm)        â€” 0.003 in/page
 ```
 
 Calculate:
 ```
-Spine width = page_count × inches_per_page
-Cover width = back_width + spine_width + front_width + (2 × bleed)
-Cover height = trim_height + (2 × bleed)
+Spine width = page_count Ã— inches_per_page
+Cover width = back_width + spine_width + front_width + (2 Ã— bleed)
+Cover height = trim_height + (2 Ã— bleed)
 
-KDP Print 6×9:
+KDP Print 6Ã—9:
   Front: 6 in | Back: 6 in | Bleed: 0.125 in
   Height: 9 + 0.25 = 9.25 in | Width: 12 + spine + 0.25 in
 
 At 300 DPI:
-  Width px  = round(cover_width_in × 300)
-  Height px = round(cover_height_in × 300)
+  Width px  = round(cover_width_in Ã— 300)
+  Height px = round(cover_height_in Ã— 300)
 ```
 
 Report:
 ```
-Print Cover Canvas (KDP 6×9):
-  Trim:        6 × 9 in
+Print Cover Canvas (KDP 6Ã—9):
+  Trim:        6 Ã— 9 in
   Bleed:       0.125 in all sides
-  Spine width: [X.XXX] in  ([PAGE_COUNT] pages × [INCHES_PER_PAGE] in)
-  Full canvas: [W] × [H] in  →  [WPX] × [HPX] px at 300 DPI
+  Spine width: [X.XXX] in  ([PAGE_COUNT] pages Ã— [INCHES_PER_PAGE] in)
+  Full canvas: [W] Ã— [H] in  â†’  [WPX] Ã— [HPX] px at 300 DPI
   Colour:      CMYK
   Format:      PDF (PDF/X-1a for IngramSpark)
   Safe zone:   keep all text/logos 0.5 in from any edge
@@ -431,7 +431,7 @@ Print Cover Canvas (KDP 6×9):
 
 ---
 
-### Step 9 — Write Cover Brief
+### Step 9 â€” Write Cover Brief
 
 Write `FEATURE_DIR/cover-brief.md` with the following structure:
 
@@ -448,7 +448,7 @@ Write `FEATURE_DIR/cover-brief.md` with the following structure:
 |---|---|
 | Book title | [TITLE] |
 | Author | [AUTHOR] |
-| Series | [SERIES_TITLE] / [SERIES_POSITION] or — |
+| Series | [SERIES_TITLE] / [SERIES_POSITION] or â€” |
 | Genre | [GENRE] |
 | Tone | [TONE] |
 | Target audience | [AUDIENCE] |
@@ -459,13 +459,13 @@ Write `FEATURE_DIR/cover-brief.md` with the following structure:
 
 | Element | Include | Text |
 |---|---|---|
-| Book title | ✓ | [TITLE] |
-| Author name | ✓ | [AUTHOR] |
-| Series title | [✓/—] | [SERIES_TITLE] |
-| Genre label | [✓/—] | [GENRE_LABEL] |
-| Tagline | [✓/—] | [TAGLINE] |
-| Extra text | [✓/—] | [EXTRA_TEXT] |
-| Custom | [✓/—] | [CUSTOM_TEXT] |
+| Book title | âœ“ | [TITLE] |
+| Author name | âœ“ | [AUTHOR] |
+| Series title | [âœ“/â€”] | [SERIES_TITLE] |
+| Genre label | [âœ“/â€”] | [GENRE_LABEL] |
+| Tagline | [âœ“/â€”] | [TAGLINE] |
+| Extra text | [âœ“/â€”] | [EXTRA_TEXT] |
+| Custom | [âœ“/â€”] | [CUSTOM_TEXT] |
 
 ---
 
@@ -473,14 +473,14 @@ Write `FEATURE_DIR/cover-brief.md` with the following structure:
 
 **Style**: [STYLE_NAME]
 
-[1–2 sentence rationale derived from genre/tone/audience]
+[1â€“2 sentence rationale derived from genre/tone/audience]
 
 **Key imagery directions**:
-- [Image direction 1 — from world-building or thematic anchors]
+- [Image direction 1 â€” from world-building or thematic anchors]
 - [Image direction 2]
 - [Image direction 3]
 
-**Mood words**: [3–5 adjectives]
+**Mood words**: [3â€“5 adjectives]
 
 ---
 
@@ -509,21 +509,21 @@ Write `FEATURE_DIR/cover-brief.md` with the following structure:
 
 ## 6. Image Generation Prompts
 
-### Variant A — Hero Subject
+### Variant A â€” Hero Subject
 ```
 [PROMPT A]
 ```
 Negative: `[NEGATIVE PROMPT]`
 MJ params: `[PARAMS]`
 
-### Variant B — Environment
+### Variant B â€” Environment
 ```
 [PROMPT B]
 ```
 Negative: `[NEGATIVE PROMPT]`
 MJ params: `[PARAMS]`
 
-### Variant C — Symbol / Object
+### Variant C â€” Symbol / Object
 ```
 [PROMPT C]
 ```
@@ -542,7 +542,7 @@ MJ params: `[PARAMS]`
 ### [PLATFORM NAME]
 | Spec | Value |
 |---|---|
-| Dimensions | [W × H px or in] |
+| Dimensions | [W Ã— H px or in] |
 | DPI | [DPI] |
 | Colour model | [RGB / CMYK] |
 | File format | [JPG / PDF / TIFF] |
@@ -571,9 +571,9 @@ Style:     [STYLE_NAME]
 Elements:  [comma-separated element list]
 Prompts:   3 variants (A: hero subject, B: environment, C: symbol)
 
-Next step — place your generated cover image:
-  FEATURE_DIR/cover.jpg   ← KDP ebook, IngramSpark, D2D (RGB JPG)
-  FEATURE_DIR/cover.png   ← alternative (RGB PNG)
+Next step â€” place your generated cover image:
+  FEATURE_DIR/cover.jpg   â† KDP ebook, IngramSpark, D2D (RGB JPG)
+  FEATURE_DIR/cover.png   â† alternative (RGB PNG)
 
 speckit.export will auto-detect this file when you run:
   /speckit.export epub
@@ -586,32 +586,32 @@ dimensions from Section 7 of the cover brief.
 
 ---
 
-### Step 10 — Output Summary to Chat
+### Step 10 â€” Output Summary to Chat
 
 After writing the file, output a condensed summary directly in the chat:
 
 ```
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-  COVER BRIEF — [TITLE]
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”
+  COVER BRIEF â€” [TITLE]
+â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”
   Platform : [PLATFORM]
   Style    : [STYLE_NAME]
   Elements : [element list]
-  Tagline  : "[TAGLINE]" (or — if excluded)
+  Tagline  : "[TAGLINE]" (or â€” if excluded)
 
   COLOUR PALETTE
-  ■ Primary  [HEX]  [description]
-  ■ Accent   [HEX]  [description]
-  ■ Text     [HEX]  [description]
+  â–  Primary  [HEX]  [description]
+  â–  Accent   [HEX]  [description]
+  â–  Text     [HEX]  [description]
 
-  IMAGE PROMPT — Variant A (recommended first pass):
-  ──────────────────────────────────────────────────
-  [FULL PROMPT A — paste into Midjourney / DALL-E 3 / Firefly]
+  IMAGE PROMPT â€” Variant A (recommended first pass):
+  â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  [FULL PROMPT A â€” paste into Midjourney / DALL-E 3 / Firefly]
 
   Negative: [NEGATIVE PROMPT]
 
-  Full brief with all 3 variants saved → FEATURE_DIR/cover-brief.md
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  Full brief with all 3 variants saved â†’ FEATURE_DIR/cover-brief.md
+â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”
 ```
 
 If `prompt-only` was passed, output only the prompt block and stop (do not write cover-brief.md).
@@ -621,8 +621,8 @@ If `brief-only` was passed, skip Step 10 chat output and write only the file.
 
 ## Constraints
 
-- **Read-only for source files** — spec.md, constitution.md, world-building.md are never modified
-- **No image generation** — this command produces briefs and prompts; actual image generation requires an external tool
-- **No font licensing** — suggest font *classes* (e.g. "condensed slab serif") not specific commercial typeface names unless they are clearly free/open-source (e.g. Libre Baskerville, EB Garamond, Oswald)
+- **Read-only for source files** â€” spec.md, constitution.md, world-building.md are never modified
+- **No image generation** â€” this command produces briefs and prompts; actual image generation requires an external tool
+- **No font licensing** â€” suggest font *classes* (e.g. "condensed slab serif") not specific commercial typeface names unless they are clearly free/open-source (e.g. Libre Baskerville, EB Garamond, Oswald)
 - **Accessibility note**: always flag if the proposed text-on-background contrast ratio is below 4.5:1 (WCAG AA)
-- **Print colour warning**: if platform is `kdp-print` or `ingramspark`, remind the user that RGB colours will be converted to CMYK on upload and that the brief colours are RGB approximations only — proof with a CMYK-calibrated tool before ordering
+- **Print colour warning**: if platform is `kdp-print` or `ingramspark`, remind the user that RGB colours will be converted to CMYK on upload and that the brief colours are RGB approximations only â€” proof with a CMYK-calibrated tool before ordering

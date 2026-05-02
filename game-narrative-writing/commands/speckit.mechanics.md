@@ -1,4 +1,4 @@
----
+ï»¿---
 description: Declare, update, or promote mechanic hooks in specs/mechanics.md. Use to register new Tier 2 stubs, promote a stub to Tier 1, add a compatibility warning rule, or audit which hooks are declared vs. in use.
 handoffs:
   - label: Update Variables
@@ -25,16 +25,16 @@ $ARGUMENTS
 ```
 
 Accepted arguments:
-- `declare [HOOK_TYPE]` — register a new Tier 2 stub hook schema in `specs/mechanics.md`
-- `promote [HOOK_TYPE]` — move a Tier 2 stub to Tier 1; requires translation tables for all declared engine targets
-- `audit` — compare hooks declared in `specs/mechanics.md` against hooks used in `nodes/` and `outlines/`; report unused declared hooks and undeclared in-use hooks
-- `list` — print all declared hooks with tier, description, and engine support status
-- *(no argument)* — equivalent to `list`
+- `declare [HOOK_TYPE]` â€” register a new Tier 2 stub hook schema in `specs/mechanics.md`
+- `promote [HOOK_TYPE]` â€” move a Tier 2 stub to Tier 1; requires translation tables for all declared engine targets
+- `audit` â€” compare hooks declared in `specs/mechanics.md` against hooks used in `nodes/` and `outlines/`; report unused declared hooks and undeclared in-use hooks
+- `list` â€” print all declared hooks with tier, description, and engine support status
+- *(no argument)* â€” equivalent to `list`
 
 ## Pre-Execution Checks
 
-1. Confirm `specs/mechanics.md` exists. If absent: "No mechanics.md found — run `speckit.constitution` first to generate the game bible and mechanics document."
-2. Load `.specify/memory/constitution.md` Section II (enabled mechanics list) — used to cross-check declarations.
+1. Confirm `specs/mechanics.md` exists. If absent: "No mechanics.md found â€” run `speckit.constitution` first to generate the game bible and mechanics document."
+2. Load `.specify/memory/constitution.md` Section II (enabled mechanics list) â€” used to cross-check declarations.
 3. If `declare` or `promote`: confirm the hook type name follows kebab-case convention (e.g. `custom_mood`, `faction`).
 
 ---
@@ -60,7 +60,7 @@ Tier 1 (fully exported):
   choice_memory    ? Sugarcube  ?? Ink (CONST mapping)
   clue             ? Sugarcube  ? Ink
 
-Tier 2 (stubs — export with warning):
+Tier 2 (stubs â€” export with warning):
   knowledge        [Sugarcube: stub] [Ink: stub]
   faction          [Sugarcube: stub] [Ink: stub]
   location_state   [Sugarcube: stub] [Ink: stub]
@@ -84,7 +84,7 @@ Register a new Tier 2 stub hook in `specs/mechanics.md`.
 2. Generate the stub block and append to the **Tier 2** section of `specs/mechanics.md`:
 
    ```markdown
-   ### `[hook_type]` — [Short Description]
+   ### `[hook_type]` â€” [Short Description]
 
    ```
    [MECHANIC:[HOOK_TYPE] [param1]=[value] [param2]=[value]]
@@ -92,7 +92,7 @@ Register a new Tier 2 stub hook in `specs/mechanics.md`.
    [/MECHANIC]
    ```
 
-   > // TIER 2 STUB — [target] export not yet implemented. Emits: `// UNSUPPORTED HOOK — [hook_type]`
+   > // TIER 2 STUB â€” [target] export not yet implemented. Emits: `// UNSUPPORTED HOOK â€” [hook_type]`
    > Analogy: [existing hook analogy if provided]
    ```
 
@@ -130,21 +130,21 @@ Compare declared hooks against in-use hooks across all node and outline files.
 Output:
 
 ```
-Mechanic Audit — [GAME_TITLE]
+Mechanic Audit â€” [GAME_TITLE]
 
 Declared and in use:
   flag, counter, trust, ending_condition, [...]
 
 Declared but never used:
-  ??  currency     — declared in mechanics.md, no nodes use it
-  ??  timer        — declared in mechanics.md, no nodes use it
+  ??  currency     â€” declared in mechanics.md, no nodes use it
+  ??  timer        â€” declared in mechanics.md, no nodes use it
 
 Used but not declared in mechanics.md:
-  ?  mood_state   — used in NODE-007, NODE-012; run `speckit.mechanics declare mood_state`
+  ?  mood_state   â€” used in NODE-007, NODE-012; run `speckit.mechanics declare mood_state`
 
 Tier 2 stubs in active use (will produce export warnings):
-  ??  knowledge    — used in 3 nodes (NODE-004, NODE-009, NODE-014)
-  ??  faction      — used in 1 node (NODE-022)
+  ??  knowledge    â€” used in 3 nodes (NODE-004, NODE-009, NODE-014)
+  ??  faction      â€” used in 1 node (NODE-022)
 ```
 
 Suggest: "Run `speckit.mechanics promote [HOOK_TYPE]` for any Tier 2 hooks in active use before export."

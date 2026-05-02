@@ -1,14 +1,14 @@
-# Timeline: [GAME_TITLE]
+ï»¿# Timeline: [GAME_TITLE]
 
 <!-- Feature: [FEATURE_DIR] | Generated: [GENERATION_DATE] -->
-<!-- OPTIONAL document — create this when the game has a defined in-world chronology
+<!-- OPTIONAL document â€” create this when the game has a defined in-world chronology
      that the player uncovers, references, or navigates across branches.
      Most relevant for: mystery games, historical settings, timer-heavy mechanics,
      or games where player choices create diverging timelines.
 
      Two layers:
-       Fabula  — the chronological order events actually happened (the world's truth)
-       Syuzhet — the order the player encounters events across nodes (branch-dependent)
+       Fabula  â€” the chronological order events actually happened (the world's truth)
+       Syuzhet â€” the order the player encounters events across nodes (branch-dependent)
 
      speckit.analyze checks that fabula entries referenced by node variables are
      consistent with their declared states. speckit.continuity checks that NPC states
@@ -24,40 +24,40 @@
 | Backstory span (pre-game events that drive plot) | [NEEDS CLARIFICATION] |
 | Narrative non-linearity | [linear / player-uncovered-past / dual-timeline / fragmented-memory] |
 | Calendar system | [real-world Gregorian / fictional / relative ("Day 1") / implied only] |
-| Time-of-day sensitivity | [yes — nodes depend on time-of-day state / no] |
-| Timer mechanic active | [yes — links to timer hook in specs/variables.md / no] |
+| Time-of-day sensitivity | [yes â€” nodes depend on time-of-day state / no] |
+| Timer mechanic active | [yes â€” links to timer hook in specs/variables.md / no] |
 
 ---
 
-## Fabula — Chronological Event Order
+## Fabula â€” Chronological Event Order
 
 <!-- Every event in the order it actually happened, including backstory.
      Events the player never witnesses directly still belong here if they cause plot.
-     This is the world's truth — independent of which branch the player takes.
+     This is the world's truth â€” independent of which branch the player takes.
      Format: [DATE_OR_OFFSET] | [EVENT] | [Arc or variable affected] -->
 
 ### Backstory (before game opens)
 
 | Date / Offset | Event | Arc / Variable Impact |
 |---|---|---|
-| [e.g., "–10 years"] | [e.g., "The founding agreement was broken by NPC-A"] | [`$npc_a_state` backstory] |
+| [e.g., "â€“10 years"] | [e.g., "The founding agreement was broken by NPC-A"] | [`$npc_a_state` backstory] |
 | | | |
 
 ### Game Period
 
 | Date / Offset | Event | Node ID | Variable / Arc |
 |---|---|---|---|
-| [Day 1 / equivalent] | [Status quo opening event] | NODE-001 | — |
+| [Day 1 / equivalent] | [Status quo opening event] | NODE-001 | â€” |
 | | | | |
 
 ---
 
-## Syuzhet — Player Discovery Order
+## Syuzhet â€” Player Discovery Order
 
 <!-- Only complete this section if the player encounters past events out of order
      across different nodes or branches.
      Maps when the player learns what vs. when it actually happened.
-     If linear/chronological, write: "N/A — player encounters events in fabula order." -->
+     If linear/chronological, write: "N/A â€” player encounters events in fabula order." -->
 
 | Discovery order | Event revealed | Fabula date | Revealed in node | Branch condition |
 |---|---|---|---|---|
@@ -70,7 +70,7 @@
 
 <!-- Some player choices create diverging in-world outcomes that change what is true
      from that branch forward. Document these here to prevent continuity errors.
-     These are NOT the same as variable states — they are world-state changes. -->
+     These are NOT the same as variable states â€” they are world-state changes. -->
 
 | Decision point | Node ID | Branch A outcome | Branch B outcome | Variable that tracks it |
 |---|---|---|---|---|
@@ -86,7 +86,7 @@
 
 | Constraint ID | Rule | Affected nodes | Enforced by variable |
 |---|---|---|---|
-| TC-001 | [NPC-A cannot know about X before NODE-[N]] | NODE-[N]–NODE-[N] | `$flag_[name]` |
+| TC-001 | [NPC-A cannot know about X before NODE-[N]] | NODE-[N]â€“NODE-[N] | `$flag_[name]` |
 | TC-002 | | | |
 
 ---

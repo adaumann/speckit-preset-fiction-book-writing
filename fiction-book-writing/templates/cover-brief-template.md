@@ -1,4 +1,4 @@
-# Cover Brief: [STORY_TITLE]
+﻿# Cover Brief: [STORY_TITLE]
 
 <!-- Created: [CREATION_DATE] | speckit.cover | Platform: [PLATFORM] | Style: [STYLE] -->
 <!-- Edit this file directly to refine direction, then re-run /speckit.cover refresh to get new prompts. -->
@@ -11,7 +11,7 @@
 |---|---|
 | Book title | [STORY_TITLE] |
 | Author | [AUTHOR_NAME] |
-| Series | [SERIES_TITLE] — [SERIES_POSITION] |
+| Series | [SERIES_TITLE] â€” [SERIES_POSITION] |
 | Genre | [GENRE] |
 | Tone | [TONE] |
 | Target audience | [TARGET_AUDIENCE] |
@@ -22,13 +22,13 @@
 
 | Element | Include | Text / Value |
 |---|---|---|
-| Book title | ✓ | [STORY_TITLE] |
-| Author name | ✓ | [AUTHOR_NAME] |
-| Series title | [✓/—] | [SERIES_TITLE] |
-| Genre label | [✓/—] | [GENRE_LABEL] |
-| Tagline | [✓/—] | [TAGLINE] |
-| Extra text | [✓/—] | [EXTRA_TEXT] |
-| Custom | [✓/—] | [CUSTOM_TEXT] |
+| Book title | âœ“ | [STORY_TITLE] |
+| Author name | âœ“ | [AUTHOR_NAME] |
+| Series title | [âœ“/â€”] | [SERIES_TITLE] |
+| Genre label | [âœ“/â€”] | [GENRE_LABEL] |
+| Tagline | [âœ“/â€”] | [TAGLINE] |
+| Extra text | [âœ“/â€”] | [EXTRA_TEXT] |
+| Custom | [âœ“/â€”] | [CUSTOM_TEXT] |
 
 ---
 
@@ -36,7 +36,7 @@
 
 **Style**: [STYLE_NAME]
 
-<!-- 1–2 sentences explaining why this style fits the genre/tone/audience. -->
+<!-- 1â€“2 sentences explaining why this style fits the genre/tone/audience. -->
 [STYLE_RATIONALE]
 
 ### Key Imagery Directions
@@ -54,13 +54,13 @@
 
 | Role | Hex | Description |
 |---|---|---|
-| Primary | [HEX] | [e.g. dominant cover ground — near-black] |
-| Accent | [HEX] | [e.g. title and key graphic element — gold] |
-| Tertiary | [HEX] | [e.g. author line, secondary graphic — muted amber] |
-| Title text | [HEX] | [contrast ratio vs. primary: X.X:1 — WCAG AA ≥ 4.5:1] |
-| Back/spine ground | [HEX] | [print only — may match primary] |
+| Primary | [HEX] | [e.g. dominant cover ground â€” near-black] |
+| Accent | [HEX] | [e.g. title and key graphic element â€” gold] |
+| Tertiary | [HEX] | [e.g. author line, secondary graphic â€” muted amber] |
+| Title text | [HEX] | [contrast ratio vs. primary: X.X:1 â€” WCAG AA â‰¥ 4.5:1] |
+| Back/spine ground | [HEX] | [print only â€” may match primary] |
 
-> ⚠️ **Print note**: These are RGB approximations. Convert to CMYK using a calibrated tool before uploading for print. IngramSpark requires PDF/X-1a; KDP print accepts CMYK PDF.
+> âš ï¸ **Print note**: These are RGB approximations. Convert to CMYK using a calibrated tool before uploading for print. IngramSpark requires PDF/X-1a; KDP print accepts CMYK PDF.
 
 ---
 
@@ -68,14 +68,14 @@
 
 | Element | Font Class | Weight | Position Zone | Notes |
 |---|---|---|---|---|
-| Title | [e.g. condensed display serif] | Bold / Heavy | Zone B (top 20–40%) | [e.g. large, tracked wide, all-caps option] |
-| Author | [e.g. clean humanist sans-serif] | Regular | Zone D (bottom 20–35%) | [e.g. smaller than title, centred] |
+| Title | [e.g. condensed display serif] | Bold / Heavy | Zone B (top 20â€“40%) | [e.g. large, tracked wide, all-caps option] |
+| Author | [e.g. clean humanist sans-serif] | Regular | Zone D (bottom 20â€“35%) | [e.g. smaller than title, centred] |
 | Series label | [e.g. small caps serif] | Light | Zone A (top 15%) | [e.g. smallest element, above title] |
 | Tagline | [e.g. italic serif] | Regular Italic | Zone E (bottom 10%) | [e.g. line under author, or above title] |
 | Extra text | [e.g. sans-serif] | Light | Zone E | [e.g. series number label] |
 
 **Title anchor**: [top-anchored / bottom-anchored / centred]
-<!-- photorealistic/cinematic → bottom-anchored; illustrated/painterly → top-anchored or overlaid; minimalist/typographic → centred dominant -->
+<!-- photorealistic/cinematic â†’ bottom-anchored; illustrated/painterly â†’ top-anchored or overlaid; minimalist/typographic â†’ centred dominant -->
 
 ---
 
@@ -85,32 +85,32 @@
 > The prompt is designed for [PLATFORM_RATIO] composition.
 > Run all three as iterations; pick the strongest, then refine with inpainting or variations.
 
-### Variant A — Hero Subject
+### Variant A â€” Hero Subject
 <!-- Foreground subject (character, object, environment) dominant -->
 ```
 [PROMPT_A]
 ```
 **Negative prompt**: `[NEGATIVE_PROMPT_A]`
 **Midjourney**: `--ar [RATIO] --style raw --stylize [VALUE] --chaos [VALUE]`
-**Best tool**: [e.g. Midjourney v6 — handles the figure-environment blend best]
+**Best tool**: [e.g. Midjourney v6 â€” handles the figure-environment blend best]
 
-### Variant B — Environment / Atmosphere
+### Variant B â€” Environment / Atmosphere
 <!-- No human figure; atmosphere and environment dominant -->
 ```
 [PROMPT_B]
 ```
 **Negative prompt**: `[NEGATIVE_PROMPT_B]`
 **Midjourney**: `--ar [RATIO] --style raw --stylize [VALUE] --chaos [VALUE]`
-**Best tool**: [e.g. DALL-E 3 — strong on atmospheric landscapes without figure distortion]
+**Best tool**: [e.g. DALL-E 3 â€” strong on atmospheric landscapes without figure distortion]
 
-### Variant C — Symbol / Object
+### Variant C â€” Symbol / Object
 <!-- Single iconic object or symbol from the story world -->
 ```
 [PROMPT_C]
 ```
 **Negative prompt**: `[NEGATIVE_PROMPT_C]`
 **Midjourney**: `--ar [RATIO] --style raw --stylize [VALUE] --chaos [VALUE]`
-**Best tool**: [e.g. Adobe Firefly — strong on object isolation with clean background]
+**Best tool**: [e.g. Adobe Firefly â€” strong on object isolation with clean background]
 
 ---
 
@@ -122,7 +122,7 @@
 
 | Spec | Value |
 |---|---|
-| Dimensions | [W × H px] |
+| Dimensions | [W Ã— H px] |
 | DPI | [DPI] |
 | Colour model | [RGB / CMYK] |
 | File format | [JPG / PDF / TIFF] |
@@ -132,10 +132,10 @@
 
 <!-- For print platforms: -->
 <!-- Print Canvas Calculation
-  Trim:         [W] × [H] in
-  Spine width:  [X.XXX] in  ([PAGE_COUNT] pages × [IN_PER_PAGE] in/page)
-  Full canvas:  [W_in] × [H_in] in  →  [W_px] × [H_px] px at 300 DPI
-  ISBN barcode: lower-right back, 2 × 1.2 in reserved zone (IngramSpark)
+  Trim:         [W] Ã— [H] in
+  Spine width:  [X.XXX] in  ([PAGE_COUNT] pages Ã— [IN_PER_PAGE] in/page)
+  Full canvas:  [W_in] Ã— [H_in] in  â†’  [W_px] Ã— [H_px] px at 300 DPI
+  ISBN barcode: lower-right back, 2 Ã— 1.2 in reserved zone (IngramSpark)
 -->
 
 ---
@@ -153,11 +153,11 @@ Once the final cover image is ready, place it here so `speckit.export` auto-dete
 | File | Used by |
 |---|---|
 | `FEATURE_DIR/cover.jpg` | KDP ebook EPUB, IngramSpark EPUB, D2D EPUB |
-| `FEATURE_DIR/cover.png` | Alternative — same detection, same path |
+| `FEATURE_DIR/cover.png` | Alternative â€” same detection, same path |
 
 `speckit.export epub` will embed the file automatically via `--epub-cover-image`.
 For **print** (KDP print / IngramSpark), the full-wrap cover (back + spine + front) is a
-separate deliverable — use the canvas dimensions from Section 7 above and upload directly
+separate deliverable â€” use the canvas dimensions from Section 7 above and upload directly
 to the platform dashboard.
 
 ---

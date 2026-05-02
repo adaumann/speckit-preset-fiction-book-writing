@@ -1,0 +1,51 @@
+:::: Story
+{
+  "ifid": "UNKNOWN",
+  "format": "SugarCube",
+  "format-version": "2.34.1"
+}
+::::
+
+{* 
+node_id: NODE-001
+title: Start
+act: 1
+status: DRAFT
+pov: second-person
+variables_read: []
+variables_set:
+  - visited_start
+  - player_choice
+drafted: 2026-05-02
+outline_ref: outlines/NODE-001.md
+*}
+
+:: StoryTitle
+Test Tier Mechanics - Start
+
+:: StoryData
+{
+  "ifid": "UNKNOWN"
+}
+
+:: Start
+	You wake up in a cold, clinical test chamber. Flickering lights cast harsh shadows across sterile white walls. 
+	
+	A gentle hum emanates from equipment lining the far wall. You can see readouts and displays, but they're too far away to read clearly.
+	
+	[MECHANIC:VISITED variable=visited_start][/MECHANIC]
+	[MECHANIC:CHOICE_MEMORY variable=player_choice][/MECHANIC]
+
+:: Look Around
+	You move cautiously through the chamber, examining the space. Your eyes adjust to the flickering light. There's a terminal in one corner, a padded bench in another, and what looks like a storage locker.
+	
+	Everything is labeled with numbers and codes. This isn't a place for comfort.
+	
+	[[Continue -> NODE-002]] or [[Return -> Start]]
+
+:: Check the Equipment  
+	You approach the equipment on the far wall. Rows of lights blink in sequence - red, amber, green. They seem to follow a pattern.
+	
+	You notice readouts for various parameters: health, status, conditions. Some of them seem to update as you watch.
+	
+	[[Continue -> NODE-002]] or [[Return -> Start]]

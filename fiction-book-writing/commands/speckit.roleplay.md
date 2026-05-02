@@ -1,5 +1,5 @@
----
-description: Interactive multi-role play-through of an outline or draft chapter. AI identifies all roles in the scene (Author, Lector, scene characters, and more), assigns each to AI or user, then walks through the chapter beat by beat — pausing for Q&A and committing insights back as revision notes. Includes Dialog Workshop mode: speaker-turn segments, live character improvisation, and a Subtext Tracker role.
+﻿---
+description: Interactive multi-role play-through of an outline or draft chapter. AI identifies all roles in the scene (Author, Lector, scene characters, and more), assigns each to AI or user, then walks through the chapter beat by beat â€” pausing for Q&A and committing insights back as revision notes. Includes Dialog Workshop mode: speaker-turn segments, live character improvisation, and a Subtext Tracker role.
 handoffs:
   - label: Revise Draft
     agent: speckit.revise
@@ -27,14 +27,14 @@ $ARGUMENTS
 You **MUST** consider the user input before proceeding (if not empty).
 
 Accepted arguments:
-- `[CHAPTER_ID]` — play through a specific scene (e.g. `A1.101`). The command resolves to the outline file (`outlines/<CHAPTER_ID>_<ChapterName>-outline.md`) if present, otherwise to the draft file (`draft/<CHAPTER_ID>_<ChapterName>.md`).
-- `[CHAPTER_ID] outline` — force outline mode even when a draft exists
-- `[CHAPTER_ID] draft` — force draft mode even when only an outline exists
-- `[CHAPTER_ID] dialog` — enter **Dialog Workshop mode**: segments by speaker turn, live character improvisation, Subtext Tracker active (see Step 5-DW)
-- `[CHAPTER_ID] tension` — run a **Tension Curve** analysis pass after the full play-through (see Step 5-TC); compatible with all other modes
-- `[CHAPTER_ID] pick` — show the **Section Picker** before the session begins: lists all detected segments with a one-line summary and lets the user choose which to include (see Step 1b)
-- `[CHAPTER_ID] [N]-[M]` — play only segments N through M (e.g. `A1.101 3-7`); skips Section Picker
-- *(no argument)* — use the most recently modified outline or draft file in `FEATURE_DIR`
+- `[CHAPTER_ID]` â€” play through a specific scene (e.g. `A1.101`). The command resolves to the outline file (`outlines/<CHAPTER_ID>_<ChapterName>-outline.md`) if present, otherwise to the draft file (`draft/<CHAPTER_ID>_<ChapterName>.md`).
+- `[CHAPTER_ID] outline` â€” force outline mode even when a draft exists
+- `[CHAPTER_ID] draft` â€” force draft mode even when only an outline exists
+- `[CHAPTER_ID] dialog` â€” enter **Dialog Workshop mode**: segments by speaker turn, live character improvisation, Subtext Tracker active (see Step 5-DW)
+- `[CHAPTER_ID] tension` â€” run a **Tension Curve** analysis pass after the full play-through (see Step 5-TC); compatible with all other modes
+- `[CHAPTER_ID] pick` â€” show the **Section Picker** before the session begins: lists all detected segments with a one-line summary and lets the user choose which to include (see Step 1b)
+- `[CHAPTER_ID] [N]-[M]` â€” play only segments N through M (e.g. `A1.101 3-7`); skips Section Picker
+- *(no argument)* â€” use the most recently modified outline or draft file in `FEATURE_DIR`
 
 Any mode flag (`outline`, `draft`, `dialog`, `tension`) may be combined with `pick` or a range, e.g. `A1.101 dialog pick` or `A1.101 tension 4-9`.
 
@@ -42,7 +42,7 @@ Any mode flag (`outline`, `draft`, `dialog`, `tension`) may be combined with `pi
 
 ## Purpose
 
-This command turns the static text of a scene outline or draft chapter into a live, multi-voice reading session. Different stakeholder **roles** react to the text from their own perspective, surface problems, and generate revision insights — all without leaving the story-writing workflow.
+This command turns the static text of a scene outline or draft chapter into a live, multi-voice reading session. Different stakeholder **roles** react to the text from their own perspective, surface problems, and generate revision insights â€” all without leaving the story-writing workflow.
 
 The session proceeds in **segments** (a segment is one beat, one paragraph, or one dialogue block, whichever is shorter). After each segment the session **pauses** and waits for the user to act. Accumulated insights from the session are written back to the source file as structured revision notes when the user ends the session.
 
@@ -59,13 +59,13 @@ The session proceeds in **segments** (a segment is one beat, one paragraph, or o
 
 ---
 
-## Step 1 — Setup
+## Step 1 â€” Setup
 
 Run `{SCRIPT}` from repo root and parse `FEATURE_DIR`.
 
 **Audiobook-only guard**: Read `OUTPUT_MODE` from `constitution.md ## X. Audiobook Production`. If `OUTPUT_MODE` is `audiobook` and neither `outlines/` nor `draft/` exists, stop:
 ```
-⛔ speckit.roleplay requires an outline or prose draft file to play through.
+â›” speckit.roleplay requires an outline or prose draft file to play through.
 In audiobook-only mode neither outlines/ nor draft/ exists.
 Generate a scene outline first: speckit.implement --outline-only [CHAPTER_ID]
 ```
@@ -74,23 +74,23 @@ Resolve the **target file**:
 1. Parse `$ARGUMENTS` for a chapter ID, optional mode flag, and optional scope flag (`pick` or `N-M` range).
 2. If no argument: use the most recently modified file in `FEATURE_DIR/outlines/` or `FEATURE_DIR/draft/`, preferring outlines.
 3. Determine **session mode**:
-   - `OUTLINE` — target is an `outlines/` file (beat sequence, character beats, dialogue requirements).
-   - `DRAFT` — target is a `draft/` file (written prose, dialogue, sensory detail).
-   - `DIALOG WORKSHOP` — forced by `dialog` flag. Target may be either file type. Extract all dialogue exchanges from the file; non-dialogue beats are summarised as context dividers, not segments. If the outline has a `dialogue requirements` section, load it as the subtext contract for the Subtext Tracker.
+   - `OUTLINE` â€” target is an `outlines/` file (beat sequence, character beats, dialogue requirements).
+   - `DRAFT` â€” target is a `draft/` file (written prose, dialogue, sensory detail).
+   - `DIALOG WORKSHOP` â€” forced by `dialog` flag. Target may be either file type. Extract all dialogue exchanges from the file; non-dialogue beats are summarised as context dividers, not segments. If the outline has a `dialogue requirements` section, load it as the subtext contract for the Subtext Tracker.
 4. Read the target file fully. Abort with a clear error if it does not exist.
-5. Parse all segments from the file and assign each a sequential number (S1, S2, S3…). Store the **full segment index** — this is used by Step 1b and by `!pick` mid-session.
+5. Parse all segments from the file and assign each a sequential number (S1, S2, S3â€¦). Store the **full segment index** â€” this is used by Step 1b and by `!pick` mid-session.
 6. If a `N-M` range was given: restrict the active segment list to that range immediately. Skip Step 1b.
 
 Load supporting documents (all optional, used to enrich role responses):
-- `.specify/memory/constitution.md` — story bible: style rules, plot structure, POV
-- `spec.md` — character arcs, reader experience goals
-- `characters/` or `characters.md` — voice signatures, psychology, arc state
-- `plan.md` — scene function, thematic intent
-- `themes.md` — active motifs this chapter should carry
+- `.specify/memory/constitution.md` â€” story bible: style rules, plot structure, POV
+- `spec.md` â€” character arcs, reader experience goals
+- `characters/` or `characters.md` â€” voice signatures, psychology, arc state
+- `plan.md` â€” scene function, thematic intent
+- `themes.md` â€” active motifs this chapter should carry
 
 ---
 
-## Step 1b — Section Picker
+## Step 1b â€” Section Picker
 
 The Section Picker is shown when:
 - The `pick` flag is present in `$ARGUMENTS`, or
@@ -104,38 +104,38 @@ List all segments in the chapter with a one-line summary for each. The summary i
 - **DIALOG WORKSHOP mode**: exchange label + participating characters + opening line
 
 ```
-── Section Picker ─────────────────────────────────────────────
-  Chapter : [CHAPTER_ID] — [ChapterName]  ([total] segments)
-───────────────────────────────────────────────────────────────
+â”€â”€ Section Picker â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  Chapter : [CHAPTER_ID] â€” [ChapterName]  ([total] segments)
+â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
   #   Type      Summary                                    Status
-  ─── ─────────  ───────────────────────────────────────────  ──────
-  S1  [beat]    Mira enters the archive and finds the door  —
-  S2  [beat]    She attempts the lock; it resists            —
-  S3  [dialog]  Jonas / Mira — "You knew this was here"      —
-  S4  [beat]    Jonas reveals the second key                 —
-  S5  [dialog]  Mira / Jonas — "Then we do this together"    —
-  S6  [beat]    Chapter closes on Mira pocketing both keys   —
+  â”€â”€â”€ â”€â”€â”€â”€â”€â”€â”€â”€â”€  â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€  â”€â”€â”€â”€â”€â”€
+  S1  [beat]    Mira enters the archive and finds the door  â€”
+  S2  [beat]    She attempts the lock; it resists            â€”
+  S3  [dialog]  Jonas / Mira â€” "You knew this was here"      â€”
+  S4  [beat]    Jonas reveals the second key                 â€”
+  S5  [dialog]  Mira / Jonas â€” "Then we do this together"    â€”
+  S6  [beat]    Chapter closes on Mira pocketing both keys   â€”
 
-───────────────────────────────────────────────────────────────
+â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 Select segments to include in this session.
 
   Enter numbers or ranges (e.g.  1, 3, 5-6 )
   Press Enter alone to include all segments
   Type  d  to include only dialog segments
   Type  b  to include only beat/action segments
-───────────────────────────────────────────────────────────────
+â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 ```
 
 **Status column** values:
-- `—` — not yet played in this session
-- `✓` — completed in this session
-- `↩` — replayed (Dialog Workshop)
-- `⚠️` — has open HIGH issues from this session
+- `â€”` â€” not yet played in this session
+- `âœ“` â€” completed in this session
+- `â†©` â€” replayed (Dialog Workshop)
+- `âš ï¸` â€” has open HIGH issues from this session
 
 ### Apply the Selection
 
-Parse the user's input and build the **active segment list** — an ordered subset of the full segment index. Rules:
+Parse the user's input and build the **active segment list** â€” an ordered subset of the full segment index. Rules:
 
 - Ranges are inclusive: `2-4` = S2, S3, S4.
 - Non-contiguous selections are allowed: `1, 3, 5-6` = S1, S3, S5, S6.
@@ -156,16 +156,16 @@ Proceeding to Role Assignment.
 When `!pick` is typed at a pause point:
 1. Re-display the full Segment Index with current status values filled in.
 2. Ask: `Add, remove, or replace selection? (add / remove / replace)`
-   - `add [numbers]` — append segments to the active list
-   - `remove [numbers]` — remove segments from the remaining active list (already-completed segments cannot be removed)
-   - `replace [numbers/shortcut]` — replace the remaining (not yet played) portion of the active list; completed segments are kept
+   - `add [numbers]` â€” append segments to the active list
+   - `remove [numbers]` â€” remove segments from the remaining active list (already-completed segments cannot be removed)
+   - `replace [numbers/shortcut]` â€” replace the remaining (not yet played) portion of the active list; completed segments are kept
 3. Confirm the updated active list and resume the session at the next unplayed segment.
 
 ---
 
-## Step 2 — Identify Roles
+## Step 2 â€” Identify Roles
 
-Analyse the target chapter and produce the **Role Manifest** — a complete list of every role that can contribute meaningful perspective to this scene.
+Analyse the target chapter and produce the **Role Manifest** â€” a complete list of every role that can contribute meaningful perspective to this scene.
 
 ### Standard Roles
 
@@ -173,8 +173,8 @@ Always include the following roles in the manifest:
 
 | Role | Symbol | Perspective |
 |---|---|---|
-| **Author** | ✍️ | Craft and intent — is the scene doing what the plan demands? |
-| **Lector** | 📖 | Attentive first read — flow, clarity, emotional pull; catches what breaks immersion |
+| **Author** | âœï¸ | Craft and intent â€” is the scene doing what the plan demands? |
+| **Lector** | ðŸ“– | Attentive first read â€” flow, clarity, emotional pull; catches what breaks immersion |
 
 ### Scene-Character Roles
 
@@ -182,36 +182,36 @@ For each named or unnamed character present in this scene, add a character role:
 
 | Role | Symbol | Perspective |
 |---|---|---|
-| **[CharacterName]** | 🎭 | First-person voice — motivations, emotional state, what they notice, what they want |
+| **[CharacterName]** | ðŸŽ­ | First-person voice â€” motivations, emotional state, what they notice, what they want |
 
 Derive character presence from:
 - Outline: characters listed in `characters_present` or inferred from the beat sequence
 - Draft: named characters with dialogue or action beats
 
-If a character's voice signature is available in `characters/` or `characters.md`, note it — the AI will use it when voicing that character.
+If a character's voice signature is available in `characters/` or `characters.md`, note it â€” the AI will use it when voicing that character.
 
 ### Optional Roles (include when applicable)
 
 Add these roles only when the scene content makes them relevant. Suggest them to the user during the Role Assignment Interview if applicable:
 
-| Role | Symbol | Include when… |
+| Role | Symbol | Include whenâ€¦ |
 |---|---|---|
-| **Casual Reader** | 📰 | Surface read — entertainment, pace, cover appeal; no craft vocabulary |
-| **Critique Reader** | 🔍 | Structural analysis — tropes, arc consistency, genre convention compliance |
-| **Editor** | ✏️ | Draft mode — prose line quality, redundancy, sentence rhythm issues |
-| **Continuity Checker** | 🗂️ | Draft mode — tracks timeline, world-state, and character consistency against story bible |
-| **Beta Reader** | 💬 | Draft mode — general reader emotionally invested in the story; gives gut reactions |
-| **Sensitivity Reader** | ❤️ | Scene includes sensitive social, cultural, or trauma content |
-| **Genre Expert** | 📚 | Scene's genre conventions (e.g. thriller pacing, romance heat level) need validation |
-| **Subtext Tracker** | 🔇 | Dialog Workshop mode — logs what each character is *not* saying; tracks deflection, concealment, and unspoken want vs. stated want per turn. Silent during regular play-through; speaks only in Dialog Workshop mode or when invoked via Q&A |
-| **Naive Reader** | 🙈 | Has read only up to the chapter immediately preceding the current one — nothing more. Flags every moment where the segment assumes knowledge the reader does not yet have: unrevealed facts, unintroduced characters, unexplained world-building. Always optional; always AI-assigned. |
-| **Tension Curve** | 📈 | Post-play-through analysis role — scores every segment 1–5 for tension/engagement and renders a pacing curve. Activated by the `tension` argument flag or by typing `!tension` at any pause point. Never speaks during segment responses; activated only in Step 5-TC. |
+| **Casual Reader** | ðŸ“° | Surface read â€” entertainment, pace, cover appeal; no craft vocabulary |
+| **Critique Reader** | ðŸ” | Structural analysis â€” tropes, arc consistency, genre convention compliance |
+| **Editor** | âœï¸ | Draft mode â€” prose line quality, redundancy, sentence rhythm issues |
+| **Continuity Checker** | ðŸ—‚ï¸ | Draft mode â€” tracks timeline, world-state, and character consistency against story bible |
+| **Beta Reader** | ðŸ’¬ | Draft mode â€” general reader emotionally invested in the story; gives gut reactions |
+| **Sensitivity Reader** | â¤ï¸ | Scene includes sensitive social, cultural, or trauma content |
+| **Genre Expert** | ðŸ“š | Scene's genre conventions (e.g. thriller pacing, romance heat level) need validation |
+| **Subtext Tracker** | ðŸ”‡ | Dialog Workshop mode â€” logs what each character is *not* saying; tracks deflection, concealment, and unspoken want vs. stated want per turn. Silent during regular play-through; speaks only in Dialog Workshop mode or when invoked via Q&A |
+| **Naive Reader** | ðŸ™ˆ | Has read only up to the chapter immediately preceding the current one â€” nothing more. Flags every moment where the segment assumes knowledge the reader does not yet have: unrevealed facts, unintroduced characters, unexplained world-building. Always optional; always AI-assigned. |
+| **Tension Curve** | ðŸ“ˆ | Post-play-through analysis role â€” scores every segment 1â€“5 for tension/engagement and renders a pacing curve. Activated by the `tension` argument flag or by typing `!tension` at any pause point. Never speaks during segment responses; activated only in Step 5-TC. |
 
 Present the full Role Manifest to the user before proceeding.
 
 ---
 
-## Step 3 — Role Assignment Interview
+## Step 3 â€” Role Assignment Interview
 
 Display the Role Manifest as a numbered table with columns: **#**, **Role**, **Symbol**, **Perspective**, **Assignment** (empty).
 
@@ -224,7 +224,7 @@ Enter role numbers (e.g. 1, 3) or press Enter to let AI play all roles.
 
 Rules:
 - Unassigned roles default to **AI**.
-- A role assigned to the user is **paused** — the AI will prompt the user for that role's response at each relevant pause point instead of generating it.
+- A role assigned to the user is **paused** â€” the AI will prompt the user for that role's response at each relevant pause point instead of generating it.
 - The user may change role assignments at any time during the session by typing `!assign [RoleName] AI` or `!assign [RoleName] me`.
 - At least one AI role must remain active (warn if the user tries to assign all roles to themselves and disable AI for all).
 
@@ -232,24 +232,24 @@ Store the final assignment in the **Session State**.
 
 ---
 
-## Step 4 — Session Briefing
+## Step 4 â€” Session Briefing
 
 Before the play-through begins, display a concise session card:
 
 ```
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”
   ROLEPLAY SESSION
-  Chapter  : [CHAPTER_ID] — [ChapterName]
+  Chapter  : [CHAPTER_ID] â€” [ChapterName]
   Mode     : [OUTLINE / DRAFT / DIALOG WORKSHOP]
   Segments : [active count] of [total] selected
   Roles    : [list with symbol + AI/User tag]
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-Type  continue  or  c   → advance to next segment
-      question  or  ?   → open Q&A for this segment
-      end       or  e   → end session and save notes
-      !assign [Role] AI / me → reassign a role mid-session
-      !pick             → open Section Picker to change active segments
-      !skip             → skip current segment without comment
+â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”
+Type  continue  or  c   â†’ advance to next segment
+      question  or  ?   â†’ open Q&A for this segment
+      end       or  e   â†’ end session and save notes
+      !assign [Role] AI / me â†’ reassign a role mid-session
+      !pick             â†’ open Section Picker to change active segments
+      !skip             â†’ skip current segment without comment
 ```
 
 In **Dialog Workshop mode**, also show:
@@ -259,7 +259,7 @@ In **Dialog Workshop mode**, also show:
   Dialogue exchanges found : [count]
   Characters               : [list]
   Subtext contract loaded  : [Yes / No]
-  Your character(s)        : [list or — if all AI]
+  Your character(s)        : [list or â€” if all AI]
 
 Type your character's line directly to respond in-character.
 AI plays all other character turns automatically.
@@ -269,30 +269,30 @@ Wait for the user to type `continue` (or `c`) to begin.
 
 ---
 
-## Step 5 — Play-Through Loop
+## Step 5 â€” Play-Through Loop
 
 Repeat for each **segment** until the chapter is exhausted or the user types `end`:
 
-### 5a — Present the Segment
+### 5a â€” Present the Segment
 
 Display the segment text verbatim, clearly framed:
 
 ```
-── Segment [N/Total] ──────────────────────────────
+â”€â”€ Segment [N/Total] â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 [segment text from outline beat or draft paragraph/dialogue block]
 
-───────────────────────────────────────────────────
+â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 ```
 
 For **OUTLINE mode**: a segment is one beat-sequence entry (a single causal step line).
 For **DRAFT mode**: a segment is one paragraph or one continuous dialogue exchange (scene break `***` starts a new segment).
 
-### 5b — Generate AI Role Responses
+### 5b â€” Generate AI Role Responses
 
 For each AI-assigned role, in the order: scene characters first, then Author, Lector, Casual Reader, then optional roles, then Critique Reader last:
 
-Generate a short focused response (2–5 sentences max per role) from that role's perspective on **this specific segment**. Format each response:
+Generate a short focused response (2â€“5 sentences max per role) from that role's perspective on **this specific segment**. Format each response:
 
 ```
 [Symbol] [RoleName]
@@ -303,11 +303,11 @@ Rules for role responses:
 - **[CharacterName]** roles speak in first person from inside the scene: feelings, intent, what they noticed. Do not break the fourth wall.
 - **Author** focuses on craft execution: does this beat do what the plan requires?
 - **Lector** reacts as a careful reader: what worked, what tripped, what raised a question?
-- **Casual Reader** reacts purely to entertainment and pace — no craft language.
+- **Casual Reader** reacts purely to entertainment and pace â€” no craft language.
 - **Critique Reader** identifies structural or craft issues with diagnostic precision. Labels issues with the standard checklist codes when applicable (e.g. `CHR-002`, `STB-004`).
 - **Editor** (draft only) flags line-level prose issues, redundancy, weak verbs.
 - **Continuity Checker** (draft only) cross-references against story bible and flags violations.
-- **Only generate a response if the role has something meaningful to say about this segment.** Roles may pass silently — signal this with `[Symbol] [RoleName] — (no note)`.
+- **Only generate a response if the role has something meaningful to say about this segment.** Roles may pass silently â€” signal this with `[Symbol] [RoleName] â€” (no note)`.
 
 For user-assigned roles: instead of generating text, display a prompt:
 
@@ -318,14 +318,14 @@ What does [RoleName] notice or feel in this segment?
 
 Wait for the user's response before continuing. Store it in the session log.
 
-### 5c — Pause Point
+### 5c â€” Pause Point
 
 After all role responses for the segment, display the pause prompt:
 
 ```
-────────────────────────────────────────
-  c  continue · ?  question · e  end · !assign · !pick · !skip
-────────────────────────────────────────
+â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  c  continue Â· ?  question Â· e  end Â· !assign Â· !pick Â· !skip
+â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 ```
 
 Wait for user input:
@@ -339,11 +339,11 @@ Wait for user input:
 
 ---
 
-## Step 5-DW — Dialog Workshop Loop
+## Step 5-DW â€” Dialog Workshop Loop
 
 This loop **replaces** the standard Step 5 when session mode is `DIALOG WORKSHOP`.
 
-### DW-1 — Extract and Index Dialogue Exchanges
+### DW-1 â€” Extract and Index Dialogue Exchanges
 
 Before the loop starts, parse the target file and build a **Dialogue Exchange Index**:
 
@@ -353,26 +353,26 @@ Before the loop starts, parse the target file and build a **Dialogue Exchange In
 - Identify non-dialogue beats between exchanges; store them as **context dividers** (displayed as brief summaries, never as playable segments).
 - If the outline's `dialogue requirements` section is loaded, map each requirement (what must be deflected, revealed, or withheld) to the exchange where it applies.
 
-### DW-2 — Pre-Exchange Briefing
+### DW-2 â€” Pre-Exchange Briefing
 
 Before each exchange begins, display:
 
 ```
-── Exchange [EX-N] · [N] turns ──────────────────────
+â”€â”€ Exchange [EX-N] Â· [N] turns â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 [Context divider summary if present]
 
 Subtext contract for this exchange:
-  [Requirement 1 — from dialogue requirements, or "none specified"]
+  [Requirement 1 â€” from dialogue requirements, or "none specified"]
   [Requirement 2]
 
 Characters: [list with AI/User assignment]
-────────────────────────────────────────────────────
+â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 ```
 
 Wait for `c` to begin the exchange.
 
-### DW-3 — Turn-by-Turn Improvisation
+### DW-3 â€” Turn-by-Turn Improvisation
 
 For each turn in the exchange:
 
@@ -380,12 +380,12 @@ For each turn in the exchange:
 Generate the character's line strictly from their voice signature (`characters/` or `characters.md`). The line must:
 - Advance or deflect the subtext contract requirement for this exchange
 - Be consistent with the character's arc state at this chapter
-- Be written as raw dialogue (no action beats, no attribution tags) — those are the writer's job
+- Be written as raw dialogue (no action beats, no attribution tags) â€” those are the writer's job
 
 Display as:
 
 ```
-🎭 [CharacterName]
+ðŸŽ­ [CharacterName]
 "[line]"
 ```
 
@@ -393,7 +393,7 @@ Display as:
 Display:
 
 ```
-🎭 [CharacterName] (Your turn)
+ðŸŽ­ [CharacterName] (Your turn)
 Type your line:
 ```
 
@@ -403,21 +403,21 @@ Wait for the user's input. Accept any free-form text as the character's line. St
 - Stated want: what the line says on the surface
 - Hidden want: what the character actually wants based on their arc and the subtext contract
 - Deflection status: did this line deflect, comply with, or break the subtext contract requirement?
-- Concealment score: `HIGH` / `MED` / `LOW` — how well the subtext is hidden
+- Concealment score: `HIGH` / `MED` / `LOW` â€” how well the subtext is hidden
 
 The Subtext Tracker does **not** display its log during the turn. It accumulates and surfaces at the end of the exchange (DW-4).
 
-### DW-4 — Post-Exchange Debrief
+### DW-4 â€” Post-Exchange Debrief
 
 After the final turn of an exchange, display the Subtext Tracker's accumulated log for that exchange:
 
 ```
-🔇 Subtext Tracker — EX-[N] debrief
+ðŸ”‡ Subtext Tracker â€” EX-[N] debrief
 
 | Turn | Character | Stated | Hidden want | Deflection | Concealment |
 |---|---|---|---|---|---|
 | T1 | [name] | [surface intent] | [hidden want] | [Deflect/Comply/Break] | [H/M/L] |
-| T2 | … | … | … | … | … |
+| T2 | â€¦ | â€¦ | â€¦ | â€¦ | â€¦ |
 
 Subtext contract status: [HELD / BROKEN / PARTIALLY MET]
 [One sentence: was the required deflection/revelation/withholding achieved?]
@@ -426,36 +426,36 @@ Subtext contract status: [HELD / BROKEN / PARTIALLY MET]
 Then display the standard pause prompt:
 
 ```
-────────────────────────────────────────
-  c  next exchange · ?  question · e  end · !assign · !pick · !replay
-────────────────────────────────────────
+â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  c  next exchange Â· ?  question Â· e  end Â· !assign Â· !pick Â· !replay
+â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 ```
 
 Additional command in Dialog Workshop mode:
 - **`!replay`**: replay the current exchange from the beginning with the same role assignments. Previous attempt is discarded from session log but preserved in a `discarded` sub-log for reference.
 - **`!replay swap`**: replay with all character role assignments inverted (user plays the AI character, AI plays the user character). Useful for testing the exchange from the other side.
 
-### DW-5 — Insight Capture (Dialog Workshop)
+### DW-5 â€” Insight Capture (Dialog Workshop)
 
 In addition to the standard Insight Capture rules, Dialog Workshop automatically generates insights from the Subtext Tracker log:
 
-- Any turn with `Deflection: Break` and `Concealment: LOW` → `ISSUE HIGH`: character states their hidden want too directly
-- Any turn where `Subtext contract status: BROKEN` → `ISSUE HIGH`: exchange fails its dialogue requirement
-- Any turn where the user's improvised line diverges strongly from the character's voice signature → `SUGGESTION MED`: user's instinct vs. character bible — worth discussing
-- Any exchange where `Subtext contract status: HELD` throughout → `CONFIRM`: dialogue requirement successfully executed
+- Any turn with `Deflection: Break` and `Concealment: LOW` â†’ `ISSUE HIGH`: character states their hidden want too directly
+- Any turn where `Subtext contract status: BROKEN` â†’ `ISSUE HIGH`: exchange fails its dialogue requirement
+- Any turn where the user's improvised line diverges strongly from the character's voice signature â†’ `SUGGESTION MED`: user's instinct vs. character bible â€” worth discussing
+- Any exchange where `Subtext contract status: HELD` throughout â†’ `CONFIRM`: dialogue requirement successfully executed
 
-### DW-6 — Revised Dialogue Output (Optional)
+### DW-6 â€” Revised Dialogue Output (Optional)
 
 At the end of the session (before Step 7), if the session mode is `DIALOG WORKSHOP`, ask:
 
 ```
 Generate a revised dialogue draft from this session?
 
-  1  Yes — assemble best turns from all attempts into a clean dialogue block
-  2  Yes — generate a new AI draft incorporating subtext notes (no user turns)
-  3  No — save insights only
+  1  Yes â€” assemble best turns from all attempts into a clean dialogue block
+  2  Yes â€” generate a new AI draft incorporating subtext notes (no user turns)
+  3  No â€” save insights only
 
-Enter 1–3:
+Enter 1â€“3:
 ```
 
 For option 1: assemble the user's accepted turns and AI turns from the final (non-discarded) attempt of each exchange into a clean, attribution-tagged dialogue block. Wrap in a `## Dialog Workshop Draft` section.
@@ -468,13 +468,13 @@ In all cases, the generated draft block (if any) is appended to the chosen commi
 
 ---
 
-## Step 5-NR — Naive Reader Pass
+## Step 5-NR â€” Naive Reader Pass
 
 The Naive Reader role may be activated at any time:
 - Automatically if the user included it during Role Assignment.
 - On demand at any pause point by typing `!naivereader`.
 
-When active, after the standard 5b role responses for each segment, the Naive Reader adds a response **only** if it detects an assumption violation — something the segment requires the reader to know that has not yet been established. If nothing is assumed, it passes silently (`🙈 Naive Reader — (no violation)`).
+When active, after the standard 5b role responses for each segment, the Naive Reader adds a response **only** if it detects an assumption violation â€” something the segment requires the reader to know that has not yet been established. If nothing is assumed, it passes silently (`ðŸ™ˆ Naive Reader â€” (no violation)`).
 
 ### Assumption Violation Detection
 
@@ -488,21 +488,21 @@ The Naive Reader checks each segment against four categories:
 For each violation found, the Naive Reader reports:
 
 ```
-🙈 Naive Reader
+ðŸ™ˆ Naive Reader
 "[quoted fragment that assumes too much]"
 Assumed knowledge : [what the segment requires the reader to know]
 First established : [where it is established, or "not yet established"]
-Suggestion        : [one sentence — front-load the context here, or defer this information]
+Suggestion        : [one sentence â€” front-load the context here, or defer this information]
 ```
 
 Violations are automatically logged as insights:
-- `ISSUE HIGH` — assumption makes the segment unreadable without prior knowledge
-- `ISSUE MED` — assumption causes momentary confusion that self-resolves later
-- `SUGGESTION LOW` — context is present but buried or easy to miss
+- `ISSUE HIGH` â€” assumption makes the segment unreadable without prior knowledge
+- `ISSUE MED` â€” assumption causes momentary confusion that self-resolves later
+- `SUGGESTION LOW` â€” context is present but buried or easy to miss
 
 ---
 
-## Step 5-TC — Tension Curve Analysis
+## Step 5-TC â€” Tension Curve Analysis
 
 The Tension Curve pass runs **after the full play-through loop is complete** (after the last segment, before Step 7). It is triggered by:
 - The `tension` argument flag, or
@@ -512,15 +512,15 @@ If triggered mid-session via `!tension`, it scores only the segments played thro
 
 ### Scoring
 
-The **Author** and **Lector** roles jointly score every played segment. Each receives a single combined score on a 1–5 scale:
+The **Author** and **Lector** roles jointly score every played segment. Each receives a single combined score on a 1â€“5 scale:
 
 | Score | Meaning |
 |---|---|
-| 5 | Maximum tension — reader cannot stop; stakes highest, outcome most uncertain |
-| 4 | High engagement — propulsive, reader pulled forward |
-| 3 | Moderate — functional, scene progressing but not gripping |
-| 2 | Low — reader may drift; pace slow or stakes abstract |
-| 1 | Flat — no forward pull; filler, over-explanation, or unearned calm |
+| 5 | Maximum tension â€” reader cannot stop; stakes highest, outcome most uncertain |
+| 4 | High engagement â€” propulsive, reader pulled forward |
+| 3 | Moderate â€” functional, scene progressing but not gripping |
+| 2 | Low â€” reader may drift; pace slow or stakes abstract |
+| 1 | Flat â€” no forward pull; filler, over-explanation, or unearned calm |
 
 Skipped segments are scored `0` and marked `SKIP` in the table.
 
@@ -530,22 +530,22 @@ Skipped segments are scored `0` and marked `SKIP` in the table.
 - **Character want vs. obstacle**: is there active resistance, deflection, or threat?
 - **Forward momentum**: does the segment end less stable than it started?
 
-If Author and Lector disagree by ±2 or more, display both scores with a one-sentence reason for the gap. Use the *lower* score in the curve — divergence itself signals a craft problem worth noting.
+If Author and Lector disagree by Â±2 or more, display both scores with a one-sentence reason for the gap. Use the *lower* score in the curve â€” divergence itself signals a craft problem worth noting.
 
 ### Render the Curve
 
 After all segments are scored, render an ASCII tension curve:
 
 ```
-📈 Tension Curve — [CHAPTER_ID] [ChapterName]
+ðŸ“ˆ Tension Curve â€” [CHAPTER_ID] [ChapterName]
 
-5 │                 ▄▄
-4 │         ▄▄   ▄▄    ▄▄
-3 │   ▄▄  ▄▄  ▄▄        ▄▄
-2 │ ▄▄
-1 │
-  └─────────────────────────────
-    S1 S2 S3 S4 S5 S6 S7 S8 S9…
+5 â”‚                 â–„â–„
+4 â”‚         â–„â–„   â–„â–„    â–„â–„
+3 â”‚   â–„â–„  â–„â–„  â–„â–„        â–„â–„
+2 â”‚ â–„â–„
+1 â”‚
+  â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    S1 S2 S3 S4 S5 S6 S7 S8 S9â€¦
 ```
 
 Below the curve, print a compact score table:
@@ -553,31 +553,31 @@ Below the curve, print a compact score table:
 ```
 | Seg | Score | Author | Lector | Flag          |
 |-----|-------|--------|--------|---------------|
-| S1  |   2   |   2    |   2    | ⚠️ SLOW OPEN  |
-| S2  |   3   |   3    |   3    | —             |
-…
+| S1  |   2   |   2    |   2    | âš ï¸ SLOW OPEN  |
+| S2  |   3   |   3    |   3    | â€”             |
+â€¦
 ```
 
 ### Automatic Flags
 
 | Pattern | Flag | Threshold |
 |---|---|---|
-| Score 1 or 2 | `⚠️ FLAT` | Any single segment |
-| Three or more consecutive segments ≤ 3 | `⚠️ SAG` | Pacing trough |
-| Final segment scores < 3 | `⚠️ WEAK ENDING` | Last segment only |
-| First segment scores < 3 | `⚠️ SLOW OPEN` | First segment only |
-| Score drops ≥ 2 in one step | `⚠️ DROP` | Any transition |
-| Score rises to 4–5 then drops to 1–2 in next segment | `⚠️ DEFLATE` | Any transition |
-| No segment scores 4 or 5 in the entire chapter | `⚠️ NO PEAK` | Full chapter |
+| Score 1 or 2 | `âš ï¸ FLAT` | Any single segment |
+| Three or more consecutive segments â‰¤ 3 | `âš ï¸ SAG` | Pacing trough |
+| Final segment scores < 3 | `âš ï¸ WEAK ENDING` | Last segment only |
+| First segment scores < 3 | `âš ï¸ SLOW OPEN` | First segment only |
+| Score drops â‰¥ 2 in one step | `âš ï¸ DROP` | Any transition |
+| Score rises to 4â€“5 then drops to 1â€“2 in next segment | `âš ï¸ DEFLATE` | Any transition |
+| No segment scores 4 or 5 in the entire chapter | `âš ï¸ NO PEAK` | Full chapter |
 
 ### Diagnosis
 
 After the curve and flag table, the Author generates a one-paragraph diagnosis:
 - Names the most critical pacing problem and its segment range
-- Explains the structural cause (e.g. "beats S4–S6 are all exposition; no character want is active")
+- Explains the structural cause (e.g. "beats S4â€“S6 are all exposition; no character want is active")
 - Proposes one structural remedy (e.g. "insert an obstacle or time pressure into S5")
 
-If no flags are raised: `📈 Tension Curve: no structural pacing issues detected.`
+If no flags are raised: `ðŸ“ˆ Tension Curve: no structural pacing issues detected.`
 
 ### Insight Capture (Tension Curve)
 
@@ -586,13 +586,13 @@ If no flags are raised: `📈 Tension Curve: no structural pacing issues detecte
 | SAG, NO PEAK, WEAK ENDING | `ISSUE HIGH` |
 | FLAT, DROP, DEFLATE, SLOW OPEN | `ISSUE MED` |
 
-Text format: `Tension [FLAG]: segments [range] — [one-sentence diagnosis].`
+Text format: `Tension [FLAG]: segments [range] â€” [one-sentence diagnosis].`
 
 The full curve and score table is included in the `## Roleplay Revision Notes` commit block under a `### Tension Curve` subsection.
 
 ---
 
-## Step 6 — Q&A Mode
+## Step 6 â€” Q&A Mode
 
 Q&A mode allows the user to ask any question about the current segment and receive an answer from the **most appropriate role** automatically selected by the AI.
 
@@ -613,7 +613,7 @@ Select the most appropriate role to answer based on question type:
 |---|---|---|
 | Character motivation / feeling | That character's role | Author |
 | Craft / structural | Author | Critique Reader |
-| Reader experience | Lector or Casual Reader | — |
+| Reader experience | Lector or Casual Reader | â€” |
 | Continuity / consistency | Continuity Checker | Author |
 | Line prose | Editor | Lector |
 | Genre / market | Genre Expert | Critique Reader |
@@ -628,13 +628,13 @@ If the responding role is user-assigned, prompt the user to answer in that role 
 
 ```
 [Symbol] [RoleName] answers:
-[2–6 sentence answer grounded in the segment and available context documents]
+[2â€“6 sentence answer grounded in the segment and available context documents]
 
-[Symbol] [OtherRole] adds: (optional — only if the secondary perspective adds distinct value)
-[1–3 sentences]
+[Symbol] [OtherRole] adds: (optional â€” only if the secondary perspective adds distinct value)
+[1â€“3 sentences]
 ```
 
-After answering, ask: `Any follow-up? (or c to continue)` — loop within Q&A until the user types `c`.
+After answering, ask: `Any follow-up? (or c to continue)` â€” loop within Q&A until the user types `c`.
 
 ### Insight Capture
 
@@ -647,16 +647,16 @@ Every Q&A exchange that surfaces an actionable insight (a problem, a suggested c
 
 ---
 
-## Step 7 — Session End and Commit
+## Step 7 â€” Session End and Commit
 
 When the user types `end`:
 
-### 7a — Session Summary
+### 7a â€” Session Summary
 
 Display a summary of the full session:
 
 ```
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”
   SESSION COMPLETE
   Segments reviewed : [N] / [Total]
   Insights captured : [count]
@@ -664,30 +664,30 @@ Display a summary of the full session:
     ISSUE     : [n] (HIGH:[n] MED:[n] LOW:[n])
     SUGGESTION: [n]
     QUESTION  : [n]
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”
 ```
 
 List each captured insight with its segment, role symbol, type, severity (if applicable), and text.
 
-### 7b — Commit Options
+### 7b â€” Commit Options
 
 Ask the user:
 
 ```
 How should these insights be saved?
 
-  1  Append revision notes to the outline file    (outlines/…)
-  2  Append revision notes to the draft file      (draft/…)
+  1  Append revision notes to the outline file    (outlines/â€¦)
+  2  Append revision notes to the draft file      (draft/â€¦)
   3  Both
-  4  Save as a standalone session log only        (roleplay/…)
+  4  Save as a standalone session log only        (roleplay/â€¦)
   5  Discard (do not save)
 
 In Dialog Workshop mode, also note whether a `## Dialog Workshop Draft` block was generated and will be included.
 
-Enter 1–5:
+Enter 1â€“5:
 ```
 
-### 7c — Write Revision Notes
+### 7c â€” Write Revision Notes
 
 For options 1, 2, or 3:
 
@@ -696,7 +696,7 @@ Append a `## Roleplay Revision Notes` section to the chosen file(s). Use this st
 ```markdown
 ## Roleplay Revision Notes
 
-> Session: [ISO date] · Chapter: [CHAPTER_ID] [ChapterName] · Mode: [OUTLINE/DRAFT]
+> Session: [ISO date] Â· Chapter: [CHAPTER_ID] [ChapterName] Â· Mode: [OUTLINE/DRAFT]
 > Roles: [comma-separated list with AI/User tags]
 
 ### Issues
@@ -725,15 +725,15 @@ Append a `## Roleplay Revision Notes` section to the chosen file(s). Use this st
 ```
 
 Rules:
-- Append — never overwrite. If a `## Roleplay Revision Notes` section already exists, append a new dated block under it rather than replacing it.
+- Append â€” never overwrite. If a `## Roleplay Revision Notes` section already exists, append a new dated block under it rather than replacing it.
 - In outline files: append after the last existing section.
 - In draft files: append after the YAML frontmatter block at the very end of the file.
 
-For option 4 only — create `FEATURE_DIR/roleplay/<CHAPTER_ID>_<ChapterName>-roleplay-<ISO_date>.md` with the same structure plus a full transcript of all role responses in segment order. In Dialog Workshop mode, also include the Subtext Tracker turn-by-turn log for every exchange and any generated dialogue draft blocks.
+For option 4 only â€” create `FEATURE_DIR/roleplay/<CHAPTER_ID>_<ChapterName>-roleplay-<ISO_date>.md` with the same structure plus a full transcript of all role responses in segment order. In Dialog Workshop mode, also include the Subtext Tracker turn-by-turn log for every exchange and any generated dialogue draft blocks.
 
-### 7d — Post-Save Handoff
+### 7d â€” Post-Save Handoff
 
-After writing, analyse the saved insights and produce a concrete **Next Step Block** — not a vague suggestion, but a ready-to-run command the user can invoke immediately.
+After writing, analyse the saved insights and produce a concrete **Next Step Block** â€” not a vague suggestion, but a ready-to-run command the user can invoke immediately.
 
 #### Determine what changed
 
@@ -741,21 +741,21 @@ Classify the session outcome:
 
 | Condition | What changes | Next step |
 |---|---|---|
-| HIGH issues saved → outline file | Beat sequence, character beats, or dialogue requirements are wrong. The outline needs structural repair before any drafting happens. | Re-run `speckit.outline` to regenerate the repaired beats |
-| HIGH issues saved → draft file | Specific passages are failing structural, character, or continuity checks. Those passages need targeted rewriting. | Run `speckit.revise` scoped to the failing items |
+| HIGH issues saved â†’ outline file | Beat sequence, character beats, or dialogue requirements are wrong. The outline needs structural repair before any drafting happens. | Re-run `speckit.outline` to regenerate the repaired beats |
+| HIGH issues saved â†’ draft file | Specific passages are failing structural, character, or continuity checks. Those passages need targeted rewriting. | Run `speckit.revise` scoped to the failing items |
 | SUGGESTION or MED/LOW issues only | The chapter works structurally; prose or pacing can be improved in a targeted pass. | Run `speckit.revise` with a light scope, or continue to `speckit.polish` |
 | CONFIRM only, no issues | Nothing is broken. The session validated the chapter. | Continue to `speckit.implement` (next scene) or `speckit.polish` |
-| Dialog Workshop — broken subtext contract | The dialogue exchange does not meet its deflection/withholding requirement. The outline's `dialogue requirements` section needs revision before re-drafting. | Update outline's dialogue requirements, then re-run `speckit.implement` |
-| Dialog Workshop — dialogue draft generated | A revised dialogue block was produced in DW-6. It needs to replace the corresponding passage in the draft. | Run `speckit.revise` scoped to the exchange |
+| Dialog Workshop â€” broken subtext contract | The dialogue exchange does not meet its deflection/withholding requirement. The outline's `dialogue requirements` section needs revision before re-drafting. | Update outline's dialogue requirements, then re-run `speckit.implement` |
+| Dialog Workshop â€” dialogue draft generated | A revised dialogue block was produced in DW-6. It needs to replace the corresponding passage in the draft. | Run `speckit.revise` scoped to the exchange |
 
 #### Format the ready-to-run command
 
 Display the Next Step Block in this format:
 
 ```
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”
   NEXT STEP
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”
 
 [One sentence explaining what the roleplay session found and why the following action addresses it.]
 
@@ -764,12 +764,12 @@ Display the Next Step Block in this format:
   Rationale: [One sentence: which specific issues drive this scope]
 
   Ready to run? Type  y  to invoke now, or  n  to stop here.
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”
 ```
 
 If the user types `y`, immediately invoke the suggested command with the formatted scope as its argument. The target agent (`speckit.revise` or `speckit.outline`) will then:
 
-- **`speckit.revise [CHAPTER_ID] "[issue codes]"`**: loads the draft, reads the quoted issue codes as the revision scope (matching the standard checklist code format), rewrites only the failing passages, and produces a versioned draft file with a diff summary. The roleplay revision notes section in the draft is preserved verbatim — it is not treated as prose.
+- **`speckit.revise [CHAPTER_ID] "[issue codes]"`**: loads the draft, reads the quoted issue codes as the revision scope (matching the standard checklist code format), rewrites only the failing passages, and produces a versioned draft file with a diff summary. The roleplay revision notes section in the draft is preserved verbatim â€” it is not treated as prose.
 - **`speckit.outline [CHAPTER_ID]`**: reloads `plan.md`, applies HIGH-issue notes from the `## Roleplay Revision Notes` section as correction constraints, regenerates the beat sequence and dialogue requirements for that chapter, and sets `status: DRAFT` so the author can review before re-approving.
 
 If the user types `n`, end the session here. The revision notes remain in the file and can be used as manual input to `speckit.revise` or `speckit.outline` at any time.
@@ -797,7 +797,7 @@ Present both steps in sequence in the Next Step Block, numbered.
 
 **TENSION CURVE TIMING**: The Tension Curve role never speaks during segment responses. It scores silently throughout the session and renders only after the final segment (Step 5-TC) or when explicitly invoked via `!tension`. It does not interrupt the play-through loop.
 
-**NAIVE READER FORWARD-ONLY**: The Naive Reader evaluates only what has been established in chapters before the current one, plus earlier segments already played through in the current session. It must not use knowledge from later segments — it reads strictly forward.
+**NAIVE READER FORWARD-ONLY**: The Naive Reader evaluates only what has been established in chapters before the current one, plus earlier segments already played through in the current session. It must not use knowledge from later segments â€” it reads strictly forward.
 
 **USER CONTROL**: The user can end the session, skip segments, reassign roles, or delegate any user-assigned role to AI at any time. Do not resist or warn against any of these actions.
 

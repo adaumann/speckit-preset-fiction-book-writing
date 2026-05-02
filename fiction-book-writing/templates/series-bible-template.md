@@ -93,6 +93,68 @@
 
 ---
 
+## Carry-Over Variable Registry
+
+<!-- Variables and story states that transfer from one book to the next via carry-over mechanisms.
+     Import method: save-file = direct import from Book 1 file; questionnaire = player answers on new game.
+     speckit.series validate checks all carry-over variables are declared and reachable in Book 1 endings.
+     speckit.series questionnaire generates the new-game-plus interview screen. -->
+
+| Variable | Type | Default (fresh start) | Import Method | Affects Book |
+|---|---|---|---|---|
+| char_[name]_state | character_state | [e.g., "alive"] | save-file / questionnaire | 2, 3 |
+| relation_[name] | relationship | [e.g., "estranged"] | save-file / questionnaire | 2 |
+| trust_[character] | trust_score | [e.g., "50"] | save-file | 2 |
+| ending_[id]_achieved | flag | false | questionnaire | 2 |
+
+---
+
+## Canonical Import State
+
+<!-- The "default save" — assumed choices when reader starts Book N fresh without importing from Book N-1.
+     This is the canon used for marketing material, future spin-offs, etc.
+     Not all endings need carry-over support; specify which are "canonical" for continuity purposes. -->
+
+### Fresh Start Defaults (Book 2)
+
+```yaml
+canonical_import:
+  char_[name]_state: alive                    # [RATIONALE]
+  relation_[name]: estranged                  # [RATIONALE]
+  trust_[character]: 65                       # [RATIONALE]
+  ending_imported: END-A                      # [RATIONALE — which Book 1 ending is "canon"]
+```
+
+---
+
+## Ending Canon Table
+
+<!-- Which ending(s) are treated as "true" for sequel purposes and carry-over support.
+     Not all endings need to be supported as carry-over — mark divergent ones as unsupported.
+     This defines what world state Book 2+ readers experience if they start fresh. -->
+
+| Book | Canon Ending | Supported Carry-Over Endings | Unsupported endings | Notes |
+|---|---|---|---|---|
+| 1 | END-A | END-A, END-B | END-C (secret), END-D | END-C too divergent; END-D requires restricted prior knowledge |
+| 2 | [TBD] | | | |
+
+---
+
+## World State Delta Per Book
+
+<!-- How the world changes between books based on reader choices and canonical ending.
+     Track both "canon" (fresh start) and "alt carry-over" (imported state) versions.
+     Use this to brief the writer on what Book 2 assumes at its start. -->
+
+| Element | Book 1 State | Book 2 State (canon) | Book 2 State (END-B carry-over) |
+|---|---|---|---|
+| [LOCATION_NAME] | [STATE] | [STATE] | [STATE — if END-B imported] |
+| [CHARACTER_NAME] | alive, estranged | dead (END-A) | alive, allied (END-B carry-over) |
+| [FACTION_NAME] | neutral | allied | hostile |
+| [RELATIONSHIP] | enemies | [STATE] | [STATE] |
+
+---
+
 ## Books in Series
 
 <!-- One row per book. Add rows as books are conceived or completed.
@@ -109,19 +171,23 @@
 
 <!-- CLOSING STATE per character per book.
      These values are the OPENING STATE for the next book.
-     Updated after each book is completed (or drafted).
+     "canonical" = opening state when reader starts fresh (no carry-over import)
+     "conditional" = opening state when specific ending is imported from prior book
+     Updated by speckit.series update after each book draft is finalized.
      Cross-reference each character's `characters/[name].md` for full profile. -->
 
 ### [Character Name]
 
-| After Book | Relationship status | Physical state | Knowledge state | Arc position | Emotional state | Notes |
-|---|---|---|---|---|---|---|
-| Book 1 | [e.g., "Estranged from mentor"] | [e.g., "Injured left hand — permanent"] | [e.g., "Knows antagonist's identity"] | [e.g., "Wound cracked open, not yet healed"] | [e.g., "Grieving, functional"] | |
-| Book 2 | | | | | | |
+| After Book | Status | Relationship | Physical State | Arc Position | Notes |
+|---|---|---|---|---|---|
+| Book 1 (canonical) | [e.g., "alive"] | [e.g., "estranged from mentor"] | [e.g., "Injured left hand"] | [e.g., "Wound fresh"] | Default path for fresh start |
+| Book 1 (END-B conditional) | [e.g., "alive"] | [e.g., "allied with mentor"] | [e.g., "Fully healed"] | [e.g., "Transformed"] | if END-B imported |
+| Book 2 (canonical) | | | | | |
+| Book 2 (conditional) | | | | | |
 
 ### [Character Name]
 
-*(repeat block)*
+*(repeat block per major character)*
 
 ---
 

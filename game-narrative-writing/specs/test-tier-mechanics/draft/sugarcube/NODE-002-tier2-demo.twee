@@ -1,0 +1,19 @@
+{*
+node_id: NODE-002-tier2-demo
+title: Tier 2 Mechanics Demo
+status: APPROVED
+character_perspective: narrator
+*}
+
+You enter a library. There's a mysterious figure studying an ancient tome.
+
+<<run $store.knowledge['ancient_prophecy'] = true>>
+<<run $store.factions['scholars'] += 5>>
+<<run $store.locations['library'] = 'discovered'>>
+<<run $store.objects['ancient_tome'] = 'readable'>>
+<<run $store.clues['prophecy_fragment'] = true>>
+
+The scholar nods at you knowingly. You feel like something important just happened.
+
+[[Question the scholar->Start]]
+[[Examine the objects->Tier 3 Mechanics Demo]]

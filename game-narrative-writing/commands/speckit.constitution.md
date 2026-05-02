@@ -2,7 +2,7 @@
 description: Generate the constitution (.specify/memory/constitution.md) from an approved game story brief. Configures engine target, mechanics, POV, craft rules, and content policy.
 handoffs:
   - speckit.clarify: If any OQ-NNN items remain unresolved in spec.md
-  - speckit.plan: When .specify/memory/constitution.md is approved, generate the flowmap
+  - speckit.plan: When .specify/memory/constitution.md is approved, generate the plan
 ---
 
 # speckit.constitution
@@ -69,10 +69,11 @@ Optional flags:
      > "Which engine target?
      > (a) **twine/sugarcube** — Twee 3 / Sugarcube 2 macros
      > (b) **ink** — Inkle's scripting language
-     > (c) **renpy** — Python-based visual novel engine
-     > (d) **ags** — Adventure Game Studio script
-     > (e) **escoria** — Godot-based point-and-click (.esc)
+     > (c) **renpy** — Python-based visual novel engine (work in progress)
+     > (d) **ags** — Adventure Game Studio script (work in progress)
+     > (e) **escoria** — Godot-based point-and-click (.esc) (work in progress)
      > (f) **unity** — C# stubs / Yarn Spinner format
+     (work in progress)
      > (g) **generic** — Annotated Markdown (engine-agnostic prose with hook blocks)"
 
    - **Player perspective**: derive from narrative design doc; ask if absent:
@@ -93,10 +94,19 @@ Optional flags:
 
    - **Prose style** � ask the user:
      > "Which prose style fits this game?
-     > (a) **author-sample** � paste a key passage and I'll extract your voice markers
-     > (b) **humanized-ai** � use the built-in craft ruleset for engaging interactive fiction"
-     - If `author-sample`: prompt for 300�1500 words of representative prose. Extract style markers (POV, tense, rhythm, vocabulary register, sensory density, tone, dialogue style, anti-patterns). Confirm extracted values with the user.
-     - If `humanized-ai`: confirm built-in ruleset is active.
+     > (a) **author-sample** – paste a key scene and I'll extract your voice markers
+     > (b) **humanized-ai** – use the built-in craft ruleset for engaging interactive fiction"
+     - If `author-sample`: prompt for 300–1500 words of representative game text (NPC dialogue, narration, or scene description). Extract style markers (POV, tense, rhythm, vocabulary register, description density, tone, dialogue style, anti-patterns). Confirm extracted values with the user.
+     - If `humanized-ai`: confirm built-in ruleset is active. Then determine the **Prose Profile** — ask if not already set:
+
+       > "Which prose profile fits this game?
+       > (a) **dialogue-heavy** — NPC banter dominates; minimal description
+       > (b) **environmental** — world-building balances with dialogue
+       > (c) **action-forward** — choices drive pace; description is functional
+       > (d) **atmospheric** — setting and mood establish tone; dialogue is sparse
+       > (e) **minimalist** — bare-bones prose; every word earns its place"
+
+       Set `[PROSE_PROFILE]` to the chosen value. The profile tunes how the universal craft principles (Sections II–V in craft-rules.md) are weighted — it does not relax or override any universal rule.
 
    - **Target audience / rating**: ask if not set:
      > "Who is the primary audience?
@@ -143,12 +153,20 @@ Optional flags:
    - Attribute/currency config: names, ranges, starting values
    - Craft rules: confirm universal node rules (NR-001�NR-009) apply; add project-specific rules
      - NR-009: Choices must use export format `- [Label](NODE_ID) <!-- condition -->` under `## Choices` heading (required by `export.py` parse_choices())
-   - Prose style rules (PR-001�PR-005): derive from narrative design doc tone + style mode selection
-   - Prohibited phrases: project-specific clich�s or banned constructions
+   - Prose style rules: derive from narrative design doc tone + style mode selection
+   - NPC voice guidelines: project-specific notes on dialogue consistency
+   - Prohibited phrases: project-specific clichés or banned constructions
    - Content policy: based on target audience / rating
-   - Tooling: RAG index scope
 
-3b. **RAG Index System** � ask after node count is known:
+3b. **Generate `.specify/memory/craft-rules.md`**:
+   - Copy `templates/craft-rules-template.md`
+   - Set `[PROSE_PROFILE]` to the chosen prose profile value
+   - If `STYLE_MODE` is `humanized-ai`: keep only the chosen profile's definition block under `## Profile Specifications`; remove the other four profile blocks entirely
+   - If `STYLE_MODE` is `author-sample`: remove the entire `## Profile Specifications` section (profiles are irrelevant; craft rules I–V and the Universal Anti-AI Filter still apply)
+   - Write the result to `.specify/memory/craft-rules.md`
+   - Emit: `✓ craft-rules.md written — loaded automatically by speckit.implement, speckit.checklist, speckit.continuity.`
+
+3c. **RAG Index System** – ask after node count is known:
 
    Determine approximate node count. Compare against 150 nodes to form the recommendation label.
 
@@ -193,10 +211,10 @@ Optional flags:
       - On failure ? emit: `?? Index build failed. Check that Python is available and dependencies are installed. You can retry later with: python scripts/python/index.py build`
 
 4. **Increment the semantic version**:
-   - **MAJOR**: if engine target, player perspective, or act structure changed
+   - **MAJOR**: if engine target, player perspective, or narrative mode changed
    - **MINOR**: if new mechanics, craft rules, or prohibited phrases added
    - **PATCH**: typos, clarifications, minor refinements
-   - Update `[BIBLE_VERSION]`, `[RATIFICATION_DATE]` (on first creation only), `[LAST_AMENDED_DATE]`
+   - Update `[GAME_BIBLE_VERSION]`, `[RATIFICATION_DATE]` (on first creation only), `[LAST_AMENDED_DATE]`
 
 5. **Write a Sync Impact Report** as an HTML comment at the top of the file, summarizing what changed and which dependent documents are affected:
    ```html
@@ -208,7 +226,7 @@ Optional flags:
 
 6. **Propagate changes** to dependent documents if applicable:
    - If engine target changed: note in the impact report (all export commands affected)
-   - If act structure changed: flag that `specs/flowmap.md` should be regenerated via `speckit.plan`
+   - If act structure changed: flag that `specs/plan.md` should be regenerated via `speckit.plan`
    - If prohibited phrases changed: note in the impact report (drafted nodes need re-scan)
    - If player perspective changed: flag `variables.md` for `pov_variable` registration
 
@@ -224,19 +242,22 @@ Optional flags:
    - `[COPYRIGHT]` is set or explicitly skipped � info note if absent: `?? Copyright not set � dc:rights will be omitted from exports`
    - `[TONE]` is one of the 5 supported values
    - `[TARGET_AUDIENCE]` is one of the 5 supported values
-   - `[ENGINE_TARGET]` is one of: `sugarcube`, `ink`, `both`
+   - `[ENGINE_TARGET]` is one or more of: `generic`, `sugarcube`, `ink`, `renpy`, `ags`, `escoria`, `unity`
+   - If `humanized-ai` mode: `[PROSE_PROFILE]` is one of: `dialogue-heavy`, `environmental`, `action-forward`, `atmospheric`, `minimalist`
+   - If `author-sample` mode: all 8 Extracted Style Markers have values
    - `[PLAYER_PERSPECTIVE]` is one of: `second-person`, `third-person`, `first-person`, `switching`
    - If `switching` perspective: `pov_variable` is declared and registered in `variables.md`
    - `[RATIFICATION_DATE]` and `[LAST_AMENDED_DATE]` are ISO format (`YYYY-MM-DD`)
    - Active Mechanics Table has at least one Tier 1 entry
-   - Node rules NR-001�NR-008 are confirmed active
-   - If Series Position is non-standalone: `## Series Context` section is present and populated, or marked `[TBD pending series-bible.md creation]`
+   - Node rules NR-001–NR-009 are confirmed active
+   - `[NARRATIVE_MODE]` is one of: `linear`, `branching`, `point-and-click`, `emergent`
+   - If Series Position is non-standalone: `## Series Context` section is present and populated
 
-9. **Report**: Summarize all resolved fields, the new version number, and any remaining items requiring attention.
+9. **Report**: Summarize all resolved fields, the new version number, any remaining items requiring attention, and next steps including craft-rules.md generation.
 
 10. **Update search index** (optional):
-    - If `.speckit/index/` exists, run: `python scripts/python/index.py update` from the project root.
-    - This re-indexes the updated `.specify/memory/constitution.md` so subsequent `speckit.implement` and `speckit.continuity` queries reflect the latest constitution rules.
+    - If `.specify/index/` exists, run: `python scripts/python/index.py update` from the project root.
+    - This re-indexes the updated `.specify/memory/constitution.md` and `.specify/memory/craft-rules.md` so subsequent queries reflect the latest rules.
     - If the command fails or the index does not exist, skip silently.
 
 11. **Suggest next step**: "Run `speckit.spec` to define the game idea"
