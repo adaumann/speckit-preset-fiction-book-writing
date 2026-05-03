@@ -1,8 +1,14 @@
 ---
 description: Generate or update a Mermaid flowchart of the node graph with mechanic trigger annotations, ending markers, and act boundary labels.
 handoffs:
-  - speckit.plan: If the plan.md source is stale
-  - speckit.analyze: If unreachable nodes are visible in the diagram
+  - label: Update Plan
+    agent: speckit.plan
+    prompt: The plan.md source needs updating based on the diagram
+    send: false
+  - label: Analyze Unreachable Nodes
+    agent: speckit.analyze
+    prompt: Check for unreachable nodes visible in the diagram
+    send: true
 ---
 
 # speckit.flowmap

@@ -1,5 +1,14 @@
 ﻿---
 description: Generate or adjust themes for compiled stories. For SugarCube: creates story.css with customizable colors, fonts, layout. For Ink: creates ink-theme.html wrapper with themed HTML presentation.
+handoffs:
+  - label: Compile with Theme
+    agent: speckit.compile
+    prompt: Compile the game with the new theme applied
+    send: false
+  - label: Review in Browser
+    agent: speckit.polish
+    prompt: Check the theme rendering and polish if needed
+    send: false
 ---
 
 # speckit.theme

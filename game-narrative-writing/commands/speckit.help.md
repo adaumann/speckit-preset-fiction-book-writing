@@ -69,6 +69,9 @@ Perform a **non-blocking inventory scan** — read each file if present, note it
 | `checklists/` | Exists? Count of failing gates (incomplete items)? |
 | `research.md` | Exists? OPEN item count? Any HIGH authenticity flags? |
 | `analysis-report.md` | Exists? CRITICAL issue count? Date of last run? |
+| `specs/consequences-audit.md` | Exists? Any choice outcome problems flagged? |
+| `specs/accessibility-audit.md` | Exists? Reading level, warnings, contrast, language issues identified? |
+| `specs/secrets-audit.md` | Exists? All secrets documented and reachable? |
 | `output/<ENGINE>/` | Compiled output present for each configured engine? Playable HTML generated? |
 | `series/series-bible.md` or `series-bible.md` | Exists? Current game registered? Open contradictions? Series carry-over variables complete? |
 | `ENGINE_CONFIGURATION.md` or `preset.yml` | `export_engines` configured? All target engines have required compilation tooling? |
@@ -176,6 +179,9 @@ Things that are not on the critical path but would strengthen the game:
 - `series-bible.md` not yet created for a non-standalone game → `speckit.series init`
 - All nodes drafted but no `analysis-report.md` → `speckit.analyze --report` (run full audit before final review)
 - `outlines/` has SKIP entries that cover ending-gating nodes → worth reviewing whether the skip was intentional
+- All nodes drafted but no `consequences-audit.md` → `speckit.consequences` (verify choice branches lead to meaningful outcomes)
+- No accessibility audit run → `speckit.accessibility` (check reading level, content warnings, contrast, ableist language)
+- No secret content documented → `speckit.secrets` (map achievements, hidden content, easter eggs)
 - `draft/<ENGINE>/` populated but `output/` missing → `speckit.compile --all-engines` (generate playable builds)
 - All nodes drafted but engine targets not yet tested → `speckit.compile --engine <ENGINE>` (test each target engine)
 - Puzzles exist but `puzzles.md` not documented → `speckit.brainstorm puzzles` (document puzzle dependencies)
@@ -203,7 +209,7 @@ Use these per-phase command sets:
 `speckit.outline`, `speckit.implement`, `speckit.checklist`, `speckit.continuity`, `speckit.status`, `speckit.brainstorm`, `speckit.research check`
 
 **Phase 4 (Quality Review):**
-`speckit.analyze`, `speckit.continuity`, `speckit.checklist`, `speckit.revise`, `speckit.flowmap`, `speckit.pacing`, `speckit.status`
+`speckit.analyze`, `speckit.continuity`, `speckit.checklist`, `speckit.revise`, `speckit.pacing`, `speckit.agency`, `speckit.consequences`, `speckit.accessibility`, `speckit.secrets`
 
 **Phase 5 (Export / Compilation):**
 `speckit.compile`, `speckit.export`, `speckit.series update`, `speckit.analyze --report`
