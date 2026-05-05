@@ -516,7 +516,7 @@ def main():
     parser.add_argument(
         '--spec',
         required=True,
-        help='Spec name (directory under specs/)'
+        help='Spec name or path (e.g., "test-tier-mechanics" or "specs/test-tier-mechanics")'
     )
     parser.add_argument(
         '--engine',
@@ -546,8 +546,14 @@ def main():
     if args.engine and args.all_engines:
         parser.error('Cannot specify both --engine and --all-engines')
     
-    # Find spec directory
-    spec_dir = Path('specs') / args.spec
+    # Find spec directory - handle both "test-tier-mechanics" and "specs/test-tier-mechanics"
+    spec_path = args.spec.strip()
+    
+    # If user included "specs/" prefix, remove it
+    if spec_path.startswith('specs/') or spec_path.startswith('specs\\'):
+        spec_path = spec_path[6:]  # Remove "specs/" or "specs\"
+    
+    spec_dir = Path('specs') / spec_path
     if not spec_dir.exists():
         print(f"❌ Spec not found: {spec_dir}")
         sys.exit(1)

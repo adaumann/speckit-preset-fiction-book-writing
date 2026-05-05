@@ -1,8 +1,5 @@
 ---
 description: Final line-edit pass — prose rhythm, sentence variety, word repetition, filter words, adverb density, and voice register consistency. Runs after speckit.checklist PASS. Distinct from speckit.revise (structural/checklist failures) and speckit.checklist (craft gates).
-scripts:
-  sh: scripts/bash/check-prerequisites.sh --json
-  ps: scripts/powershell/check-prerequisites.ps1 -Json
 handoffs:
   - label: Run Checklist
     agent: speckit.checklist
@@ -203,3 +200,4 @@ Expected format: a node ID (e.g., `NODE-005`) or a range (e.g., `NODE-005—NODE
 - Location description consistency across nodes → use `speckit.continuity --check locations`
 - Said-bookism that conveys a mechanic (e.g., `threatened` as trust signal in character profile) → skip DI-001 for those cases
 - Branch structure or choice logic → use `speckit.revise` or `speckit.analyze`
+

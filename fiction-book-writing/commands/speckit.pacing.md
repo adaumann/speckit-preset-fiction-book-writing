@@ -1,8 +1,5 @@
 ---
 description: Emotional rhythm and pacing audit — scores each drafted chapter for tension level, identifies plateaus, sagging middles, premature peaks, and act-boundary misalignments. Outputs a tension arc chart (Mermaid xychart), a pacing plateau report, and a remediation task list. Read-only except when writing the chart file. Run after speckit.implement, before speckit.polish or speckit.export.
-scripts:
-  sh: scripts/bash/check-prerequisites.sh --json --require-tasks --include-tasks
-  ps: scripts/powershell/check-prerequisites.ps1 -Json -RequireTasks -IncludeTasks
 handoffs:
   - label: Revise Low-Tension Chapter
     agent: speckit.revise
@@ -188,3 +185,4 @@ If no issues found:
 ✅ Pacing audit passed — tension arc is structurally sound.
 Chart saved to FEATURE_DIR/pacing-arc.md
 ```
+

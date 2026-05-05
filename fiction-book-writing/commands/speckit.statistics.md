@@ -1,8 +1,5 @@
 ---
 description: Prose statistics report — readability score, sentence length variance, passive voice %, adverb density, and dialogue balance (% dialogue vs. action/narration). Read-only. Run after speckit.implement or speckit.polish to get a quantitative picture of your prose at the sentence level.
-scripts:
-  sh: scripts/bash/check-prerequisites.sh --json
-  ps: scripts/powershell/check-prerequisites.ps1 -Json
 handoffs:
   - label: Polish Prose
     agent: speckit.polish
@@ -239,3 +236,4 @@ No readability, voice, or dialogue balance flags.
 - `speckit.polish` **finds and fixes** — it operates on the same signals but rewrites prose
 
 Run `speckit.statistics` first to understand the scope of the problem, then hand off to `speckit.polish` for the targeted chapter. If a chapter's statistics verdict is STRONG across all metrics, it can skip the polish pass.
+

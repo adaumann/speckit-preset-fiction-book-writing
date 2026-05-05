@@ -1,8 +1,5 @@
 ---
 description: Story pacing analyzer — measure word count, beat spacing, emotional tempo, and reading time per branch. Detects pacing problems (info dumps, draggy sections, rushed climax).
-scripts:
-  sh: scripts/bash/check-prerequisites.sh --json
-  ps: scripts/powershell/check-prerequisites.ps1 -Json
 handoffs:
   - label: Check Tone
     agent: speckit.tone
@@ -450,3 +447,4 @@ Output `pacing-audit.md` with:
 **Branch Pacing Consistency**: Different branches can have different total word counts (different story paths), but similar-weight scenes should have similar node lengths. Inconsistency signals either intentional weight difference or editor oversight.
 
 **Silent Scenes Count**: Even if a node has minimal prose, if it contains emotional beats, decision points, or mechanical changes, it's not a dead zone. Dead zones are purely transitional with nothing else.
+

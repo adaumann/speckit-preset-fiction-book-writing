@@ -9,9 +9,6 @@ handoffs:
     agent: speckit.continuity
     prompt: Check drafted chapters for POV voice consistency and information leakage
     send: true
-scripts:
-  sh: scripts/bash/check-prerequisites.sh --json
-  ps: scripts/powershell/check-prerequisites.ps1 -Json
 agent_scripts:
   sh: scripts/bash/update-agent-context.sh __AGENT__
   ps: scripts/powershell/update-agent-context.ps1 -AgentType __AGENT__
@@ -272,3 +269,4 @@ If `$ARGUMENTS` is not one of the named sub-modes:
 - The `relay` and `convergence` sub-modes are only meaningful for multi-POV; if run against a single-POV story, report "Not applicable for Single POV mode" and suggest `audit` instead
 - Do not invent POV characters not present in `spec.md` or `characters.md`
 - Information asymmetry violations are `CRITICAL` — they directly break story logic and reader trust
+

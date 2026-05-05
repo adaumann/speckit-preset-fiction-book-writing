@@ -57,14 +57,27 @@ status: DRAFT
 
 <!-- Minimum 2 choices for non-terminal nodes. 0 choices for ending nodes.
      Include all conditional choices with their requirements.
+     
+     IMPORTANT: The "Narrative Consequence" column is CRITICAL for speckit.implement.
+     It describes what the player experiences as a result of this choice.
+     These consequences will be transferred to the drafted node as comments in the Choices section.
+     
      speckit.implement uses this table to generate the ## Choices section in the node file.
-     export.py requires: ## Choices heading + - [Label](NODE-ID) <!-- condition --> format. -->
+     export.py requires: ## Choices heading + - [Label](NODE-ID) <!-- condition; Effect: consequence --> format. -->
 
 | # | Label | Condition | Target Node | Narrative Consequence |
 |---|---|---|---|---|
-| A | [CHOICE_LABEL] | none | NODE-[N] | [What changes / where this leads] |
-| B | [CHOICE_LABEL] | none | NODE-[N] | [What changes / where this leads] |
-| C | [CHOICE_LABEL] | requires [VAR CONDITION] | NODE-[N] | [What changes / where this leads] |
+| A | [CHOICE_LABEL] | none | NODE-[N] | [What changes or what the player experiences] |
+| B | [CHOICE_LABEL] | none | NODE-[N] | [What changes or what the player experiences] |
+| C | [CHOICE_LABEL] | requires [VAR CONDITION] | NODE-[N] | [What changes or what the player experiences] |
+
+**Narrative Consequence examples:**
+- "Mira gains trust in you" (relationship change)
+- "You escape the chamber" (plot progression)
+- "The door locks behind you" (environmental change)
+- "You gain the artifact" (inventory change)
+- "The timer starts counting down" (mechanic activation)
+- "The guard becomes suspicious" (NPC state change)
 
 **Default path** (if no conditional choices are met): [NODE_ID or END_ID]
 
@@ -72,7 +85,8 @@ status: DRAFT
 
 ## Mechanic Hooks Summary
 
-<!-- Quick reference of all hooks triggered in this node. -->
+<!-- Quick reference of all hooks triggered in this node.
+     Review the Mechanic Hooks Checklist below and select which ones apply. -->
 
 | Hook Type | Variable | Action | Timing |
 |---|---|---|---|
@@ -80,6 +94,70 @@ status: DRAFT
 | INVENTORY | [ITEM_VAR] | add / check | on entry / choice [A] |
 | TRUST | $trust_[npc] | +N | choice [A] |
 | NPC_STATE | $npc_[name]_state | set=[value] | choice [B] |
+
+---
+
+## Mechanic Hooks Checklist
+
+<!-- Consider each available hook type for this node. Check which ones apply. -->
+
+**Tier 1 Hooks (Fully Supported)**:
+
+- [ ] **VISITED** — Mark this node as visited for later tracking
+  - Example: `visited=player_visited_sanctuary`
+  - Use when: Player should remember reaching this location
+
+- [ ] **FLAG** — Set or check boolean state flags
+  - Example: `flag=door_unlocked` or check `flag=knows_combination`
+  - Use when: Binary state needs to persist (learned fact, completed task)
+
+- [ ] **COUNTER** — Track numeric state (quest progress, attempts, rounds)
+  - Example: `counter=escape_attempts +1` or check `counter=riddle_attempts >= 3`
+  - Use when: Node needs to count occurrences (failed attempts, items collected, round number)
+
+- [ ] **INVENTORY** — Add/remove/check items
+  - Example: `add=key_rusty` or check `contains=lockpick`
+  - Use when: Player gains/loses equipment or tools
+
+- [ ] **TIMER** — Start/stop/check elapsed time
+  - Example: `start=bomb_timer 30s` or check `timer=ticking expired`
+  - Use when: Time pressure or delayed consequence is important
+
+- [ ] **TRUST** — Adjust NPC relationship score (+/- N)
+  - Example: `npc=mira delta=+5` (gain 5 trust)
+  - Use when: Player dialogue or action affects NPC loyalty/attitude
+
+- [ ] **NPC_STATE** — Change NPC state (suspicious → convinced, etc.)
+  - Example: `npc=mira state=convinced`
+  - Use when: NPC mood/relationship state progresses beyond simple trust value
+
+- [ ] **CURRENCY** — Add/remove/check money or resources
+  - Example: `variable=gold delta=-50` or check `currency=gold >= 100`
+  - Use when: Purchasing power or economic consequence matters
+
+- [ ] **ENDING_CONDITION** — Increment progress toward an ending
+  - Example: `ending=escape delta=+1` (one step closer to escape ending)
+  - Use when: Multiple nodes contribute to reaching a specific ending
+
+- [ ] **RANDOM** — Generate random outcome
+  - Example: `variable=random_outcome min=1 max=3`
+  - Use when: Node has probabilistic results
+
+- [ ] **CHOICE_MEMORY** — Record player dialogue choice for later reference
+  - Example: `variable=player_response value="agreed_to_help"`
+  - Use when: Previous dialogue choice should influence later dialogue or prose
+
+- [ ] **CLUE** — Mark a clue as discovered (for detective/puzzle mechanics)
+  - Example: `clue_id=clue_suspect_alibi`
+  - Use when: Node contains investigative discoveries
+
+**Common Hook Combinations**:
+
+- **Dialogue-centric node**: CHOICE_MEMORY (record dialogue choice) + TRUST (adjust per choice) + NPC_STATE (change mood)
+- **Quest hub node**: COUNTER (track active quests) + VISITED (mark as explored) + INVENTORY (check prerequisites)
+- **Timed challenge**: TIMER (start countdown) + COUNTER (track attempts) + FLAG (mark as succeeded/failed)
+- **Investigation scene**: CLUE (discover evidence) + INVENTORY (collect items) + NPC_STATE (witness becomes suspicious)
+- **Relationship branch**: TRUST (major change) + NPC_STATE (reflect new relationship tier) + FLAG (unlock new options)
 
 ---
 

@@ -6,7 +6,7 @@
 }
 ::::
 
-{* 
+/* 
 node_id: NODE-001
 title: Start
 act: 1
@@ -18,7 +18,7 @@ variables_set:
   - player_choice
 drafted: 2026-05-02
 outline_ref: outlines/NODE-001.md
-*}
+*/
 
 :: StoryTitle
 Test Tier Mechanics - Start

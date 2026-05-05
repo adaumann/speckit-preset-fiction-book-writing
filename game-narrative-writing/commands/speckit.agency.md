@@ -1,8 +1,5 @@
 ---
 description: Validate player agency — verify choices have consequences and aren't illusory. Detects dead choices, forced branches, and choice-outcome impact via variable state tracking.
-scripts:
-  sh: scripts/bash/check-prerequisites.sh --json
-  ps: scripts/powershell/check-prerequisites.ps1 -Json
 handoffs:
   - label: Revise Branches
     agent: speckit.revise
@@ -255,3 +252,4 @@ Output `agency-audit.md` with:
 **Cosmetic Choices**: Acceptable in moderation (flavor decisions). If >10% of choices are cosmetic-only, consider adding mechanical weight to player decisions.
 
 **Reachability**: High agency doesn't matter if all choices lead to the same ending. Use `speckit.endings` to verify multiple endings are actually reachable from the agency nodes you're testing.
+

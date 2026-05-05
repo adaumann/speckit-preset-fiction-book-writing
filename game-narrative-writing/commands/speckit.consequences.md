@@ -1,8 +1,5 @@
 ---
 description: Choice consequence mapper — visualize how each choice branches story into different outcomes. Track consequences across all branches, detect orphaned choice branches, map consequence chains.
-scripts:
-  sh: scripts/bash/check-prerequisites.sh --json
-  ps: scripts/powershell/check-prerequisites.ps1 -Json
 handoffs:
   - label: Check Agency
     agent: speckit.agency
@@ -424,3 +421,4 @@ Output `consequence-audit.md` with:
 **Cumulative Consequences**: Different choices can compound (choice A + choice B = different outcome than A alone or B alone). This is good design; just keep chains to <4 steps so players can follow.
 
 **Foreshadow Delayed Consequences**: If a consequence appears 5+ nodes after choice, foreshadow it. Have an NPC mention it, or show the setup for it, so player understands the connection.
+

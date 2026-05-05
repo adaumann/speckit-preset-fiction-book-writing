@@ -9,9 +9,6 @@ handoffs:
     agent: speckit.plan
     prompt: Node targets or branch logic conflict with the flowmap. Please review and fix it.
     send: true
-scripts:
-  sh: scripts/bash/check-prerequisites.sh --json --require-tasks --include-tasks
-  ps: scripts/powershell/check-prerequisites.ps1 -Json -RequireTasks -IncludeTasks
 ---
 
 # speckit.outline
@@ -111,9 +108,50 @@ Then:
    - Dialogue sub-branches: indicate if a dialogue choice continues in-node or branches to a different node
    - If no structured dialogue tree is needed, mark as `None`
 
-   **Mechanic Hooks Summary** — derive from `specs/mechanics.md` hook schema:
-   - All hooks triggered in this node: type, tier (1 or 2), variable, action, timing
-   - Include any custom hooks added via `speckit.mechanics declare`
+   **Mechanic Hooks Summary & Checklist** — Identify all mechanics relevant to this node:
+   
+   1. **First, derive explicit hooks** from `specs/mechanics.md` and flowmap annotations:
+      - All hooks already triggered: type, tier (1 or 2), variable, action, timing
+      - Include any custom hooks added via `speckit.mechanics declare`
+
+   2. **Then, use the Mechanic Hooks Checklist** (in template) to identify forgotten mechanics:
+      
+      For each node type, prompt the author through these common patterns:
+      - **Dialogue-centric** (dialogue-heavy prose_profile or dialogue-centric flag):
+        - ✓ CHOICE_MEMORY (record which dialogue option player chose)
+        - ✓ TRUST (dialogue choice should affect NPC trust by ±N)
+        - ✓ NPC_STATE (dialogue can change NPC mood or relationship tier)
+        - ✓ FLAG (dialogue might reveal secrets or flag new knowledge)
+        
+      - **Quest/Task hub** (setup or hub narrative purpose):
+        - ✓ COUNTER (track active quests, attempts, or rounds)
+        - ✓ INVENTORY (check prerequisites, award completion items)
+        - ✓ VISITED (mark location explored)
+        
+      - **Investigative/Mystery** (contains clue discovery or evidence gathering):
+        - ✓ CLUE (discover evidence piece)
+        - ✓ INVENTORY (collect physical evidence)
+        - ✓ COUNTER (track evidence collected, theories tested)
+        
+      - **Timed challenge** (tension level 7+, obstacle or puzzle):
+        - ✓ TIMER (start countdown or ticking timer)
+        - ✓ COUNTER (track attempts or rounds remaining)
+        - ✓ ENDING_CONDITION (major success/failure consequence)
+        
+      - **Choice consequence** (decision node with multiple paths):
+        - ✓ TRUST (choice affects NPC relationships)
+        - ✓ FLAG (choice unlocks/locks paths)
+        - ✓ NPC_STATE (NPC reacts to choice)
+        - ✓ ENDING_CONDITION (choice pushes toward specific ending)
+        
+      - **Any node with player resources (items, money, health)**:
+        - ✓ INVENTORY (track items acquired/lost)
+        - ✓ CURRENCY (track resources spent/gained)
+
+   3. **Populate the template's Mechanic Hooks Checklist**: 
+      - Check the boxes for all mechanics that should apply to this node
+      - Fill in the summary table at the top with the concrete hooks
+      - Reference "Common Hook Combinations" section if uncertain
 
    **Branch Logic Notes** � pull from flowmap annotations:
    - Any complex gate logic, reachability conditions, or POV overrides
@@ -160,9 +198,11 @@ Then:
    
    Remind the author to:
    - Review each outline file and edit beats, choices, and variable tables as needed
+   - **Complete the Mechanic Hooks Checklist** for each node — check all applicable hook types (dialogue-centric nodes should include CHOICE_MEMORY + TRUST + NPC_STATE; quest hubs should include COUNTER + INVENTORY; timed challenges should include TIMER; etc.)
    - Verify ending gates are correct (choice targets are valid ending IDs or intermediate nodes)
    - Check sensory anchors for location-based nodes
    - Change `status: DRAFT` ? `status: APPROVED` when satisfied, or `status: SKIP` to write the node themselves
    - Run `speckit.implement` once outlines are approved
 
 7. **Check for extension hooks** (after generation): check `hooks.after_outline`.
+

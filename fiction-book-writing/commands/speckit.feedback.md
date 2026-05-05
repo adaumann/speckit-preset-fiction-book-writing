@@ -1,8 +1,5 @@
 ---
 description: Ingest beta reader, critique partner, or editor notes — categorize by issue type, map to chapter IDs, generate prioritized revision tasks in tasks.md. Closes the editorial round as a proper workflow step.
-scripts:
-  sh: scripts/bash/check-prerequisites.sh --json --include-tasks
-  ps: scripts/powershell/check-prerequisites.ps1 -Json -IncludeTasks
 handoffs:
   - label: Start Revisions
     agent: speckit.revise
@@ -129,3 +126,4 @@ The feedback log becomes the audit trail for the editorial round — you can see
    - [S-001] A2.201 — [description]
    - [C-003] A1.102 — [description]
    ```
+

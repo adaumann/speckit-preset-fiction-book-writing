@@ -1,8 +1,5 @@
 ---
 description: Branch complexity analyzer — detect exponential growth, warn on unsustainable branching patterns, estimate maintenance effort per branch depth.
-scripts:
-  sh: scripts/bash/check-prerequisites.sh --json
-  ps: scripts/powershell/check-prerequisites.ps1 -Json
 handoffs:
   - label: Check Replayability
     agent: speckit.replayability
@@ -511,3 +508,4 @@ Output `complexity-audit.md` with:
 - Twine games: Highly variable; depends on target
 
 Know your scope before designing branching.
+

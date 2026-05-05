@@ -1,8 +1,5 @@
 ---
 description: Generate scene quality checklists — triple purpose test, dialogue subtext, sensory detail, off-balance ending, and story bible compliance. "Unit tests for prose."
-scripts:
-  sh: scripts/bash/check-prerequisites.sh --json
-  ps: scripts/powershell/check-prerequisites.ps1 -Json
 ---
 
 ## Checklist Purpose: "Unit Tests for Prose"
@@ -75,3 +72,4 @@ You **MUST** consider the user input before proceeding (if not empty).
    - If found: compare `version` field in the audiodraft YAML against the prose draft's `version`. If lower: `⚠️ Audiodraft is stale (prose v[N], audio v[M]) — resync by running speckit.revise or speckit.implement for this chapter.`
    - If not found: `ℹ️ No audiodraft found for this chapter — run speckit.implement to generate one.`
    - If in sync: `✓ Audiodraft in sync (v[N]).`
+

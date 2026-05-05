@@ -84,13 +84,18 @@ outline_ref: outlines/[NODE_ID].md
 ## Choices
 
 <!-- Minimum 2 choices for non-terminal nodes; omit section entirely for ending nodes.
-     Format: - [Label text](TARGET_NODE_ID) <!-- condition expression if gated -->
+     Format: - [Label text](TARGET_NODE_ID) <!-- condition if gated; consequence of choice -->
+     Each choice must include:
+       1. Label text in brackets [...]
+       2. Target node in parentheses (NODE_ID or END_ID)
+       3. Optional condition comment: <!-- condition_expression -->
+       4. Optional consequence comment: <!-- Effect: narrative consequence from outline -->
      export.py parse_choices() requires this exact heading and link format. -->
 
-- [CHOICE_LABEL_A](NODE_ID_A)
-- [CHOICE_LABEL_B](NODE_ID_B)
-- [CHOICE_LABEL_C](NODE_ID_C) <!-- requires: $VARIABLE_NAME == value -->
+- [CHOICE_LABEL_A](NODE_ID_A) <!-- Effect: [Narrative consequence from outline] -->
+- [CHOICE_LABEL_B](NODE_ID_B) <!-- Effect: [Narrative consequence from outline] -->
+- [CHOICE_LABEL_C](NODE_ID_C) <!-- requires: $VARIABLE_NAME == value; Effect: [Narrative consequence] -->
 
 <!-- Terminal node (ending): use a single entry pointing to the ending node:
-- [ENDING_LABEL](END-A)
+- [ENDING_LABEL](END-A) <!-- Effect: [How this ending concludes the story] -->
 -->

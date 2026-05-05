@@ -1,8 +1,5 @@
 ---
 description: Draft scenes and chapters by executing writing tasks from tasks.md, enforcing story bible compliance and checklist gates.
-scripts:
-  sh: scripts/bash/check-prerequisites.sh --json --require-tasks --include-tasks
-  ps: scripts/powershell/check-prerequisites.ps1 -Json -RequireTasks -IncludeTasks
 agent_scripts:
   sh: scripts/bash/update-agent-context.sh __AGENT__
   ps: scripts/powershell/update-agent-context.ps1 -AgentType __AGENT__
@@ -297,3 +294,4 @@ You **MUST** consider the user input before proceeding (if not empty).
 7. **Agent context update**: Run the agent script to refresh the story context file with the newly drafted chapters.
 
 8. **Check for extension hooks** (after drafting): check `hooks.after_implement`.
+

@@ -1,4 +1,4 @@
-ï»¿---
+---
 description: Run the quality checklist for one or more node files. Checks structural integrity, craft rules, hook declarations, choice design, and game bible compliance. "Unit tests for nodes." Saves a checklist file per node and produces a weighted PASS/FAIL verdict.
 handoffs:
   - label: Fix Checklist Failures
@@ -7,16 +7,13 @@ handoffs:
     send: true
   - label: Run Continuity Check
     agent: speckit.continuity
-    prompt: Per-node checks have passed â€” run a full continuity check now
+    prompt: Per-node checks have passed — run a full continuity check now
     send: true
-scripts:
-  sh: scripts/bash/check-prerequisites.sh --json
-  ps: scripts/powershell/check-prerequisites.ps1 -Json
 ---
 
 # speckit.checklist
 
-**CRITICAL CONCEPT**: Node checklists are **quality gates for node files** â€” unit tests that validate whether a drafted node fulfils its structural and craft obligations.
+**CRITICAL CONCEPT**: Node checklists are **quality gates for node files** — unit tests that validate whether a drafted node fulfils its structural and craft obligations.
 
 **NOT for verifying story events**:
 - ? NOT "Does this node match the plan?"
@@ -29,7 +26,7 @@ scripts:
 - ? "Do choice labels avoid meta-language?" (player experience)
 - ? "Are prohibited phrases absent?" (game bible compliance)
 
-**Metaphor**: If your node is a unit of player experience, the checklist is its test suite â€” verifying the node works structurally, the prose works as prose, and the mechanic hooks work as intended.
+**Metaphor**: If your node is a unit of player experience, the checklist is its test suite — verifying the node works structurally, the prose works as prose, and the mechanic hooks work as intended.
 
 ## User Input
 
@@ -38,12 +35,12 @@ $ARGUMENTS
 ```
 
 You **MUST** consider the user input before proceeding (if not empty). Accepted arguments:
-- A node ID (e.g. `NODE-003`) â€” run checklist for that node
-- A list of node IDs â€” run checklist for each
-- `--act [N]` â€” check all nodes in the specified act
-- `--all` â€” check all nodes with status DRAFT or APPROVED
-- `--strict` â€” also validate Tier 2 stub hooks for completeness
-- Nothing â€” check the most recently modified node file
+- A node ID (e.g. `NODE-003`) — run checklist for that node
+- A list of node IDs — run checklist for each
+- `--act [N]` — check all nodes in the specified act
+- `--all` — check all nodes with status DRAFT or APPROVED
+- `--strict` — also validate Tier 2 stub hooks for completeness
+- Nothing — check the most recently modified node file
 
 ## Pre-Execution Checks
 
@@ -56,7 +53,7 @@ You **MUST** consider the user input before proceeding (if not empty). Accepted 
 
 ## Execution Steps
 
-### Step 1 â€” Setup
+### Step 1 — Setup
 
 Run `{SCRIPT}` from repo root. Determine target node(s) from `$ARGUMENTS`.
 
@@ -65,20 +62,20 @@ For each target node:
 - Read the node file (YAML frontmatter + prose body).
 - If the node has status SKIP, skip it and note in the report.
 
-### Step 2 â€” Load Context
+### Step 2 — Load Context
 
 Load the following (required):
-- `.specify/memory/constitution.md` â€” POV, tone, Prose Style Mode (Section VII), `style_mode`, `prose_profile`
-- `.specify/memory/craft-rules.md` â€” craft rules (NR-NNN, PR-NNN per active prose profile), prohibited phrases, anti-AI clichÃ©s filter
-- `specs/variables.md` â€” declared variable registry for NR-003 / NR-006
-- `specs/mechanics.md` â€” valid hook types and syntax for MC checks
+- `.specify/memory/constitution.md` — POV, tone, Prose Style Mode (Section VII), `style_mode`, `prose_profile`
+- `.specify/memory/craft-rules.md` — craft rules (NR-NNN, PR-NNN per active prose profile), prohibited phrases, anti-AI clichés filter
+- `specs/variables.md` — declared variable registry for NR-003 / NR-006
+- `specs/mechanics.md` — valid hook types and syntax for MC checks
 
 Load the following (if present):
-- `specs/characters/` â€” NPC profiles for trust range and dialogue register checks (dialogue style per prose profile)
-- `outlines/[NODE_ID].md` â€” node outline for outline-gate compliance check
-- `specs/plan.md` â€” for upstream path analysis (NR-006)
+- `specs/characters/` — NPC profiles for trust range and dialogue register checks (dialogue style per prose profile)
+- `outlines/[NODE_ID].md` — node outline for outline-gate compliance check
+- `specs/plan.md` — for upstream path analysis (NR-006)
 
-### Step 3 â€” Clarifying Questions (=2)
+### Step 3 — Clarifying Questions (=2)
 
 Ask at most 2 targeted questions if the node file or loaded context leaves a check ambiguous:
 - Only ask what cannot be resolved from the files
@@ -86,11 +83,11 @@ Ask at most 2 targeted questions if the node file or loaded context leaves a che
 
 Skip if the node and context provide enough information to run all checks without ambiguity.
 
-### Step 4 â€” Run Checks
+### Step 4 — Run Checks
 
 For each node, evaluate all items in the four sections below using `templates/checklist-template.md` as the output structure. Mark each item ? / ? / ??.
 
-**NR â€” Node Rules** (structural integrity)
+**NR — Node Rules** (structural integrity)
 - NR-001: Non-terminal nodes have = 2 choices in `## Choices`
 - NR-002: All choice targets are valid node IDs (exist in `outlines/` or `nodes/`)
 - NR-003: All variables in `variables_read` and `variables_set` are declared in `variables.md`
@@ -101,36 +98,36 @@ For each node, evaluate all items in the four sections below using `templates/ch
 - NR-008: Trust score changes are within the declared NPC range (per `characters/` profile)
 - NR-009: Choices use the export-required format: `- [Label](NODE_ID) <!-- condition -->` under `## Choices` heading
 
-**PR â€” Prose Rules** (craft and voice)
+**PR — Prose Rules** (craft and voice)
 - PR-001: POV is consistent with `constitution.md` `player_perspective` (or has an approved override)
 - PR-002: No prohibited phrases from `constitution.md` appear in prose
 - PR-003: Choice labels use active verb phrases and avoid meta-language (e.g. "Ask about the key" not "Select dialogue option")
 - PR-004: Dialogue register matches NPC trust state at this node's variable value
 - PR-005: Prose coheres without hook blocks (narrative reads as complete if mechanic blocks are removed)
-- PR-006: At least one concrete sensory detail (sound, smell, texture, temperature â€” not visual only)
+- PR-006: At least one concrete sensory detail (sound, smell, texture, temperature — not visual only)
 - PR-007: No choice or action is trivialized or telegraphed by the prose (player's decision space is respected)
 - PR-008: Prose tense, sentence rhythm, and vocabulary register are consistent with Prose Style Mode (Section VII of `constitution.md`); anti-AI filter patterns are absent
 - PR-009: Location atmosphere is established through sensory detail or description (from `specs/locations.md` Setting Anchors field if present)
 - PR-010: Sensory details are consistent with the location or NPC context (e.g., a sterile facility has clinical smells/sounds, not organic ones)
 - PR-011: Emotional subtext is shown through character reaction or environmental description, not explicitly named (e.g., "tension hung in the air" not "I felt tense")
 
-**MC â€” Mechanic Compliance** (hook balance and fairness)
+**MC — Mechanic Compliance** (hook balance and fairness)
 - MC-001: Every trust-shifting choice has narrative justification in prose
-- MC-002: No single choice dominates trivially â€” all choices are meaningful trade-offs
+- MC-002: No single choice dominates trivially — all choices are meaningful trade-offs
 - MC-003: Timer failure conditions are handled in a downstream node (or flagged as `[NEEDS NODE]`)
 - MC-004: If `--strict`: Tier 2 stub hooks include a `// TODO:` comment describing expected implementation
 - MC-005: No mechanic hook reads a variable not listed in `variables_read` in the frontmatter
 - MC-006: Every `MECHANIC:CURRENCY` hook includes `variable=` and that variable is declared as `type: currency` in `variables.md`; flag missing or wrong-type declaration as CRITICAL
 
-**GB â€” Game Bible Compliance** (spec authority)
+**GB — Game Bible Compliance** (spec authority)
 - GB-001: Node tone is consistent with the genre and emotional register defined in `constitution.md`
 - GB-002: Any NPC appearing in this node is consistent with their character profile (voice, state, goal)
 - GB-003: World-rule constraints (from `world-building.md`) are not violated in prose or choice outcomes
 - GB-004: Engine target constraints are respected (no unsupported syntax for the declared export target)
 
-### Step 5 â€” Score and Verdict
+### Step 5 — Score and Verdict
 
-Calculate the weighted **RTG â€” Overall Rating**:
+Calculate the weighted **RTG — Overall Rating**:
 
 | Section | Weight |
 |---|---|
@@ -139,25 +136,25 @@ Calculate the weighted **RTG â€” Overall Rating**:
 | Mechanic Compliance (MC) | 25% |
 | Game Bible Compliance (GB) | 20% |
 
-Score each section 1â€“10 based on items passed. Apply weights. A weighted total = 7 is required to pass.
+Score each section 1–10 based on items passed. Apply weights. A weighted total = 7 is required to pass.
 
 **Hard-fail gates** (FAIL regardless of weighted score):
-- Any NR-002 failure (unknown choice target â€” export will break)
-- Any NR-006 failure (unreadable variable â€” runtime error)
-- Any NR-009 failure (wrong choices format â€” `export.py` will drop all choices)
+- Any NR-002 failure (unknown choice target — export will break)
+- Any NR-006 failure (unreadable variable — runtime error)
+- Any NR-009 failure (wrong choices format — `export.py` will drop all choices)
 
-### Step 6 â€” Write Checklist File
+### Step 6 — Write Checklist File
 
 Save to `checklists/[NODE_ID]-checklist.md` using `templates/checklist-template.md`.
 
 Confirm: `? Saved: checklists/[NODE_ID]-checklist.md`
 
-### Step 7 â€” Report
+### Step 7 — Report
 
 Output per node:
 
 ```
-[NODE_ID] â€” [PASS / FAIL]  (score: [N.N] / 10)
+[NODE_ID] — [PASS / FAIL]  (score: [N.N] / 10)
 
   NR  [N passed / 9]   PR  [N passed / 11]   MC  [N passed / 6]   GB  [N passed / 4]
 
@@ -183,7 +180,7 @@ If checking multiple nodes, append a summary table:
 ```
 | Node | Score | Verdict | Hard-fail? | Top failure |
 |---|---|---|---|---|
-| NODE-003 | 8.1 | PASS | â€” | â€” |
+| NODE-003 | 8.1 | PASS | — | — |
 | NODE-007 | 5.4 | FAIL | NR-009 | choices format |
 ```
 
@@ -191,3 +188,4 @@ If checking multiple nodes, append a summary table:
 
 Check for extension hooks after execution:
 - Look for `hooks.after_checklist` in `.specify/extensions.yml`. Process as standard hook block. Skip silently if absent.
+

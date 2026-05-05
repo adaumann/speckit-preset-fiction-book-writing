@@ -1,8 +1,5 @@
 ---
 description: Replayability metrics — measure unique content per playthrough, branch coverage, variation in dialogue/prose, and content reuse across paths.
-scripts:
-  sh: scripts/bash/check-prerequisites.sh --json
-  ps: scripts/powershell/check-prerequisites.ps1 -Json
 handoffs:
   - label: Check Agency
     agent: speckit.agency
@@ -494,3 +491,4 @@ Output `replayability-audit.md` with:
 4. Challenge/speedrun (want optimal path)
 
 Design for at least 1–2 of these motivations to maximize replayability.
+

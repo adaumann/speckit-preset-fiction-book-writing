@@ -1,8 +1,5 @@
 ---
 description: Secret content tracker — map achievements, hidden content, easter eggs. Verify all secrets are discoverable, reachable, and properly documented.
-scripts:
-  sh: scripts/bash/check-prerequisites.sh --json
-  ps: scripts/powershell/check-prerequisites.ps1 -Json
 handoffs:
   - label: Check Agency
     agent: speckit.agency
@@ -548,3 +545,4 @@ Output `secrets-audit.md` with:
 **Optional Is Key**: Secrets should never gate core story or required endings. If secret is needed for "real" ending, make that explicit in opening warning.
 
 **New Game+ Extends Replayability**: If designing for replay, secrets unlocked in later playthroughs extend the "want to play again" factor significantly.
+

@@ -1,8 +1,5 @@
 ---
 description: Accessibility validator — measure readability (Flesch-Kincaid, sentence length), flag content warnings needed, validate contrast for UI text, identify ableist language.
-scripts:
-  sh: scripts/bash/check-prerequisites.sh --json
-  ps: scripts/powershell/check-prerequisites.ps1 -Json
 handoffs:
   - label: Revise Readability
     agent: speckit.revise
@@ -482,3 +479,4 @@ Output `accessibility-audit.md` with:
 **Warnings Are Spoiler-Free**: Content warnings shouldn't spoil plot. E.g., "Character death" is OK; "Marcus dies at NODE-25" is not.
 
 **Contrast Extends to All Text**: Menu text, button text, link text—all need to meet contrast standards. Don't rely on white text on light backgrounds.
+

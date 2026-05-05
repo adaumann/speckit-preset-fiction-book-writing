@@ -1,8 +1,5 @@
 ---
 description: Subplot resolution tracker — verify all subplots are started AND resolved in each branch. Detects dangling plot threads and incomplete arcs across different playthroughs.
-scripts:
-  sh: scripts/bash/check-prerequisites.sh --json
-  ps: scripts/powershell/check-prerequisites.ps1 -Json
 handoffs:
   - label: Check Continuity
     agent: speckit.continuity
@@ -360,3 +357,4 @@ Output `subplot-audit.md` with:
 **Consistency Standard**: All resolved subplots should resolve *approximately* at the same story point. If one subplot resolves in NODE-10 in one branch and NODE-30 in another, flag it as pacing inconsistency (use `speckit.pacing` for details).
 
 **Dangling Threads**: In moderation, a minor unresolved thread can add realism ("not everything wraps up perfectly"). But systematically unresolved subplots across multiple branches = incomplete narrative. Flag anything that feels like unfinished business.
+

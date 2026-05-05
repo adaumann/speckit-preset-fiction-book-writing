@@ -14,9 +14,7 @@ handoffs:
     prompt: Show me the current drafted nodes
     send: false
 scripts:
-  sh: scripts/bash/compile.sh --json --engine $ENGINE
-  ps: scripts/powershell/compile.ps1 -Engine $ENGINE
-  py: scripts/python/compile.py --spec $SPECNAME --engine $ENGINE --output spec/$SPECNAME/output/$ENGINE
+  py: scripts/python/compile.py --spec $SPECNAME --engine $ENGINE
 ---
 
 # speckit.compile
@@ -194,16 +192,10 @@ python scripts/python/compile.py --spec my-game --engine sugarcube
 python scripts/python/compile.py --spec my-game --all-engines
 ```
 
-**PowerShell**:
-```ps1
-.\scripts\powershell\compile.ps1 -Spec "my-game" -Engine "sugarcube"
-.\scripts\powershell\compile.ps1 -Spec "my-game" -AllEngines
-```
-
-**Bash**:
+**Python**:
 ```bash
-bash scripts/bash/compile.sh --spec my-game --engine sugarcube
-bash scripts/bash/compile.sh --spec my-game --all-engines
+python scripts/python/compile.py --spec my-game --engine sugarcube
+python scripts/python/compile.py --spec my-game --all-engines
 ```
 
 ---

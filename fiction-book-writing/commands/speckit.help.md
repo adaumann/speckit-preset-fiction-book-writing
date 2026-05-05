@@ -5,9 +5,6 @@ handoffs:
     agent: speckit.status
     prompt: Show the full manuscript dashboard with chapter table and word counts
     send: true
-scripts:
-  sh: scripts/bash/check-prerequisites.sh --json --paths-only
-  ps: scripts/powershell/check-prerequisites.ps1 -Json -PathsOnly
 ---
 
 ## User Input
@@ -252,3 +249,4 @@ Scope the report to a single chapter:
 ## Post-Execution Hooks
 
 - Look for `hooks.after_help` in `.specify/extensions.yml`. Process as standard hook block. Skip silently if absent.
+

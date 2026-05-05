@@ -1,8 +1,5 @@
 ---
 description: Project dashboard — scan all draft chapters, tasks, and checklists to produce a word-count table, status breakdown, and completion estimate. Run at any time during the draft.
-scripts:
-  sh: scripts/bash/check-prerequisites.sh --json
-  ps: scripts/powershell/check-prerequisites.ps1 -Json
 handoffs:
   - label: Continue Drafting
     agent: speckit.implement
@@ -137,3 +134,4 @@ Consider user input before proceeding (e.g. a specific act, chapter range, or `-
    Manuscript: N/N chapters drafted (N%) · ~N,NNN words · Stage: [stage]
    Next: [chapter ID] — [chapter name]
    ```
+

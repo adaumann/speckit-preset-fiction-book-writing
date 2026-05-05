@@ -4,9 +4,6 @@ handoffs:
   - label: Build Story Structure
     agent: speckit.plan
     prompt: Create a story structure plan for this brief. The plot structure I want to use is...
-scripts:
-  sh: scripts/bash/check-prerequisites.sh --json --paths-only
-  ps: scripts/powershell/check-prerequisites.ps1 -Json -PathsOnly
 ---
 
 ## User Input
@@ -67,3 +64,4 @@ You **MUST** consider the user input before proceeding (if not empty).
    - If a new scene beat is implied, add it to Key Scenes with a `[NEEDS SCENE DRAFT]` note
 
 7. **Report**: Summarize what was clarified, what was added, and whether any `[NEEDS CLARIFICATION]` markers remain.
+

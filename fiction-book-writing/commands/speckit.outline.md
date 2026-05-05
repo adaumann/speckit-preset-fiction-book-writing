@@ -9,9 +9,6 @@ handoffs:
     agent: speckit.analyze
     prompt: Run a pre-draft structural alignment check
     send: true
-scripts:
-  sh: scripts/bash/check-prerequisites.sh --json --require-tasks --include-tasks
-  ps: scripts/powershell/check-prerequisites.ps1 -Json -RequireTasks -IncludeTasks
 ---
 
 ## User Input
@@ -128,3 +125,4 @@ Accepted arguments:
    - If the command fails or the index does not exist, skip silently.
 
 8. **Check for extension hooks** (after generation): check `hooks.after_outline`.
+

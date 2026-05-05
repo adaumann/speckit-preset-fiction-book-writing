@@ -1,8 +1,5 @@
 ---
 description: Variable state mapper — visualize game state transitions across branches. Detects unreachable states, dead-end variable combos, untracked variable mutations.
-scripts:
-  sh: scripts/bash/check-prerequisites.sh --json
-  ps: scripts/powershell/check-prerequisites.ps1 -Json
 handoffs:
   - label: Check Continuity
     agent: speckit.continuity
@@ -541,3 +538,4 @@ Output `statemap-audit.md` with:
 **Mutation Must Be Explicit**: Every variable change should be visible in node prose or code. "Silent" variable changes are debugging nightmares. Use explicit assignment comments.
 
 **Dead Ends Are Design Failures**: If a reachable state leads to a node with incompatible requirements, fix it. Either make the state unreachable, or add an alternate path from that state.
+

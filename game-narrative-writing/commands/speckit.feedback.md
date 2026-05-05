@@ -1,8 +1,5 @@
 ---
 description: Ingest playtest feedback — categorize issues by type, map to node IDs, assign severity, generate prioritized revision tasks in tasks.md. Closes the playtest round as a proper workflow step.
-scripts:
-  sh: scripts/bash/check-prerequisites.sh --json --include-tasks
-  ps: scripts/powershell/check-prerequisites.ps1 -Json -IncludeTasks
 handoffs:
   - label: Start Revisions
     agent: speckit.revise
@@ -160,3 +157,4 @@ If any CRITICAL issues were found:
 
 Check for extension hooks after execution:
 - Look for `hooks.after_feedback` in `.specify/extensions.yml`. Process as standard hook block. Skip silently if absent.
+

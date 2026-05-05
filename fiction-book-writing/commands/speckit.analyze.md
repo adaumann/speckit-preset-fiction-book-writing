@@ -1,8 +1,5 @@
 ---
 description: Pre-draft structural alignment check — spec↔plan coverage, act proportions, task completeness. Run after speckit.tasks, before speckit.implement. For post-draft prose analysis use speckit.continuity.
-scripts:
-  sh: scripts/bash/check-prerequisites.sh --json --require-tasks --include-tasks
-  ps: scripts/powershell/check-prerequisites.ps1 -Json -RequireTasks -IncludeTasks
 ---
 
 ## User Input
@@ -112,3 +109,4 @@ Run after `speckit.tasks` has produced a complete `tasks.md`. Does not require a
    - Look for `hooks.after_analyze` in `.specify/extensions.yml`. Process as standard hook block. Skip silently if absent.
 
 6. **Optional remediation plan**: Only if the user explicitly requests it, list the specific file edits needed to resolve CRITICAL issues. User must approve before any editing commands are invoked.
+

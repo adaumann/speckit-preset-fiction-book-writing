@@ -1,8 +1,5 @@
 ---
 description: Sensitivity and representation review — flags cultural misrepresentation, harmful tropes, anachronisms in historical fiction, and identity portrayal issues across drafted chapters. Read-only analysis with severity tiers (CRITICAL / WARNING / NOTE) and per-issue remediation guidance. Scope to a single chapter, a demographic category, or the full manuscript.
-scripts:
-  sh: scripts/bash/check-prerequisites.sh --json --require-tasks --include-tasks
-  ps: scripts/powershell/check-prerequisites.ps1 -Json -RequireTasks -IncludeTasks
 handoffs:
   - label: Revise Chapter
     agent: speckit.revise
@@ -221,3 +218,4 @@ If no issues found:
 Note: AI review has known limitations. Human sensitivity readers are
 recommended for any work featuring communities outside the author's experience.
 ```
+

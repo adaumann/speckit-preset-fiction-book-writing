@@ -1,8 +1,5 @@
-﻿---
+---
 description: Export all drafted chapters to DOCX, EPUB, or LaTeX via pandoc. Supports platform-specific formatting for KDP (ebook + print), IngramSpark (ebook + print), Draft2Digital, and Shunn manuscript standard. Assembles chapters in chapter_id order, preferring polished versions when available.
-scripts:
-  sh: scripts/bash/check-prerequisites.sh --json
-  ps: scripts/powershell/check-prerequisites.ps1 -Json
 handoffs:
   - label: Polish Chapters First
     agent: speckit.polish
@@ -31,10 +28,10 @@ Passing `--platform` selects a pre-configured set of pandoc defaults, CSS, and L
 | `epub` | `kdp` *(default)* | EPUB 3, `epub.css` (indent, drop cap, chapter breaks), KDP metadata | Cover image required for KDP listing |
 | `epub` | `ingramspark` | EPUB 3, same CSS + accessibility metadata slots | Add `--isbn 978-...` for ISBN field |
 | `epub` | `d2d` | Minimal EPUB 3 + `epub-d2d.css` (stripped for D2D auto-formatter) | No cover embed; upload cover on D2D dashboard |
-| `latex` | `kdp-print-6x9` *(default)* | 6"Ã—9" trim, 0.5" gutter, running headers, chapter title 1/3 down | Compile with `pdflatex` or `xelatex` |
+| `latex` | `kdp-print-6x9` *(default)* | 6"×9" trim, 0.5" gutter, running headers, chapter title 1/3 down | Compile with `pdflatex` or `xelatex` |
 | `latex` | `ingramspark-6x9` | Same geometry + font embedding notes + greyscale option | PDF/X-1a conversion needed; see template header |
-| `docx` | `shunn` *(default)* | Shunn manuscript format via `docx-shunn.docx` reference doc | Place `docx-shunn.docx` in `scripts/templates/` â€” not included (binary) |
-| `docx` | `smashwords` | Minimal-style DOCX via `docx-smashwords.docx` reference doc | Place `docx-smashwords.docx` in `scripts/templates/` â€” not included (binary) |
+| `docx` | `shunn` *(default)* | Shunn manuscript format via `docx-shunn.docx` reference doc | Place `docx-shunn.docx` in `scripts/templates/` — not included (binary) |
+| `docx` | `smashwords` | Minimal-style DOCX via `docx-smashwords.docx` reference doc | Place `docx-smashwords.docx` in `scripts/templates/` — not included (binary) |
 
 **DOCX note**: The `.docx` reference files for Shunn and Smashwords are not bundled in the preset (binary files cannot be distributed in a ZIP preset). To use them:
 - Shunn: download the official Shunn template from [shunn.net/format/novel](https://www.shunn.net/format/novel/) and place as `scripts/templates/docx-shunn.docx`
@@ -44,11 +41,11 @@ If no reference doc is found, pandoc uses its built-in defaults (functional but 
 
 ## Export Purpose
 
-`speckit.export` assembles the full manuscript from `draft/` in chapter order and produces a submission-ready DOCX or print-ready LaTeX file.  It delegates all conversion to **pandoc** â€” a standalone tool that must be installed separately.
+`speckit.export` assembles the full manuscript from `draft/` in chapter order and produces a submission-ready DOCX or print-ready LaTeX file.  It delegates all conversion to **pandoc** — a standalone tool that must be installed separately.
 
 **Chapter selection logic** (automatic):
-- Files named `<CHAPTER_ID>_<ChapterName>_vN.md` â†’ highest N wins (polished version)
-- Files named `<CHAPTER_ID>_<ChapterName>.md` â†’ base draft (used if no polished version)
+- Files named `<CHAPTER_ID>_<ChapterName>_vN.md` → highest N wins (polished version)
+- Files named `<CHAPTER_ID>_<ChapterName>.md` → base draft (used if no polished version)
 - Sorted by `chapter_id` from frontmatter (`A1.101`, `A2.201`, etc.)
 
 ---
@@ -61,7 +58,7 @@ If no reference doc is found, pandoc uses its built-in defaults (functional but 
    - Look for `FEATURE_DIR/draft/`
    - If it does not exist or contains no `.md` files, stop and report:
      ```
-     âš ï¸ No chapters found in FEATURE_DIR/draft/
+     ⚠️ No chapters found in FEATURE_DIR/draft/
      Draft at least one chapter with speckit.implement before exporting.
      ```
 
@@ -69,7 +66,7 @@ If no reference doc is found, pandoc uses its built-in defaults (functional but 
    - Run `pandoc --version`
    - If pandoc is not installed, stop and display:
      ```
-     âš ï¸ pandoc not found.
+     ⚠️ pandoc not found.
      Install from: https://pandoc.org/installing.html
 
      macOS:    brew install pandoc
@@ -81,15 +78,15 @@ If no reference doc is found, pandoc uses its built-in defaults (functional but 
    - **Format**: Read from `$ARGUMENTS` (`docx`, `latex`, `epub`, or `audio`).
      If not specified, ask the user: "Export format? `docx` (Word, submission), `epub` (KDP/distributors), `latex` (typeset), or `audio` (assemble audiobook drafts from audiodraft/)?"
    - **Platform**: Read from `$ARGUMENTS` (`--platform [name]`).
-     If not specified, use the format default: `epub` â†’ `kdp`, `latex` â†’ `kdp-print-6x9`, `docx` â†’ `shunn`.
-     Inform the user which platform preset is active: `Platform: kdp (default) â€” pass --platform ingramspark or --platform d2d to change.`
-   - **ISBN** (EPUB + IngramSpark only): Read `--isbn` from `$ARGUMENTS`. If platform is `ingramspark` and no ISBN is provided, emit a WARNING: `âš ï¸ --isbn not set â€” IngramSpark requires an ISBN in EPUB metadata. Add --isbn 978-... to the command.`
+     If not specified, use the format default: `epub` → `kdp`, `latex` → `kdp-print-6x9`, `docx` → `shunn`.
+     Inform the user which platform preset is active: `Platform: kdp (default) — pass --platform ingramspark or --platform d2d to change.`
+   - **ISBN** (EPUB + IngramSpark only): Read `--isbn` from `$ARGUMENTS`. If platform is `ingramspark` and no ISBN is provided, emit a WARNING: `⚠️ --isbn not set — IngramSpark requires an ISBN in EPUB metadata. Add --isbn 978-... to the command.`
    - **Title**: Read from `$ARGUMENTS` if given; otherwise look for a YAML `title:` field
      or H1 heading in `spec.md`; fall back to `"Untitled Manuscript"`.
-   - **Author**: Read from `$ARGUMENTS` (`--author "..."`) if given; otherwise read `author_name` from `constitution.md Â§ VII Author Name`; then look in `spec.md`; fall back to `"Author Name"`.
-   - **Language**: Read `language` from `constitution.md Â§ VII Language` (or pass `--lang` in `$ARGUMENTS` to override). Passed as the `lang` metadata field in EPUB (`dc:language`), DOCX, and LaTeX output. Default: `en`.
-   - **Copyright**: Read `copyright` from `constitution.md Â§ VII Copyright` (or pass `--rights "Â© 2025 ..."` in `$ARGUMENTS` to override). Written as `dc:rights` in EPUB metadata; omitted from output if not set.
-   - **About the Author** (EPUB and DOCX): Read `Author Bio (Long)` from `constitution.md Â§ VII`. If set, it is appended as a `# About the Author` section after the final chapter. Pass `--no-author-bio` in `$ARGUMENTS` to suppress. Use `speckit.bio draft` to create the canonical bio if not yet set.
+   - **Author**: Read from `$ARGUMENTS` (`--author "..."`) if given; otherwise read `author_name` from `constitution.md § VII Author Name`; then look in `spec.md`; fall back to `"Author Name"`.
+   - **Language**: Read `language` from `constitution.md § VII Language` (or pass `--lang` in `$ARGUMENTS` to override). Passed as the `lang` metadata field in EPUB (`dc:language`), DOCX, and LaTeX output. Default: `en`.
+   - **Copyright**: Read `copyright` from `constitution.md § VII Copyright` (or pass `--rights "© 2025 ..."` in `$ARGUMENTS` to override). Written as `dc:rights` in EPUB metadata; omitted from output if not set.
+   - **About the Author** (EPUB and DOCX): Read `Author Bio (Long)` from `constitution.md § VII`. If set, it is appended as a `# About the Author` section after the final chapter. Pass `--no-author-bio` in `$ARGUMENTS` to suppress. Use `speckit.bio draft` to create the canonical bio if not yet set.
    - **Output path**: `FEATURE_DIR/manuscript.docx`, `FEATURE_DIR/manuscript.epub`, or `FEATURE_DIR/manuscript.tex`
      (overridden by `--output` in `$ARGUMENTS` if present).
    - **Reference doc** (DOCX only): If `FEATURE_DIR/manuscript-template.docx` exists,
@@ -101,28 +98,28 @@ If no reference doc is found, pandoc uses its built-in defaults (functional but 
      the back-cover description. If the file does not exist, generate a blurb (see Step 4b) and
      write it to `FEATURE_DIR/blurb.md` before proceeding.
 
-4b. **Blurb generation** (EPUB only â€” skip for DOCX and LaTeX):
+4b. **Blurb generation** (EPUB only — skip for DOCX and LaTeX):
 
    If `FEATURE_DIR/blurb.md` does not exist, generate a back-cover blurb and write it:
 
    **Blurb rules** (KDP / retailer standard):
-   - 100â€“150 words. Present tense. Third person (even if the novel is first person).
-   - Structure: **hook sentence** (protagonist + disruption) â†’ **escalation** (what they must do, what stands in the way) â†’ **stakes closer** (what is lost if they fail â€” do NOT reveal the ending or resolution).
+   - 100–150 words. Present tense. Third person (even if the novel is first person).
+   - Structure: **hook sentence** (protagonist + disruption) → **escalation** (what they must do, what stands in the way) → **stakes closer** (what is lost if they fail — do NOT reveal the ending or resolution).
    - No rhetorical questions. No marketing language ("gripping", "unforgettable", "page-turning").
-   - End on tension, not resolution â€” the blurb sells the question, not the answer.
+   - End on tension, not resolution — the blurb sells the question, not the answer.
    - Source material: `spec.md` logline, character arcs, dramatic question. Do not invent details not in the spec.
 
    After generating, write to `FEATURE_DIR/blurb.md`:
    ```markdown
    # Back-Cover Blurb: [STORY_TITLE]
 
-   <!-- 100â€“150 words. Edit here and re-run speckit.export epub to update the EPUB metadata. -->
+   <!-- 100–150 words. Edit here and re-run speckit.export epub to update the EPUB metadata. -->
 
    [GENERATED_BLURB_TEXT]
    ```
-   Notify the user: `âœ“ blurb.md generated â€” review and edit before final distribution.`
+   Notify the user: `✓ blurb.md generated — review and edit before final distribution.`
 
-   If `FEATURE_DIR/blurb.md` already exists, read the first non-comment paragraph as the description text. Validate it is 100â€“150 words; warn if outside that range but proceed.
+   If `FEATURE_DIR/blurb.md` already exists, read the first non-comment paragraph as the description text. Validate it is 100–150 words; warn if outside that range but proceed.
 
 5. **Run the export script**:
    ```
@@ -140,7 +137,7 @@ If no reference doc is found, pandoc uses its built-in defaults (functional but 
 
 6. **Report the result**:
    ```
-   âœ… Export complete
+   ✅ Export complete
 
    | Field         | Value                              |
    |---|---|
@@ -172,18 +169,18 @@ If no reference doc is found, pandoc uses its built-in defaults (functional but 
    > `pdflatex manuscript.tex` (or `xelatex` for full Unicode/font support).
    > For Overleaf, upload the `.tex` file directly.
 
-7. **Optional â€” export polished chapters only**:
+7. **Optional — export polished chapters only**:
    If the user passes `polished` or `--polished-only` in `$ARGUMENTS`, add the
    `--polished-only` flag to the script invocation. Report which chapters were
    **skipped** (no polished version yet) in the output table.
 
-8. **Audio export** (format `audio` only â€” skip for all other formats):
+8. **Audio export** (format `audio` only — skip for all other formats):
 
    8a. **Locate audiobook drafts**:
    - Look for `FEATURE_DIR/audiodraft/` containing `.ssml` and/or `_el.xml` files
    - If the directory does not exist or is empty, stop and report:
      ```
-     âš ï¸ No audiobook drafts found in FEATURE_DIR/audiodraft/
+     ⚠️ No audiobook drafts found in FEATURE_DIR/audiodraft/
      Run speckit.implement with Output Mode set to `audiobook` or `both`
      in constitution.md ## X to generate audiobook draft files first.
      ```
@@ -193,7 +190,7 @@ If no reference doc is found, pandoc uses its built-in defaults (functional but 
 
    8c. **Validate drafts**:
    - Collect all `.ssml` / `_el.xml` files; sort by `chapter_id` from each file's YAML header
-   - Identify any prose draft chapters (`draft/`) that have **no corresponding audiobook draft** â€” list them in the report as `âš ï¸ Missing audiobook draft`
+   - Identify any prose draft chapters (`draft/`) that have **no corresponding audiobook draft** — list them in the report as `⚠️ Missing audiobook draft`
    - If `audiodraft/lexicon.pls` exists, validate XML is well-formed; report a warning if not
 
    8d. **Assemble and report**:
@@ -208,7 +205,7 @@ If no reference doc is found, pandoc uses its built-in defaults (functional but 
      ```
    - Report:
      ```
-     âœ… Audiobook export complete
+     ✅ Audiobook export complete
 
      | Field          | Value                                   |
      |---|---|
@@ -228,7 +225,7 @@ If no reference doc is found, pandoc uses its built-in defaults (functional but 
    > - Azure TTS: `POST /cognitiveservices/v1` with `Content-Type: application/ssml+xml`
    > - Amazon Polly: `SynthesizeSpeech` with `TextType: ssml`
    > - Google Cloud TTS: `synthesize` with `input.ssml`
-   > - Output format: MP3 192kbps, mono or stereo â€” required by ACX
+   > - Output format: MP3 192kbps, mono or stereo — required by ACX
 
    > **ElevenLabs**:
    > - Upload `audiodraft/lexicon.pls` to your ElevenLabs project's pronunciation dictionary first
@@ -239,3 +236,4 @@ If no reference doc is found, pandoc uses its built-in defaults (functional but 
    > - Required: MP3 192kbps, -23 LUFS integrated loudness, -3 dBFS peak, room tone under -60 dBFS
    > - One MP3 per chapter + one retail audio sample (first 5 minutes or opening chapter)
    > - Tools: normalize with Auphonic (automatic) or Audacity (manual) before submission
+

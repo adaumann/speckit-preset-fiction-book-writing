@@ -1,8 +1,5 @@
 ---
 description: Foreshadowing & payoff tracker — verify clues are placed before revelations, detect orphaned foreshadowing and premature payoffs, ensure mysteries feel fair (not random or cheap).
-scripts:
-  sh: scripts/bash/check-prerequisites.sh --json
-  ps: scripts/powershell/check-prerequisites.ps1 -Json
 handoffs:
   - label: Check Continuity
     agent: speckit.continuity
@@ -432,3 +429,4 @@ Output `foreshadow-audit.md` with:
 **Player Attention**: Assume moderate player attention. Don't expect players to notice subtle clues, but do expect them to catch direct statements and obvious behavioral patterns.
 
 **Mystery Genre Matters**: Whodunits need more clues; character-driven games need fewer. Adjust clue density based on game genre and player expectations.
+

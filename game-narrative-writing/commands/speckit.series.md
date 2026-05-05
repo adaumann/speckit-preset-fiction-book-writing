@@ -1,5 +1,5 @@
-ï»¿---
-description: Series management command â€” init the series bible before Entry 1, audit cross-entry continuity, sync the series bible after an entry ships, and display a series-wide status dashboard. Operates on series/series-bible.md as the single authority for cross-entry canon.
+---
+description: Series management command — init the series bible before Entry 1, audit cross-entry continuity, sync the series bible after an entry ships, and display a series-wide status dashboard. Operates on series/series-bible.md as the single authority for cross-entry canon.
 handoffs:
   - label: Specify Next Entry
     agent: speckit.specify
@@ -13,9 +13,6 @@ handoffs:
     agent: speckit.series
     prompt: validate
     send: true
-scripts:
-  sh: scripts/bash/check-prerequisites.sh --json --paths-only
-  ps: scripts/powershell/check-prerequisites.ps1 -Json -PathsOnly
 ---
 
 # speckit.series
@@ -31,21 +28,21 @@ $ARGUMENTS
 You **MUST** consider the user input before proceeding (if not empty).
 
 Accepted arguments:
-- *(no argument)* â€” display the series status dashboard (same as `status`)
-- `init` â€” scaffold `series/series-bible.md` as a new series founding document
-- `audit` â€” run a full cross-entry continuity check (read-only)
-- `audit [N-M]` â€” audit only entries N through M
-- `update [N]` â€” sync `series/series-bible.md` after entry N is completed
-- `status` â€” display the series-level dashboard
-- `draft` â€” (legacy) generate or update series-bible.md from current entry's endings and variables
-- `validate` â€” check that all carry-over variables are declared and reachable in ending states
-- `questionnaire` â€” generate the new-game questionnaire for importing state from a previous entry
-- `delta` â€” compute the world state delta between two entries given a carry-over import
+- *(no argument)* — display the series status dashboard (same as `status`)
+- `init` — scaffold `series/series-bible.md` as a new series founding document
+- `audit` — run a full cross-entry continuity check (read-only)
+- `audit [N-M]` — audit only entries N through M
+- `update [N]` — sync `series/series-bible.md` after entry N is completed
+- `status` — display the series-level dashboard
+- `draft` — (legacy) generate or update series-bible.md from current entry's endings and variables
+- `validate` — check that all carry-over variables are declared and reachable in ending states
+- `questionnaire` — generate the new-game questionnaire for importing state from a previous entry
+- `delta` — compute the world state delta between two entries given a carry-over import
 
 Optional flags:
-- `--entry [N]` â€” scope to a specific entry number
-- `--ending [END-ID]` â€” assume a specific ending as the import state for `questionnaire` or `delta`
-- `--canonical` â€” use the canonical ending (from `series-bible.md`) for `delta`
+- `--entry [N]` — scope to a specific entry number
+- `--ending [END-ID]` — assume a specific ending as the import state for `questionnaire` or `delta`
+- `--canonical` — use the canonical ending (from `series-bible.md`) for `delta`
 
 ## Pre-Execution Checks
 
@@ -56,7 +53,7 @@ Optional flags:
 
 ## Scope Boundaries
 
-- `speckit.series` does **not** check within-entry node quality, hook correctness, or variable continuity within a single entry â€” that is `speckit.continuity` and `speckit.analyze`.
+- `speckit.series` does **not** check within-entry node quality, hook correctness, or variable continuity within a single entry — that is `speckit.continuity` and `speckit.analyze`.
 - `audit` and `status` are strictly **read-only**. No files are modified.
 - `update` writes only to `series/series-bible.md` and NPC state tables. Nothing else.
 
@@ -64,14 +61,14 @@ Optional flags:
 
 | Argument | Mode |
 |---|---|
-| `init` | Init â€” create the series bible |
-| `audit` / `audit N-M` | Audit â€” cross-entry read-only check |
-| `update N` | Update â€” sync after entry N ships |
-| `status` / *(empty)* | Status â€” dashboard |
-| `draft` | Draft â€” populate from current entry's endings/variables |
-| `validate` | Validate â€” check carry-over variable coverage |
-| `questionnaire` | Questionnaire â€” generate player import screen |
-| `delta` | Delta â€” compute world-state change between entries |
+| `init` | Init — create the series bible |
+| `audit` / `audit N-M` | Audit — cross-entry read-only check |
+| `update N` | Update — sync after entry N ships |
+| `status` / *(empty)* | Status — dashboard |
+| `draft` | Draft — populate from current entry's endings/variables |
+| `validate` | Validate — check carry-over variable coverage |
+| `questionnaire` | Questionnaire — generate player import screen |
+| `delta` | Delta — compute world-state change between entries |
 
 In all modes except `init`: locate `series/series-bible.md`. If not found, abort with:
 ```
@@ -93,14 +90,14 @@ If `series/series-bible.md` already exists, abort:
 Ask the following (accept from `$ARGUMENTS` if present, otherwise ask interactively):
 
 1. **Series title**
-2. **Total entry count** â€” number of planned entries, or "open series"
-3. **Genre / tone** â€” (e.g. "Dark fantasy interactive fiction")
+2. **Total entry count** — number of planned entries, or "open series"
+3. **Genre / tone** — (e.g. "Dark fantasy interactive fiction")
 4. **Target audience**
-5. **Overarching dramatic question** â€” one sentence; the series-level spine not fully answered until the final entry
-6. **Overarching theme** â€” stated as a question
-7. **Engine target** â€” Sugarcube / Ink / other (consistent across entries or varies)
-8. **Carry-over strategy** â€” save-file import / questionnaire / both
-9. **Series ending contract** â€” what the final entry must deliver (not what happens â€” what it must resolve)
+5. **Overarching dramatic question** — one sentence; the series-level spine not fully answered until the final entry
+6. **Overarching theme** — stated as a question
+7. **Engine target** — Sugarcube / Ink / other (consistent across entries or varies)
+8. **Carry-over strategy** — save-file import / questionnaire / both
+9. **Series ending contract** — what the final entry must deliver (not what happens — what it must resolve)
 
 Generate `series/series-bible.md` from `series-bible-template.md`. Create `series/` directory if absent.
 
@@ -154,15 +151,15 @@ Output:
 ???????????????????????????????????????????????????????
   SERIES AUDIT REPORT
   Series  : [SERIES_TITLE]
-  Scope   : Entries [N]â€“[M]
+  Scope   : Entries [N]–[M]
   Date    : [YYYY-MM-DD]
 ???????????????????????????????????????????????????????
 
 ### CRITICAL Issues
-- [Code]: [description] â€” [suggested action]
+- [Code]: [description] — [suggested action]
 
 ### WARNINGS
-- [Code]: [description] â€” [suggested action]
+- [Code]: [description] — [suggested action]
 
 ### PASS
 - [dimension]: OK
@@ -181,20 +178,20 @@ Recommended action: [proceed / resolve contradictions / update series-bible.md]
 
 1. **NPC State Registry sync**: for each NPC with a state row in `characters/`: read closing state after Entry N. If incomplete, prompt for each field. Copy into series-bible.md NPC Survival Registry.
 
-2. **New world rules**: prompt â€” "What world rules were definitively established in Entry N?" Add each as `SWR-NNN` (auto-increment).
+2. **New world rules**: prompt — "What world rules were definitively established in Entry N?" Add each as `SWR-NNN` (auto-increment).
 
-3. **New carry-over variables**: prompt â€” "Were any new variables added to carry-over in Entry N?" Add to Carry-Over Variable Registry.
+3. **New carry-over variables**: prompt — "Were any new variables added to carry-over in Entry N?" Add to Carry-Over Variable Registry.
 
 4. **New series threads**: load open narrative threads from Entry N. For each new series-level thread, add `ST-NNN` row. For threads planned to pay off in Entry N, ask and mark RESOLVED or update pay-off entry.
 
-5. **Known contradictions**: prompt â€” "Any new continuity issues to log?" Add as `CON-NNN`.
+5. **Known contradictions**: prompt — "Any new continuity issues to log?" Add as `CON-NNN`.
 
 6. **Update Entries table**: set Entry N status to `released` (or as specified). Prompt for `Key arc closed` and `Key thread opened` if empty.
 
 7. Confirm:
 ```
 ???????????????????????????????????????????????????????
-  SERIES BIBLE UPDATED â€” Entry [N]: [ENTRY_TITLE]
+  SERIES BIBLE UPDATED — Entry [N]: [ENTRY_TITLE]
 ???????????????????????????????????????????????????????
   NPC state rows updated  : N
   New world rules (SWR)   : N
@@ -223,7 +220,7 @@ Recommended action: [proceed / resolve contradictions / update series-bible.md]
 | # | Title | Status | Nodes | Endings | Carry-over vars |
 |---|---|---|---|---|---|
 | 1 | [TITLE] | released | N | N | N vars |
-| 2 | [TITLE] | in-progress | N | â€” | â€” |
+| 2 | [TITLE] | in-progress | N | — | — |
 
 ### Open Series Threads
 | ID | Description | Introduced | Pay-off |
@@ -241,7 +238,7 @@ Recommended action: [proceed / resolve contradictions / update series-bible.md]
 | Entry | Q answered | Q opened |
 |---|---|---|
 | 1 | [partial answer] | [new question] |
-| 2 | â€” | â€” |
+| 2 | — | — |
 
 Series ending contract: [SET / NOT YET WRITTEN]
 ???????????????????????????????????????????????????????
@@ -256,8 +253,8 @@ If any `CON-NNN` contradictions are OPEN, append:
 
 ## Mode: Draft (Legacy)
 
-1. Load `endings.md` â€” extract all variable state snapshots per ending.
-2. Load `variables.md` â€” identify variables flagged as carry-over (scope: series).
+1. Load `endings.md` — extract all variable state snapshots per ending.
+2. Load `variables.md` — identify variables flagged as carry-over (scope: series).
 3. Generate or update `series/series-bible.md` using `series-bible-template.md`.
 
 ---
@@ -291,3 +288,4 @@ If any `CON-NNN` contradictions are OPEN, append:
 
 Check for extension hooks after execution:
 - Look for `hooks.after_series` in `.specify/extensions.yml`. Process as standard hook block. Skip silently if absent.
+

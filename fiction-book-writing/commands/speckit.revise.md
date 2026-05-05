@@ -1,8 +1,5 @@
 ---
 description: Targeted chapter revision — rewrites specific failing passages identified by speckit.checklist or speckit.continuity without touching passing content. Produces a versioned draft file with a diff summary.
-scripts:
-  sh: scripts/bash/check-prerequisites.sh --json
-  ps: scripts/powershell/check-prerequisites.ps1 -Json
 handoffs:
   - label: Re-run Checklist
     agent: speckit.checklist
@@ -189,3 +186,4 @@ Rewrite only the passages in a drafted chapter that are failing checklist items 
     - If `.specify/index/` exists, run: `python scripts/python/index.py update` from the project root.
     - Revised draft files are re-indexed incrementally (only changed files are re-processed).
     - If the command fails or the index does not exist, skip silently.
+

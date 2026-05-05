@@ -13,9 +13,6 @@ handoffs:
     agent: speckit.implement
     prompt: Begin drafting scenes in phase order
     send: true
-scripts:
-  sh: scripts/bash/check-prerequisites.sh --json
-  ps: scripts/powershell/check-prerequisites.ps1 -Json
 ---
 
 ## User Input
@@ -97,3 +94,4 @@ You **MUST** consider the user input before proceeding (if not empty).
    - Total task count, arc distribution, parallel opportunity count, and audiodraft task count (if applicable) are reported in the task file header
 
 7. **Report**: Total tasks, tasks per arc (P1/P2/P3), parallel vs. sequential ratio, number of story-specific research tasks generated, recommended MVP scope (minimum scenes to complete Act I).
+

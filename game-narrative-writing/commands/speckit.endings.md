@@ -1,8 +1,5 @@
 ---
 description: Ending quality gate — verify endings resolve the central dramatic question, maintain thematic consistency, and provide satisfying closure for player character and stakes.
-scripts:
-  sh: scripts/bash/check-prerequisites.sh --json
-  ps: scripts/powershell/check-prerequisites.ps1 -Json
 handoffs:
   - label: Check Agency
     agent: speckit.agency
@@ -374,3 +371,4 @@ Output `ending-audit.md` with:
 **Theme Payoff**: If you chose a central theme, every ending should either resolve it directly, subvert it meaningfully, or explain why it doesn't apply. Ignoring your own theme is weak.
 
 **Variable Snapshots**: Different paths can reach the same ending ID but with different variable states. This is GOOD — it shows player choices matter. Always include prose variants or metadata showing how the same ending plays differently based on player history.
+

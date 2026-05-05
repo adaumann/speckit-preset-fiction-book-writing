@@ -1,8 +1,0 @@
-title: Test Tier Mechanics
-author: Speckit Test Suite
-version: 1.0.0
-description: Test suite for Tier 1/2/3 mechanic system
-export_engines:
-  - generic
-  - sugarcube
-  - ink

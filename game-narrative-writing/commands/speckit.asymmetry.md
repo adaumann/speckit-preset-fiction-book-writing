@@ -1,8 +1,5 @@
 ---
 description: Information gap mapper — visualize what player knows vs what each NPC knows. Detects blind spots, ensures player has enough agency, identifies unrealistic NPC knowledge.
-scripts:
-  sh: scripts/bash/check-prerequisites.sh --json
-  ps: scripts/powershell/check-prerequisites.ps1 -Json
 handoffs:
   - label: Check Continuity
     agent: speckit.continuity
@@ -456,3 +453,4 @@ Output `asymmetry-audit.md` with:
 **Factions Have Collective Knowledge**: Militia as a group knows more than any individual guard. When NPCs communicate (radio, messenger, etc.), faction knowledge spreads. Track this.
 
 **Unreliable Narrators Are OK**: If an NPC is lying, that creates intentional false asymmetry (player thinks NPC doesn't know, but NPC is deliberately hiding). Mark these distinctly in your tracking.
+

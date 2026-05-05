@@ -1,8 +1,5 @@
 ---
 description: Generate a query letter from spec.md and synopsis.md — hook, story body, housekeeping, comp titles, and author bio. Enforces industry-standard format (250–350 words). Also updates the submission tracker.
-scripts:
-  sh: scripts/bash/check-prerequisites.sh --json
-  ps: scripts/powershell/check-prerequisites.ps1 -Json
 handoffs:
   - label: Write Synopsis First
     agent: speckit.specify
@@ -149,3 +146,4 @@ Quality check adjustments for Exposé:
 - No comp-title paragraph needed (German publishers rely on genre categories, not comp titles)
 - Word count target for the Exposé body: 1,500–3,000 words
 - Full plot spoilers required — do not use the US hook-only structure
+

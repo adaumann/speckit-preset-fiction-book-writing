@@ -1,8 +1,5 @@
 ---
 description: Emotional beat progression mapper — validate consistent tone trajectory, detect tonal whiplash, ensure emotional moments feel earned and thematically aligned.
-scripts:
-  sh: scripts/bash/check-prerequisites.sh --json
-  ps: scripts/powershell/check-prerequisites.ps1 -Json
 handoffs:
   - label: Review Endings
     agent: speckit.endings
@@ -416,3 +413,4 @@ Output `tone-audit.md` with:
 **Audience Matters**: Target audience affects tone tolerance. Middle-grade audiences need more stable tone; adult audiences accept more tonal variation. Check constitution.md §VII Target Audience.
 
 **Player Agency + Tone**: Different branches can have different emotional arcs (one optimistic, one tragic). This is fine—it's the result of player choice. Just ensure each branch is internally coherent.
+

@@ -1,8 +1,5 @@
 ---
 description: Generate a one-page (250–350 words) and full (1,000–2,000 words) synopsis from plan.md and the draft. Both formats are in present tense, third person, and reveal the ending. Run after speckit.plan (outline synopsis) or after drafting (accurate synopsis).
-scripts:
-  sh: scripts/bash/check-prerequisites.sh --json --paths-only
-  ps: scripts/powershell/check-prerequisites.ps1 -Json -PathsOnly
 handoffs:
   - label: Write Query Letter
     agent: speckit.query
@@ -143,3 +140,4 @@ Both formats **reveal the ending**. A synopsis is not a blurb. Every major plot 
     ```
 
     If `next step` is query letter: suggest `/speckit.query draft`.
+
