@@ -67,7 +67,7 @@ Accepted arguments:
 
 ## Step 1 — Setup and Mode Resolution
 
-Run `{SCRIPT}` from repo root and parse `FEATURE_DIR`.
+Resolve `FEATURE_DIR` by reading the project structure: the first subdirectory inside `specs/` that contains project files. Fall back to project root if `specs/` does not exist.
 
 Locate `FEATURE_DIR/glossary.md`. If the file does not exist:
 - For `add` mode: create it from `glossary-template.md`. Populate the header from `spec.md` (`[STORY_TITLE]`, `[FEATURE_DIR]`, today's date). Seed `## Term Index` from any invented terms or proper nouns found in `spec.md` — character names, place names, faction names. Mark each seeded entry as `[NEEDS CLARIFICATION]` for full definition. Emit: `✓ Created glossary.md from template. Proceeding to add first term.`
@@ -376,7 +376,7 @@ Check for extension hooks after execution:
 - Look for `hooks.after_glossary` in `.specify/extensions.yml`. Process as standard hook block. Skip silently if absent.
 
 **Update search index** (optional — large projects):
-- If `.specify/index/` exists, run: `python scripts/python/index.py update` from the project root.
+- If `.specify/index/` exists, run: `python .specify/presets/fiction-book-writing/scripts/python/index.py update` from the project root.
 - Updated `glossary.md` is re-indexed so semantic queries return current terminology and constraints.
 - If the command fails or the index does not exist, skip silently.
 

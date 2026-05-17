@@ -56,14 +56,14 @@ Accepted arguments:
 
 ### Step 1 — Setup
 
-Run `{SCRIPT}` from repo root. Parse `FEATURE_DIR`.
+Resolve `FEATURE_DIR` by reading the project structure: the first subdirectory inside `specs/` that contains project files. Fall back to project root if `specs/` does not exist.
 
 Load:
 - Required: `plan.md` (act structure, chapter list), `tasks.md` (scene intent)
 - Required: all `draft/*.md` files in scope — abort if no draft files exist
 - **Large project optimization** (if `.specify/index/` exists and project has >50 drafted chapters): instead of loading all `draft/*.md` simultaneously, query the index to retrieve tension-bearing passages per chapter. The index stores `chapter_id` and `act_phase` metadata on each chunk, which is sufficient to compute the tension arc without loading full chapter prose:
   ```
-  python scripts/python/index.py query "conflict stakes tension threat revelation" --type draft --top 100
+  python .specify/presets/fiction-book-writing/scripts/python/index.py query "conflict stakes tension threat revelation" --type draft --top 100
   ```
   Group returned chunks by `chapter_id`, derive a tension score from each group, then plot the arc. Fall back to full file loading for any chapter where the index returns fewer than 2 chunks.
 - Optional: `spec.md` (central dramatic question, emotional arc intent), `constitution.md` (style mode — affects expected tension baseline)

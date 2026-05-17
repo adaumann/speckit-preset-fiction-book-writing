@@ -1,5 +1,5 @@
 ---
-description: Draft scenes and chapters by executing writing tasks from tasks.md, enforcing story bible compliance and checklist gates.
+description: Draft scenes and chapters — supports discovery mode (--discovery), outline dismissal (--dismiss-outline), and voice sample calibration (--voice <file>).
 agent_scripts:
   sh: scripts/bash/update-agent-context.sh __AGENT__
   ps: scripts/powershell/update-agent-context.ps1 -AgentType __AGENT__
@@ -21,14 +21,14 @@ You **MUST** consider the user input before proceeding (if not empty).
 - Process as standard hook block (Optional/Mandatory). Skip silently if absent.
 
 **Update search index** (large projects):
-- Check whether `scripts/python/index.py` exists and `.specify/index/` exists (index has been built).
-- If both exist, run: `python scripts/python/index.py update` from the project root before drafting begins.
+- Check whether `scripts/python/index.py` exists (check `.specify/presets/fiction-book-writing/scripts/python/index.py` first, then `scripts/python/index.py` as fallback) and `.specify/index/` exists (index has been built).
+- If both exist, run: `python .specify/presets/fiction-book-writing/scripts/python/index.py update` from the project root before drafting begins.
 - This ensures semantic search reflects the latest draft files and supporting documents.
 - If the command fails or either path is absent, skip silently.
 
 ## Outline
 
-1. **Setup**: Run `{SCRIPT}` from repo root and parse `FEATURE_DIR` and available documents list.
+1. **Setup**: Resolve `FEATURE_DIR` by reading the project structure: the first subdirectory inside `specs/` that contains project files. Fall back to project root if `specs/` does not exist.
 
 2. **Check checklist gates** (if `FEATURE_DIR/checklists/` exists):
    - Scan all checklist files in `checklists/`
@@ -48,6 +48,11 @@ You **MUST** consider the user input before proceeding (if not empty).
 
 2b. **Check outline gate** (if `FEATURE_DIR/outlines/` exists):
    - After resolving the target chapter ID (from `$ARGUMENTS` or the first unchecked task), look for a matching outline file at `outlines/<CHAPTER_ID>_<ChapterName>-outline.md`
+   - **`--dismiss-outline` mode**: If `$ARGUMENTS` contains `--dismiss-outline`:
+     - Skip the outline gate entirely for this chapter
+     - Use `plan.md ## Scene Outline` entry as a direction-of-travel guide, not a beat map
+     - Proceed directly to drafting with discovery mode enabled (see step 5)
+     - Note in DRAFT NOTES: `Outline dismissed — discovery draft`
    - If a matching outline file exists:
      - Read its `status` field from the frontmatter
      - If `status: DRAFT` — stop and display:
@@ -60,6 +65,9 @@ You **MUST** consider the user input before proceeding (if not empty).
        To write this chapter yourself instead, set:
            status: SKIP
 
+       To dismiss the outline and draft freely, re-run with:
+           /speckit.implement --dismiss-outline <CHAPTER_ID>
+
        Then re-run /speckit.implement
        ```
      - If `status: SKIP` — do not generate any prose for this chapter. Instead:
@@ -68,7 +76,7 @@ You **MUST** consider the user input before proceeding (if not empty).
        - Update the `## Scene Outline` entry status in `plan.md` from `outline` → `author-draft`
        - Advance to the next unchecked task and repeat the outline gate check
      - If `status: APPROVED` — proceed to drafting using the outline file as the working brief (see step 4)
-   - If no outline file exists for this chapter — proceed using `plan.md ## Scene Outline` as the working brief (legacy behaviour, no gate applied)
+   - If no outline file exists for this chapter — proceed using `plan.md ## Scene Outline` as a direction-of-travel guide (discovery mode, no gate applied)
 
 3. **Load context**:
    - Read `tasks.md` — identify the first group of unchecked tasks (respect `[P]` markers for parallel drafting)
@@ -85,17 +93,18 @@ You **MUST** consider the user input before proceeding (if not empty).
    - If no argument given, use the first unchecked task that has a `draft/` output path
    - **Large project optimization** (if `.specify/index/` exists and project has >30 drafted chapters): instead of loading all `characters/*.md` profiles and full `world-building.md`, run targeted queries scoped to this chapter's POV character and setting:
      ```
-     python scripts/python/index.py query "[POV_CHARACTER] voice register micro-obsession stress tells" --type character --top 3
-     python scripts/python/index.py query "[SETTING_NAME] sensory anchors atmosphere" --type world --top 2
-     python scripts/python/index.py query "[CHAPTER_ID] [POV_CHARACTER]" --type outline --top 1
+     python .specify/presets/fiction-book-writing/scripts/python/index.py query "[POV_CHARACTER] voice register micro-obsession stress tells" --type character --top 3
+     python .specify/presets/fiction-book-writing/scripts/python/index.py query "[SETTING_NAME] sensory anchors atmosphere" --type world --top 2
+     python .specify/presets/fiction-book-writing/scripts/python/index.py query "[CHAPTER_ID] [POV_CHARACTER]" --type outline --top 1
      ```
      Use returned chunks to supplement or replace loading full files when combined file size approaches context limits.
 
 4. **Resolve the target chapter outline**:
    - **Priority order for the working brief**:
-     1. If `outlines/<CHAPTER_ID>_<ChapterName>-outline.md` exists with `status: APPROVED` → use the outline file as the sole working brief. Extract: opening hook, beat sequence, character beats, dialogue requirements, sensory anchors, thematic work from the outline file sections.
-     2. Otherwise → fall back to `plan.md ## Scene Outline` entry. Extract: POV, setting, timeline position, estimated length, opening hook, key beats (in order), character beats, dialogue requirements, sensory details, thematic work, closing beat.
-   - This resolved content is the **working brief** — follow it, do not improvise structure
+     1. If `$ARGUMENTS` contains `--dismiss-outline` → use `plan.md ## Scene Outline` entry as a **direction-of-travel guide**. Extract only: POV, setting, timeline position, estimated length, opening hook intent, closing beat intent. Do not extract or enforce intermediate beats, dialogue requirements, or sensory anchors. The model discovers these.
+     2. If `outlines/<CHAPTER_ID>_<ChapterName>-outline.md` exists with `status: APPROVED` → use the outline file as the sole working brief. Extract: opening hook, beat sequence, character beats, dialogue requirements, sensory anchors, thematic work from the outline file sections.
+     3. Otherwise → fall back to `plan.md ## Scene Outline` entry as a direction-of-travel guide (discovery mode). Extract: POV, setting, timeline position, estimated length, opening hook, key beats (in order), character beats, dialogue requirements, sensory details, thematic work, closing beat. Use these as reference, not mandate.
+   - This resolved content is the **working brief** — follow it, do not improvise structure. In `--dismiss-outline` or discovery mode, follow it as a compass, not a map.
    - If the working brief contains `[NEEDS CLARIFICATION]` markers, pause and resolve them with the user before drafting
    - If the outline file and `plan.md` conflict on structural beats, the **outline file wins** (it is the author's last-reviewed version). Note the conflict in the draft's `DRAFT NOTES` block.
 
@@ -108,10 +117,23 @@ You **MUST** consider the user input before proceeding (if not empty).
    - Report the outline file path(s) and remind the author to review, then either approve or set `status: SKIP` and re-run `/speckit.implement`
    - Stop after generating outlines
 
+   **Voice sample** (optional — if available): Check whether `writing-sample.md` exists at the project root, or whether `$ARGUMENTS` contains `--voice <filepath>`. If a voice sample is available:
+   - **Do NOT analyze it** or extract formal markers
+   - **Do read 2-3–5 paragraphs aloud in your head** (simulate the reading experience) to absorb the rhythm, register, and sensory density
+   - Keep the sample open as a **stylistic compass** — when unsure about sentence length, vocabulary choice, or how much interiority, or what rhythm to land on, glance at the sample and match its register
+   - The goal is not to copy the sample but to **calibrate your prose ear** to the author's frequency
+
+   **`--discovery` mode**: If `$ARGUMENTS` contains `--discovery`:
+   - After loading the working brief (outline or plan.md), set it aside as a **reference only** — do not write to it
+   - Write the scene as if discovering it for the first time through the POV character's senses
+   - Hit the beats but don't let the beats drive the prose — let the character's moment-to-moment experience drive the prose
+   - Trust that the causal progression is internalised; check against the outline only at scene-end to confirm coverage
+   - This mode is the default when no outline file exists (discovery replaces rigid beat-following)
+
    **Prose language**: Draft all prose written *into the chapter draft file* in the language specified in `constitution.md § VII Language`. If Language is not set or not recognised, default to English. **All command output, status messages, confirmations, and conversational responses remain in English regardless of the Language setting.**
 
    **Output path**: `draft/<CHAPTER_ID>_<ChapterName>.md`
-   **Naming convention**: `{PREFIX}{phase}.{beat_number}_{ShortName}.md` where PREFIX is the plot-structure prefix from `constitution.md` (e.g., `A` = three-act, `JO` = Hero's Journey, `SC` = Save the Cat, `KT` = Kishōtenketsu, `FT` = Freytag, `SL` = Story Circle, `FA` = Five-Act, `P` = generic). Examples: `draft/A1.101_Awakening.md`, `draft/JO3.201_SupremeOrdeal.md`
+   **Naming convention**: `{PREFIX}{phase}.{beat_number}_{ShortName}.md` where PREFIX is the plot-structure prefix from `constitution.md` (e.g., `A` = three-act, `JO` = Hero's Journey, `SC` = Save the Cat, `KT` = Kishōtenketsu, `FT` = Freytag, `SL` = Story Circle, `FA` = Five-Act, `SP` = given-by-spec, `P` = generic). Examples: `draft/A1.101_Awakening.md`, `draft/JO3.201_SupremeOrdeal.md`
    Create `draft/` directory in `FEATURE_DIR` if it does not exist.
 
    **Every draft file MUST begin with this header block** (machine-readable; do not omit or reorder fields):
@@ -138,15 +160,18 @@ You **MUST** consider the user input before proceeding (if not empty).
 
    **Before writing**:
    - Confirm POV character's full profile from `characters/[name].md` is loaded — specifically: voice register, vocabulary pool, micro-obsession state for this phase, current emotional state per the arc progression table, active self-deception pattern, and stress tells
+   - Absorb the opening hook and closing beat — the draft must open with the hook's intent and end at the closing beat's instability
+   - If in `--discovery` mode: take a moment to imagine yourself in the POV character's body at this moment. What do they notice first? What do they avoid? Let that guide the opening, not the outline's first beat.
    - Confirm the Triple Purpose: this chapter must advance plot + reveal character + deepen world
-   - Note the opening hook — the draft MUST open with it (or a refined version true to its intent)
-   - Note the closing beat — the draft MUST end with it (off-balance, no tidy summary)
 
-   **While writing** (enforce story bible):
+   **While writing** — write as a storyteller, not a task-executor:
+
+   **Mode**: You are discovering the scene alongside the POV character. The outline beats are a safety net, not a leash. If a character does something unexpected that serves the story, follow it. You can reconcile with the outline after.
+
    - Apply the active style mode from `constitution.md`:
-     - `author-sample`: match voice, rhythm, and sensory density from the extracted style markers
-     - `humanized-ai`: apply Sections II–VI from `.specify/memory/craft-rules.md` (Dirt Rule, Physical Feedback, Oblique Dialogue, Triple Purpose, etc.) plus story-specific Anti-AI phrases from `constitution.md §VII`
-   - Follow the key beats from the scene outline in causal order — each beat produces the next
+     - `author-sample`: let the voice sample's rhythm and register be your compass — match its frequency, not its content
+     - `humanized-ai`: apply the craft principles from `.specify/memory/craft-rules.md` (Dirt Rule, Physical Feedback, Oblique Dialogue, Triple Purpose, Anti-AI Filter) as instincts, not a checklist
+   - Follow the key beats from the scene outline in causal order — each beat produces the next. In `--discovery` mode, check against the outline only at natural breaks to confirm coverage.
    - Deliver the dialogue requirements: each critical exchange uses oblique dialogue (deflection before honest answer), includes the misunderstanding/word-failure moment if specified
    - Include the required sensory details; at minimum, the primary anchor from `locations.md` (or the scene outline if no location entry exists) and one Dirt Rule imperfection from the location's options
    - Carry the thematic work through action and image — never state the theme in dialogue

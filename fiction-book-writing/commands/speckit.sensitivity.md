@@ -57,7 +57,7 @@ Accepted arguments:
 
 ### Step 1 — Setup
 
-Run `{SCRIPT}` from repo root. Parse `FEATURE_DIR`.
+Resolve `FEATURE_DIR` by reading the project structure: the first subdirectory inside `specs/` that contains project files. Fall back to project root if `specs/` does not exist.
 
 Load:
 - Required: all `draft/*.md` files in scope — abort if no draft files exist

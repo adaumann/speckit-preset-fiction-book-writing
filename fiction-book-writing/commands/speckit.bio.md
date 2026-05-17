@@ -55,7 +55,7 @@ Expected formats:
 
 ## Step 1 — Setup and Context Load
 
-Run `{SCRIPT}` from repo root and parse `FEATURE_DIR`.
+Resolve `FEATURE_DIR` by reading the project structure: the first subdirectory inside `specs/` that contains project files. Fall back to project root if `specs/` does not exist.
 
 Locate `constitution.md` (at `.specify/memory/constitution.md` or `FEATURE_DIR/constitution.md`).
 

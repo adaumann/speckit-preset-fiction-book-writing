@@ -31,16 +31,16 @@ Run after `speckit.tasks` has produced a complete `tasks.md`. Does not require a
 
 ## Execution Steps
 
-1. **Setup**: Run `{SCRIPT}` and parse `FEATURE_DIR`. Load all available documents.
+1. **Setup**: Resolve `FEATURE_DIR` by reading the project structure: the first subdirectory inside `specs/` that contains a `spec.md` file (or the first subdirectory if none found). Fall back to project root if `specs/` does not exist. Load all available documents.
 
 2. **Load documents**:
    - Required: `spec.md`, `plan.md`, `tasks.md`, `.specify/memory/constitution.md`
    - Also load: `characters.md` (index) and `characters/` profiles, `timeline.md`, `world-building.md`, `subplots.md` (if present), `relationships.md` (if present)
    - **Large project optimization** (if `.specify/index/` exists): if the combined character profile files would exceed context capacity, query the index for the key arc and constraint data rather than loading every profile in full:
      ```
-     python scripts/python/index.py query "character arc wound false belief dramatic question" --type character --top 8
-     python scripts/python/index.py query "world rules constraints forbidden" --type world --top 5
-     python scripts/python/index.py query "subplot beats resolution" --type subplot --top 5
+     python .specify/presets/fiction-book-writing/scripts/python/index.py query "character arc wound false belief dramatic question" --type character --top 8
+     python .specify/presets/fiction-book-writing/scripts/python/index.py query "world rules constraints forbidden" --type world --top 5
+     python .specify/presets/fiction-book-writing/scripts/python/index.py query "subplot beats resolution" --type subplot --top 5
      ```
    - Abort with a clear error if any required document is missing
    - Do **not** scan `draft/` — this command is pre-draft only. If draft files are present, note their count in the report but do not analyze them.
@@ -103,10 +103,10 @@ Run after `speckit.tasks` has produced a complete `tasks.md`. Does not require a
    ### Summary
    CRITICAL: N | WARNINGS: N | PASS: N | Existing drafts (not analyzed): N | Subplots checked: N | Series checks: [skipped (standalone) / N issues]
    Recommended action: [clear to draft / address criticals first / run speckit.constitution to resolve structural issues / update series-bible.md]
-   ```
+   ```5. **Check for extension hooks (after analysis)**:
 
-5. **Check for extension hooks (after analysis)**:
    - Look for `hooks.after_analyze` in `.specify/extensions.yml`. Process as standard hook block. Skip silently if absent.
+
 
 6. **Optional remediation plan**: Only if the user explicitly requests it, list the specific file edits needed to resolve CRITICAL issues. User must approve before any editing commands are invoked.
 

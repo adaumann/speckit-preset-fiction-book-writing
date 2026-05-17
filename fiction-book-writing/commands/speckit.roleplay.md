@@ -58,7 +58,7 @@ The session proceeds in **segments** (a segment is one beat, one paragraph, or o
 
 ## Step 1 — Setup
 
-Run `{SCRIPT}` from repo root and parse `FEATURE_DIR`.
+Resolve `FEATURE_DIR` by reading the project structure: the first subdirectory inside `specs/` that contains project files. Fall back to project root if `specs/` does not exist.
 
 **Audiobook-only guard**: Read `OUTPUT_MODE` from `constitution.md ## X. Audiobook Production`. If `OUTPUT_MODE` is `audiobook` and neither `outlines/` nor `draft/` exists, stop:
 ```

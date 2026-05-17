@@ -61,7 +61,7 @@ Output is only written when you explicitly commit at the end.
 
 ## Step 1 — Character Resolution
 
-Run `{SCRIPT}` from repo root and parse `FEATURE_DIR`.
+Resolve `FEATURE_DIR` by reading the project structure: the first subdirectory inside `specs/` that contains project files. Fall back to project root if `specs/` does not exist.
 
 Resolve the **target character**:
 

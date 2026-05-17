@@ -46,7 +46,7 @@ The feedback log becomes the audit trail for the editorial round — you can see
 
 ## Steps
 
-1. **Setup**: Run `{SCRIPT}` from repo root. Parse `FEATURE_DIR`.
+1. **Setup**: Resolve `FEATURE_DIR` by reading the project structure. Fall back to project root if `specs/` does not exist.
 
 2. **Identify the feedback source**:
    - If `$ARGUMENTS` contains a file path → read that file as raw notes

@@ -30,11 +30,11 @@
 - **Additional Anti-AI filter**: "liminal" · "ineffable" · "the weight of" · "something shifted inside her" · "she couldn't quite put into words" · "a mosaic of memories"
 
 #### thriller
-- **Sentence rhythm**: Short-dominant (1–2 clauses); long sentences reserved for immediate aftermath only, never mid-action
-- **Sensory density**: Low-to-medium — precise and functional detail only; sensory anchors are obstacles or threats, not texture
-- **Interiority**: Minimal — inner monologue is compressed to single-sentence observations or cut entirely during action; characters act before they reflect
-- **Dialogue subtext**: Light — dialogue is terse and functional; subtext is carried by what is NOT said or done, not by elaborate deflection; silences are weaponized
-- **Pacing bias**: Action-forward — sequel beats are compressed; reflection happens in motion, not in stillness
+- **Sentence rhythm**: Variable — short for action and tension; longer for reflection, processing, and aftermath. No fixed ratio; rhythm follows the character's internal state.
+- **Sensory density**: Moderate — grounded in physical environment and emotional sensation; tactile and auditory preferred but all senses available when they serve the moment
+- **Interiority**: Continuous but compressed — inner life is always present, shown through what the character notices, builds, and fails to confront. Interiority through physical sensation and systems-thinking, not abstraction.
+- **Dialogue subtext**: Moderate — terse and functional; subtext carried by what is NOT said or done; silences are weaponized
+- **Pacing bias**: Action-forward but with breathing room — sequel beats are present but compressed; reflection happens in motion and in stillness
 - **Additional Anti-AI filter**: "heart pounding" · "adrenaline surged" · "pulse quickened" · "fight-or-flight" · "every instinct screamed" · "she had no choice"
 
 #### atmospheric
@@ -67,12 +67,17 @@ Prioritize **sensory truth** over lofty metaphors. Avoid statistics and overwhel
 ### The Dirt Rule
 No environment should feel perfect. Every scene MUST include at least one small flaw — a smudge on a lens, a fraying cuff, a flickering light, an unscratched itch. These imperfections make the world feel lived-in.
 
-### Physical Feedback
+### Physical Feedback (Show Don't Tell)
 Show emotions through **involuntary bodily reactions**, not named feelings.
 
-| ❌ | ✅ |
+| ❌ Telling | ✅ Showing |
 |---|---|
 | "She felt despair." | "Her knees went soft. She leaned on the door frame and did not push off." |
+| "He was angry." | "His jaw tightened. He set the glass down with care — too much care." |
+| "She was nervous." | "She checked the lock twice. Then again." |
+| "He was exhausted." | "He sat on the edge of the bed and did not lie down." |
+
+**The rule**: If you can replace a feeling-word with a physical action that implies it, do it. The reader is smarter than you think.
 
 ---
 

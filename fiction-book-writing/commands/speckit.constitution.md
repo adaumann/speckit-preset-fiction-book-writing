@@ -24,9 +24,9 @@ You **MUST** consider the user input before proceeding (if not empty).
 **Query search index for existing project context** (optional — large projects):
 - If `.specify/index/` exists, query the index before loading documents to identify which files contain relevant context for constitution fields:
   ```
-  python scripts/python/index.py query "genre tone protagonist arc" --top 8
-  python scripts/python/index.py query "world rules setting premise" --type spec --top 5
-  python scripts/python/index.py query "theme dramatic question" --type spec --top 5
+  python .specify/presets/fiction-book-writing/scripts/python/index.py query "genre tone protagonist arc" --top 8
+  python .specify/presets/fiction-book-writing/scripts/python/index.py query "world rules setting premise" --type spec --top 5
+  python .specify/presets/fiction-book-writing/scripts/python/index.py query "theme dramatic question" --type spec --top 5
   ```
 - Use returned passages as supplementary context when inferring `[GENRE]`, `[TONE]`, `[THEME]`, `[DRAMATIC_QUESTION]`, and `[STORY_SPECIFIC_PRINCIPLES]` from existing project files.
 - This is especially useful when `spec.md` is large or when characters/world-building files already contain implicit constitutional constraints.
@@ -52,7 +52,7 @@ You **MUST** consider the user input before proceeding (if not empty).
      > "Which prose profile fits this story?
      > (a) **commercial** — balanced pace, moderate interiority, alternating rhythm (general fiction, romance, fantasy)
      > (b) **literary** — deep interiority, high sensory texture, reflection-forward (literary fiction, character studies)
-     > (c) **thriller** — action-forward, minimal interiority, short-dominant sentences (thrillers, crime, horror)
+     > (c) **thriller** — variable sentence rhythm (short for action, longer for reflection), interiority through physical sensation and systems-thinking (thrillers, crime, horror)
      > (d) **atmospheric** — maximum sensory density, slow burn, environment as plot engine (gothic, horror, weird fiction)
      > (e) **dark-realist** — clipped declarative prose, cold interiority, consequence-forward (noir, social realism, gritty literary)"
 
@@ -88,7 +88,7 @@ You **MUST** consider the user input before proceeding (if not empty).
      > "What language is this story written in? (e.g. en, de, fr, es, it, pt, nl, ja, zh, fi, hu, tr)"
      
      Controls prose drafting language, SSML `xml:lang`, export `dc:language`, and gates English-only prose checks.
-   - `[PLOT_STRUCTURE]` — if not set, present the 7 options with a brief description of each and ask the user to choose
+   - `[PLOT_STRUCTURE]` — if not set, present the 8 options with a brief description of each and ask the user to choose
    - `[DRAMATIC_QUESTION]` — one sentence, the story's spine
    - `[THEME]` — stated as a question, not an answer
    - `[POV_STRATEGY]` and `[TENSE]` — from style mode or user input
@@ -120,55 +120,15 @@ You **MUST** consider the user input before proceeding (if not empty).
    - `[STORY_SPECIFIC_PRINCIPLES]` — 3–5 rules unique to this story
    - `[ADDITIONAL_PROHIBITED_PHRASES]` — story/genre-specific additions to the Anti-AI filter
 
-3b. **RAG Index System** — ask after `[WORD_COUNT_TARGET]` is known:
+3b. **RAG Index System** — mention as optional post-plan step (do not prompt during constitution):
 
-   Determine the target word count from the resolved `[WORD_COUNT_TARGET]` field (or from `$ARGUMENTS` if not yet set). Compare against 80,000 words to form the recommendation label.
+   After constitution is ratified and `speckit.plan` has generated all supporting documents (characters, locations, timeline, world-building, etc.), the user can build the search index:
 
-   Ask the user:
+   > `python .specify/presets/fiction-book-writing/scripts/python/index.py build`
 
-   > "Do you want to enable the RAG semantic search index for this project?
-   > It allows `speckit.implement`, `speckit.continuity`, `speckit.research`, and other commands to retrieve relevant passages from your entire project without loading all files into context.
-   > *(Your target is [WORD_COUNT_TARGET] words — **recommended** for projects over 80,000 words / optional for smaller projects)*
-   > (a) **Yes** — initialize the index now
-   > (b) **No** — skip (can be enabled later with `python scripts/python/index.py build`)"
+   The index enables `speckit.implement`, `speckit.continuity`, `speckit.research`, and other commands to retrieve relevant passages without loading all files into context. It works best after `speckit.plan` has produced the full document set.
 
-   If the user chooses **(b)**: skip silently and continue.
-
-   If the user chooses **(a)**:
-
-   1. **Check if already initialized**: inspect whether `.specify/index/chroma/` exists in the project root.
-      - If it exists → emit `ℹ️ ChromaDB index already initialized at .specify/index/ — skipping build.` and continue without re-running build.
-
-   2. **Check if dependencies are installed** (only if not already initialized):
-      Run:
-      ```
-      python -m pip show chromadb sentence-transformers
-      ```
-      - If both packages are found → proceed to build.
-      - If either is missing → ask if a virtual environment is preferred:
-        > "ChromaDB and sentence-transformers are not installed.
-        > (a) **Install to global/user site** — `python -m pip install chromadb sentence-transformers`
-        > (b) **Create and use .venv** (Recommended) — creates a `.venv/` folder and installs there"
-      
-      - If the user chooses **(b)**:
-        1. Run `python -m venv .venv`
-        2. Activate (Windows: `.venv\Scripts\Activate.ps1`, Unix: `source .venv/bin/activate`)
-        3. Run `python -m pip install chromadb sentence-transformers`
-      - Else if **(a)** or fallback:
-        Run:
-        ```
-        python -m pip install chromadb sentence-transformers
-        ```
-        - On success → proceed to build.
-        - On failure → emit: `⚠️ Installation failed. Ensure Python is on the PATH and try running manually: python -m pip install chromadb sentence-transformers` and stop.
-
-   3. **Build the index**:
-      Run from the project root:
-      ```
-      python scripts/python/index.py build
-      ```
-      - On success → emit: `✓ RAG index initialized at .specify/index/ — semantic search is now active for all project files.`
-      - On failure → emit: `⚠️ Index build failed. Check that Python is available and dependencies are installed. You can retry later with: python scripts/python/index.py build`
+   **Do not ask the user about the index during constitution** — the document set is too small (only spec.md + constitution.md) to make an informed decision. The `speckit.plan` command handles index setup at the right time.
 
 3c. **Resolve Audiobook Production section** (Section X of constitution.md):
 
@@ -247,7 +207,7 @@ You **MUST** consider the user input before proceeding (if not empty).
    - `[RATIFICATION_DATE]` and `[LAST_AMENDED_DATE]` are ISO format (`YYYY-MM-DD`)
    - Style mode is explicitly set
    - If `humanized-ai` mode: `[PROSE_PROFILE]` is one of the 5 supported values: `commercial`, `literary`, `thriller`, `atmospheric`, `dark-realist`
-   - Plot structure is one of the 7 supported values
+   - Plot structure is one of the 8 supported values: `three-act`, `heros-journey`, `save-the-cat`, `kishotenketsu`, `freytag`, `story-circle`, `five-act`, `given-by-spec`
    - Theme is stated as a question, not an answer
    - If `author-sample` mode: all 8 Extracted Style Markers have values (not `[NEEDS CLARIFICATION]`)
    - If Series Position is non-standalone: `## IX. Series Context` is present and has at least one populated SC-NNN or STC-NNN row, or is explicitly marked `[TBD pending series-bible.md creation]`. Any Series Variance Log row that is present but has an empty Justification column → WARNING.
@@ -261,6 +221,6 @@ You **MUST** consider the user input before proceeding (if not empty).
 8. **Report**: Summarize all resolved fields, the new version number, and any remaining items requiring attention.
 
 9. **Update search index** (optional — large projects):
-   - If `.specify/index/` exists, run: `python scripts/python/index.py update` from the project root.
+   - If `.specify/index/` exists, run: `python .specify/presets/fiction-book-writing/scripts/python/index.py update` from the project root.
    - This re-indexes the updated `.specify/memory/constitution.md` so that subsequent `speckit.implement`, `speckit.continuity`, and `speckit.research` queries reflect the latest story bible rules.
    - If the command fails or the index does not exist, skip silently.

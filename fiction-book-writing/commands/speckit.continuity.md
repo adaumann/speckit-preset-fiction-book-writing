@@ -23,8 +23,8 @@ If a chapter ID or range is given (e.g., `A1.101` or `JO3.201–JO3.203`), scope
 
 **Search index** (large projects — optional):
 - If `.specify/index/` exists, you MAY query it to locate all draft passages referencing a specific character, location, or world rule before performing the full prose scan. This is especially useful for 5M-word projects where loading all draft files at once is impractical.
-  > `python scripts/python/index.py query "[character name] [rule or fact]" --type draft --top 10`
-  > `python scripts/python/index.py query "[world rule text]" --top 8`
+  > `python .specify/presets/fiction-book-writing/scripts/python/index.py query "[character name] [rule or fact]" --type draft --top 10`
+  > `python .specify/presets/fiction-book-writing/scripts/python/index.py query "[world rule text]" --top 8`
 - Use index results to prioritise which draft files to load in full. The index is an efficiency aid — it does not replace reading the actual draft files for any flagged passage.
 
 ## Goal
@@ -39,7 +39,7 @@ Identify story bible violations, continuity errors, and untracked narrative thre
 
 ## Execution Steps
 
-1. **Setup**: Run `{SCRIPT}` and parse `FEATURE_DIR`. Load all available documents.
+1. **Setup**: Resolve `FEATURE_DIR` by reading the project structure: the first subdirectory inside `specs/` that contains project files. Fall back to project root if `specs/` does not exist. Load all available documents.
 
 2. **Load documents**:
    - Required: `spec.md`, `plan.md`, `tasks.md`, `.specify/memory/constitution.md`

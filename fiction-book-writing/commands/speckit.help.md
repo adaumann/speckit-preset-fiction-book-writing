@@ -41,7 +41,7 @@ Run `speckit.help` at the start of any working session, when you feel stuck, or 
 
 ## Step 1 — Detect Project State
 
-Run `{SCRIPT}` from repo root and parse `FEATURE_DIR`.
+Resolve `FEATURE_DIR` by reading the project structure: the first subdirectory inside `specs/` that contains project files. Fall back to project root if `specs/` does not exist.
 
 Perform a **non-blocking inventory scan** — read each file if present, note its absence if not. Never abort because a file is missing; missing files are themselves state signals.
 

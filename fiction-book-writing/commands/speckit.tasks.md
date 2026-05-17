@@ -32,7 +32,7 @@ You **MUST** consider the user input before proceeding (if not empty).
 
 ## Outline
 
-1. **Setup**: Run `{SCRIPT}` from repo root and parse `FEATURE_DIR` and available documents list.
+1. **Setup**: Resolve `FEATURE_DIR` by reading the project structure: the first subdirectory inside `specs/` that contains project files. Fall back to project root if `specs/` does not exist.
 
 2. **Load story documents**: Read from `FEATURE_DIR`:
    - **Required**: `plan.md` (story structure, chosen plot structure, act breakdown), `spec.md` (character arcs with priorities)

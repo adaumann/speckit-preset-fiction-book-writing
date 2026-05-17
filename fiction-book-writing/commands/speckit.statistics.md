@@ -115,7 +115,7 @@ Report:
 
 ### Step 1 — Setup
 
-Run `{SCRIPT}` from repo root. Parse `FEATURE_DIR`.
+Resolve `FEATURE_DIR` by reading the project structure: the first subdirectory inside `specs/` that contains project files. Fall back to project root if `specs/` does not exist.
 
 Load:
 - Required: draft files in `FEATURE_DIR/draft/` matching the scope from `$ARGUMENTS`. Abort if none exist.

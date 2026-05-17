@@ -97,7 +97,7 @@ constitution_version: [CONSTITUTION_VERSION]
      Set to ONE of the following values:
        commercial    → balanced pace, moderate interiority, alternating rhythm
        literary      → deep interiority, high sensory texture, reflection-forward
-       thriller      → action-forward, minimal interiority, short-dominant sentences
+       thriller      → action-forward, variable sentence rhythm (short for action, longer for reflection), interiority through physical sensation and systems-thinking, not abstraction
        atmospheric   → maximum sensory density, slow burn, atmosphere as plot engine
        dark-realist  → clipped declarative prose, cold interiority, consequence-forward
 
@@ -255,7 +255,8 @@ constitution_version: [CONSTITUTION_VERSION]
      - save-the-cat       → 15 beats with word-count pacing targets
      - story-circle       → Dan Harmon's 8-step character transformation loop
      - kishotenketsu      → Ki → Shō → Ten → Ketsu (no central conflict required)
-     - five-act           → Introduction → Rise → Climax → Fall → Catastrophe/Resolution -->
+     - five-act           → Introduction → Rise → Climax → Fall → Catastrophe/Resolution
+     - given-by-spec      → plot structure defined entirely in spec.md; no predefined beat template -->
 
 ### Central Dramatic Question
 [DRAMATIC_QUESTION]

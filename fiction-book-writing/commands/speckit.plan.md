@@ -138,11 +138,29 @@ You **MUST** consider the user input before proceeding (if not empty).
 
 4. **Stop and report**: Command ends after Phase 3. Report: `IMPL_PLAN` path, total beats generated, total chapters outlined, word count distribution across acts, any remaining `[NEEDS CLARIFICATION]` markers, open threads count.
 
-5. **Build search index** (large projects):
-   - Check whether `scripts/python/index.py` exists in the preset scripts directory.
-   - If it exists, run: `python scripts/python/index.py build` from the project root.
-   - This indexes all supporting documents generated in Phase 0 for offline semantic search during drafting.
-   - If ChromaDB / sentence-transformers are not installed, the script falls back to keyword search automatically.
-   - If the script is absent or fails, skip silently and note: `ℹ️ Search index not built — run python scripts/python/index.py build manually when ready.`
+5. **Build search index** (offline keyword/semantic search — useful at any project size, recommended once supporting docs exist):
+
+   - Check whether the preset's `scripts/python/index.py` exists (check `.specify/presets/fiction-book-writing/scripts/python/index.py` first, then `scripts/python/index.py` as fallback). Let `INDEX_SCRIPT` = the found path.
+   - If it exists, ask:
+     ```
+     Do you want to enable the offline search index for this project?
+    
+     It indexes all supporting documents (characters, locations, timeline, world-building, plan, etc.)
+     so that speckit.implement, speckit.continuity, and speckit.research can retrieve relevant
+     passages without loading all files into context.
+    
+     The script auto-detects available backends:
+       • ChromaDB + sentence-transformers → semantic/vector search (install separately with pip)
+       • rank-bm25                         → keyword BM25 scoring (install separately with pip)
+       • built-in TF scorer                → zero-dependency fallback (works out of the box)
+    
+     (a) **Build now** — index with the best available backend
+     (b) **Skip** — can be built later with `python {INDEX_SCRIPT} build`
+     ```
+   - If the user chooses **(a)**:
+     - Run: `python {INDEX_SCRIPT} build` from the project root.
+     - On success → emit: `✓ Search index built at .specify/index/ — {total_chunks} chunks across {total_files} files.`
+     - On failure → emit: `⚠️ Index build failed. You can retry with: python {INDEX_SCRIPT} build`
+   - If **(b)** or script absent: skip silently and note at end: `ℹ️ Search index not built — run python {INDEX_SCRIPT} build manually when ready.`
 
 6. **Check for extension hooks** (after planning): check `hooks.after_plan` and process as standard hook block.

@@ -74,7 +74,7 @@ Accepted arguments:
 
 ## Step 1 — Setup and Mode Resolution
 
-Run `{SCRIPT}` from repo root and parse `FEATURE_DIR`.
+Resolve `FEATURE_DIR` by reading the project structure: the first subdirectory inside `specs/` that contains project files. Fall back to project root if `specs/` does not exist.
 
 Locate `FEATURE_DIR/research.md`. If the file does not exist:
 - For `add` mode: create it from `research-template.md`. Populate `## Research Scope` from `spec.md` and `constitution.md` if present (time period, locations, technical domains, cultural context). Emit: `✓ Created research.md from template. Proceeding to add first item.`

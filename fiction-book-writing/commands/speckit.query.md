@@ -40,7 +40,7 @@ Consider user input before proceeding. Accepted arguments:
 
 ## Steps
 
-1. **Setup**: Run `{SCRIPT}` from repo root. Parse `FEATURE_DIR`.
+1. **Setup**: Resolve `FEATURE_DIR` by reading the project structure: the first subdirectory inside `specs/` that contains project files. Fall back to project root if `specs/` does not exist.
 
    **Language scope**: The `Language` field in `constitution.md § VII` affects the *content written into the query letter or Exposé file* and the submission format convention. All command output, status messages, and conversational responses during this command remain in English regardless of the Language setting.
 

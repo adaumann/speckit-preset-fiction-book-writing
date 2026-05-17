@@ -11,6 +11,7 @@ estimated_words: [number]
 status: DRAFT
 # Change status to APPROVED when the outline is correct and ready to draft.
 # Use SKIP if you will write this chapter yourself (no AI prose will be generated).
+# You can also bypass this outline entirely with: /speckit.implement --dismiss-outline <CHAPTER_ID>
 ---
 
 ## Opening Hook

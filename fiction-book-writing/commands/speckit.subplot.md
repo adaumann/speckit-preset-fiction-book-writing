@@ -72,7 +72,7 @@ Accepted arguments:
 
 ## Step 1 — Setup and Mode Resolution
 
-Run `{SCRIPT}` from repo root and parse `FEATURE_DIR`.
+Resolve `FEATURE_DIR` by reading the project structure: the first subdirectory inside `specs/` that contains project files. Fall back to project root if `specs/` does not exist.
 
 Locate `FEATURE_DIR/subplots.md`. If the file does not exist:
 - For `add` mode: create it from `subplots-template.md`. Populate the header from `spec.md` (`[STORY_TITLE]`, `[FEATURE_DIR]`, today's date). Seed Subplot Index from any P2/P3 arcs found in `spec.md` character entries. Emit: `✓ Created subplots.md from template. Proceeding to add first subplot.`

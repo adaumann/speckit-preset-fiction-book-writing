@@ -34,7 +34,7 @@ Accepted arguments:
 
 ## Outline
 
-1. **Setup**: Run `{SCRIPT}` from repo root and parse `FEATURE_DIR` and available documents list.
+1. **Setup**: Resolve `FEATURE_DIR` by reading the project structure: the first subdirectory inside `specs/` that contains project files. Fall back to project root if `specs/` does not exist.
 
 2. **Load source documents**:
    - **Required**: `plan.md` (the `## Scene Outline` section is the authoritative source for scene content), `spec.md` (character arcs, scene beats)
@@ -46,9 +46,9 @@ Accepted arguments:
    - **Optional**: `pov-structure.md` (POV schedule — which character holds this chapter)
    - **Large project optimization** (if `.specify/index/` exists): for each target scene, query the index for the POV character’s arc state and the setting’s sensory anchors before loading those full files:
      ```
-     python scripts/python/index.py query "[POV_CHARACTER] arc progression wound belief" --type character --top 3
-     python scripts/python/index.py query "[SETTING_NAME] sensory anchors dirt rule atmosphere" --type world --top 2
-     python scripts/python/index.py query "[active_motif_name]" --type theme --top 2
+     python .specify/presets/fiction-book-writing/scripts/python/index.py query "[POV_CHARACTER] arc progression wound belief" --type character --top 3
+     python .specify/presets/fiction-book-writing/scripts/python/index.py query "[SETTING_NAME] sensory anchors dirt rule atmosphere" --type world --top 2
+     python .specify/presets/fiction-book-writing/scripts/python/index.py query "[active_motif_name]" --type theme --top 2
      ```
      Use returned chunks to populate the outline’s Character Beats, Sensory Anchors, and Thematic Work sections when full files are too large to load.
    - If `$ARGUMENTS` is empty: find the first chapter in `plan.md ## Scene Outline` whose `status` is `outline` (not yet started) and for which no file exists at `outlines/<CHAPTER_ID>_<ChapterName>-outline.md`
@@ -119,7 +119,7 @@ Accepted arguments:
    - Run `/speckit.implement` once outlines are approved
 
 7. **Update search index** (large projects):
-   - If `.specify/index/` exists, run: `python scripts/python/index.py update` from the project root.
+   - If `.specify/index/` exists, run: `python .specify/presets/fiction-book-writing/scripts/python/index.py update` from the project root.
    - This incrementally indexes all newly created outline files (`outlines/` glob, doc type `outline`).
    - Outline chunks allow later `speckit.implement` and `speckit.continuity` runs to query beat sequences by meaning: e.g. `query "confrontation scene Act II" --type outline`.
    - If the command fails or the index does not exist, skip silently.

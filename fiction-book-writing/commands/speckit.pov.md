@@ -67,7 +67,7 @@ Use this reference when drafting or auditing `pov-structure.md`:
 
 ### Step 1 — Setup and Document Load
 
-Run `{SCRIPT}` and parse `FEATURE_DIR`.
+Resolve `FEATURE_DIR` by reading the project structure: the first subdirectory inside `specs/` that contains project files. Fall back to project root if `specs/` does not exist.
 
 Load available documents:
 - Required: `spec.md`

@@ -51,7 +51,7 @@ Both formats **reveal the ending**. A synopsis is not a blurb. Every major plot 
 
 ## Steps
 
-1. **Setup**: Run `{SCRIPT}` from repo root. Parse `FEATURE_DIR`.
+1. **Setup**: Resolve `FEATURE_DIR` by reading the project structure: the first subdirectory inside `specs/` that contains project files. Fall back to project root if `specs/` does not exist.
 
 2. **Load source documents** (in priority order):
    - `FEATURE_DIR/spec.md` — extract: title, genre, logline, protagonist, central dramatic question, theme, word count target

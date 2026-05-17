@@ -144,7 +144,7 @@ provides:
     - type: "command"
       name: "speckit.implement"
       file: "commands/speckit.implement.md"
-      description: "Draft scenes and chapters by executing writing tasks from tasks.md."
+      description: "Draft scenes and chapters — supports discovery mode (--discovery), outline dismissal (--dismiss-outline), and voice sample calibration (--voice <file>)."
     - type: "command"
       name: "speckit.analyze"
       file: "commands/speckit.analyze.md"

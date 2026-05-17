@@ -29,7 +29,7 @@ You **MUST** consider the user input before proceeding (if not empty).
 
 ### Execution steps
 
-1. **Setup**: Run `{SCRIPT}` from repo root and parse JSON for FEATURE_SPEC path and SPECS_DIR.
+1. **Setup**: Resolve `FEATURE_DIR` by reading the project structure: the first subdirectory inside `specs/` that contains project files. Fall back to project root if `specs/` does not exist.
 
 2. **Load `spec.md`**: Read the full story brief. Identify all `[NEEDS CLARIFICATION]` markers.
 

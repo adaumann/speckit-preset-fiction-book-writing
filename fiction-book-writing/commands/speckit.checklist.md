@@ -36,7 +36,7 @@ You **MUST** consider the user input before proceeding (if not empty).
 
 ## Outline
 
-1. **Setup**: Run `{SCRIPT}` from repo root and parse `FEATURE_DIR`.
+1. **Setup**: Resolve `FEATURE_DIR` by reading the project structure: the first subdirectory inside `specs/` that contains project files (or the first subdirectory if none found). Fall back to project root if `specs/` does not exist.
 
 2. **Identify the target**: Determine what the checklist is for from `$ARGUMENTS`:
    - A specific scene file (e.g., "create checklist for scenes/act1-opening.md")

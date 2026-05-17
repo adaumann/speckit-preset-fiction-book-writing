@@ -93,7 +93,11 @@ If no topic was provided as an argument, display the topic menu:
 
 ## Step 2 — Context Load
 
-Run `{SCRIPT}` from repo root and parse JSON for `FEATURE_DIR` and `SPECS_DIR`.
+Resolve the **project feature directory** and **specs directory** by reading the project structure directly:
+- **Feature directory** (`FEATURE_DIR`): the first subdirectory inside `specs/` that contains a `spec.md` file (or the first subdirectory if no `spec.md` is found)
+- **Specs directory** (`SPECS_DIR`): `specs/` itself — list its contents to identify available story projects
+
+If `specs/` does not exist, fall back to the project root.
 
 Resolve the **canonical file path** for the selected topic using the table below:
 
@@ -138,7 +142,7 @@ Before proceeding to the file existence check, look for `{FEATURE_DIR}/brainstor
 
   - **Additional index context** (if `.specify/index/` exists): query for related project content scattered across files other than the canonical file for this topic:
     ```
-    python scripts/python/index.py query "[SESSION.topic]" --top 8
+    python .specify/presets/fiction-book-writing/scripts/python/index.py query "[SESSION.topic]" --top 8
     ```
     Surface any connections, constraints, or prior decisions from `character`, `world`, `draft`, `research`, or `series` doc types that are relevant to the brainstorm topic. Present any conflicts with the loaded canonical file as Change Candidates for the user to resolve — do not silently override.
 

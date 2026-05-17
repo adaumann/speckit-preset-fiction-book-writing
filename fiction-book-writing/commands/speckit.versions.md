@@ -78,7 +78,7 @@ The YAML frontmatter in each file is the authority for metadata:
 
 ## Step 1 — Setup and Mode Resolution
 
-Run `{SCRIPT}` from repo root and parse `FEATURE_DIR`.
+Resolve `FEATURE_DIR` by reading the project structure: the first subdirectory inside `specs/` that contains project files. Fall back to project root if `specs/` does not exist.
 
 Scan `FEATURE_DIR/draft/` for all `.md` files. If the directory does not exist or is empty: abort with `✗ No draft files found in FEATURE_DIR/draft/. Nothing to version.`
 

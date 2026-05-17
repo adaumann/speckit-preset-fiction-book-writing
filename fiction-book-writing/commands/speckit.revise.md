@@ -42,7 +42,7 @@ Rewrite only the passages in a drafted chapter that are failing checklist items 
 
 ## Execution Steps
 
-1. **Setup**: Run `{SCRIPT}` from repo root and parse `FEATURE_DIR`.
+1. **Setup**: Resolve `FEATURE_DIR` by reading the project structure: the first subdirectory inside `specs/` that contains project files. Fall back to project root if `specs/` does not exist.
 
 2. **Identify the revision target**:
    - Parse `$ARGUMENTS` for chapter ID. Resolve to `draft/<CHAPTER_ID>_<ChapterName>.md` in `FEATURE_DIR`.

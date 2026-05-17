@@ -71,6 +71,13 @@
      Each phase lists: key scenes from spec.md, character arc milestones,
      and the dominant emotional register. -->
 
+<!-- ─── GIVEN-BY-SPEC ─────────────────────────────────────────────────── -->
+<!-- Use this block when PLOT_STRUCTURE: given-by-spec
+     The plot structure is defined entirely in spec.md — no predefined beat
+     template. Generate scene IDs as SP1.101, SP1.102, etc., grouping by
+     the sections/stages declared in spec.md. Omit the standard structure
+     blocks below and use only the Scene Outline section. -->
+
 <!-- ─── THREE-ACT STRUCTURE ───────────────────────────────────────────── -->
 <!-- Use this block when PLOT_STRUCTURE: three-act -->
 
@@ -387,6 +394,7 @@ Scale proportionally to [WORD_COUNT_TARGET].
        freytag       → FT{n}  e.g. FT1.101_Exposition, FT3.301_Climax
        story-circle  → SL{n}  e.g. SL1.101_You, SL5.501_Seek
        five-act      → FA{n}  e.g. FA1.101_Exposition, FA5.501_Denouement
+       given-by-spec → SP{n}  e.g. SP1.101_SpecScene, SP2.201_SpecBeat
        generic       → P{n}   e.g. P1.101_Opening, P2.201_Rising
 
      Insertion beats use letter suffix: JO3.201b between JO3.201 and JO3.202 -->

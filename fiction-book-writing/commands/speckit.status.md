@@ -36,7 +36,7 @@ Consider user input before proceeding (e.g. a specific act, chapter range, or `-
 
 ## Steps
 
-1. **Setup**: Run `{SCRIPT}` from repo root. Parse `FEATURE_DIR`.
+1. **Setup**: Resolve `FEATURE_DIR` by reading the project structure: the first subdirectory inside `specs/` that contains project files. Fall back to project root if `specs/` does not exist.
 
 2. **Collect chapter data** from `FEATURE_DIR/draft/*.md`:
    - For each `.md` file, parse the YAML frontmatter block
