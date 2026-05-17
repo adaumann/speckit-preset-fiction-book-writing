@@ -203,6 +203,11 @@ Use these per-phase command sets:
 **Phase 3 (Active drafting):**
 `speckit.implement`, `speckit.checklist`, `speckit.continuity`, `speckit.status`, `speckit.glossary audit`, `speckit.research check`, `speckit.subplot check`
 
+**Outline workflow options:**
+- **Generate outlines first** (recommended): Run `speckit.outline all`, review/edit beats in `outlines/`, set `status: APPROVED` or `status: SKIP`, then run `speckit.implement` (AI drafts only APPROVED chapters, skips SKIP chapters)
+- **Skip outlines entirely**: Run `speckit.implement --dismiss-outline` to draft freely without outline gates (discovery mode)
+- **Generate outlines on-demand**: Run `speckit.implement --outline-only <CHAPTER_ID>` to generate just the outline for specific chapter(s) without drafting prose
+
 **Phase 4 (Revision / checking):**
 `speckit.revise`, `speckit.checklist`, `speckit.continuity`, `speckit.pacing`, `speckit.versions diff`, `speckit.glossary check`
 
