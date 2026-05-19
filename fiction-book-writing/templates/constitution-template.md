@@ -27,35 +27,24 @@ constitution_version: [CONSTITUTION_VERSION]
 <!-- Set to ONE of the following values:
      - author-sample   → Your own key chapter defines the voice (Section I-A)
      - humanized-ai    → Use the Humanized AI Prose principles (Section I-B)
-     Set this first. The AI will use whichever section matches your choice
-     and treat the other as inactive reference material. -->
+     Set this first. Once the AI has analyzed your sample or you've committed to AI principles,
+     DELETE the unused section to save tokens. -->
 
 ---
 
 <!-- ═══════════════════════════════════════════════════════════════════
      MODE A: AUTHOR VOICE SAMPLE
-     Paste 500–2000 words from a key chapter or scene that represents
-     the exact voice, rhythm, and style you want for this story.
-     The AI will use this text as the authoritative style reference
-     and extract the markers below from it.
+     ACTIVE when STYLE_MODE: author-sample | DELETE IF UNUSED
      ═══════════════════════════════════════════════════════════════════ -->
 
 ## I-A. Author Voice Sample
-<!-- ACTIVE when STYLE_MODE: author-sample | Ignored otherwise -->
-
 [AUTHOR_VOICE_SAMPLE]
-<!-- Paste your reference text here. Guidelines:
-     - Minimum 500 words for reliable style extraction
-     - Choose a passage that contains both dialogue AND narration
-     - Include at least one moment of emotional intensity
-     - This text defines: sentence rhythm, vocabulary register,
-       POV distance, dialogue style, and sensory density
-     The AI will populate the Extracted Style Markers below
-     when running speckit.constitution for the first time. -->
+<!-- GUIDELINE: Once the "Extracted Style Markers" table below is populated and verified,
+     you should move this full sample to a separate file (e.g., voice-sample.txt) 
+     and leave only the markers here to save ~2000 tokens per request. -->
 
 ### Extracted Style Markers
-<!-- Populated automatically by speckit.constitution from your sample.
-     Override manually if the inference is wrong. -->
+<!-- Populated automatically by speckit.constitution from your sample. -->
 
 | Marker | Extracted Value |
 |---|---|

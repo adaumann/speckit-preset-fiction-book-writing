@@ -1,68 +1,36 @@
 # Writing Tasks: [STORY_TITLE]
 
-<!-- Feature: [FEATURE_DIR] | Generated: [GENERATION_DATE] -->
-<!-- Total tasks: NNN | Scenes: NN | Arcs: P1 (NN), P2 (NN), P3 (NN) -->
-<!-- Parallel opportunities: NN | MVP scope suggestion: Act I complete -->
+<!-- Feature: [FEATURE_DIR] | Generated: [GENERATION_DATE]
+     LEGEND:
+     - [P] Parallel task | [CA-n] Character Arc | TXXX Task ID
+     - Path: draft/{PLOT_PREFIX}{ACT}.{BEAT}_{ShortName}.md
+     - Prefix: A (3-Act), JO (Hero), SC (Cat), KT (Kisho), FT (Freytag), SL (Circle), FA (5-Act)
+-->
 
 ---
 
-## Task Format
+## Phase 1: Pre-Production
+<!-- Complete before drafting. -->
 
-```
-- [ ] TXXX [P] [CA-n] Action: Description (`draft/{PREFIX}{phase}.{beat_number}_{ShortName}.md`)
-```
+- [ ] T001 Research: World/domain research (`research.md`)
+- [ ] T002 [P] Profile: P1 protagonist arc & voice (`characters/[name].md`)
+- [ ] T003 [P] Profile: P2/P3 supporting cast (`characters/[name].md`)
+- [ ] T004 World: Rules & sensory anchors (`world-building.md`)
+- [ ] T005 Timeline: Chronological order/backstory (`timeline.md`)
 
-- `[P]` — can be drafted in parallel with other `[P]` tasks in the same phase
-- `[CA-n]` — character arc label (CA-1 = P1 protagonist, CA-2 = P2, etc.)
-- No `[P]` marker = sequential dependency on prior task
-- Output paths use the structure-aware chapter naming convention: `draft/{PREFIX}{phase}.{beat_number}_{ShortName}.md`
-  - PREFIX comes from `constitution.md` plot structure: `A` (three-act), `JO` (heros-journey), `SC` (save-the-cat), `KT` (kishotenketsu), `FT` (freytag), `SL` (story-circle), `FA` (five-act), `P` (generic)
-  - Phase digit: act/phase number (e.g., `1`, `2`, `3`)
-  - Beat number: 3-digit sequential within each phase (e.g., `101`, `102`, `201`)
-  - Short name: PascalCase, 2–4 words (e.g., `Awakening`, `BetrayalRevealed`, `SupremeOrdeal`)
-  - Examples: `draft/A1.101_Awakening.md`, `draft/JO3.201_SupremeOrdeal.md`
-
-**Audiodraft tasks** (only present when `OUTPUT_MODE` is `audiobook` or `both` in `constitution.md ## X`):
-- Each prose draft task is immediately followed by a paired audiodraft task (no `[P]` — depends on prose draft)
-- Format: `TXXX [CA-n] Audiodraft: Generate SSML draft — [Scene Name] → audiodraft/{CHAPTER_ID}_{ShortName}.md`
-- Audiobook setup tasks (voice IDs, pronunciation lexicon) appear in Phase 1 before the critical checkpoint
+## ⚠️ CHECKPOINT: Story Bible Complete
+<!-- Verify constitution.md has no [NEEDS CLARIFICATION] and voice signatures are locked. -->
 
 ---
 
-## Phase 1: Research & World-Building
+## Phase 2: Act I — Setup (≈25%)
+<!-- Chapter IDs: {PREFIX}{phase}.{beat}_{Name} -->
 
-<!-- Complete before any drafting. Output goes to specs/[FEATURE_DIR]/ -->
-
-- [ ] T001 Research: Complete world/domain research needed for authenticity (`research.md`)
-- [ ] T002 [P] Profile: Write full character profile — P1 protagonist (wound, arc, voice signature, micro-obsession, contradiction) (`characters/[name].md`, register in `characters.md`)
-- [ ] T003 [P] Profile: Write full character profiles — all P2/P3 characters (`characters/[name].md` each, register in `characters.md`)
-- [ ] T004 World: Document world rules, locations with sensory anchors, internal logic (`world-building.md`)
-- [ ] T005 Timeline: Lock chronological event order (fabula) including backstory events (`timeline.md`)
-- [ ] T006 Order: Document narrative order (syuzhet) in `timeline.md` Syuzhet section if story is non-linear — skip if linear
-
-## ⚠️ CRITICAL CHECKPOINT: Story Bible Complete
-
-**Do not begin drafting until all Phase 1 tasks are complete.**
-
-Verify before proceeding:
-- [ ] `constitution.md` has no `[NEEDS CLARIFICATION]` markers
-- [ ] All character voice signatures are distinct (Voice Homogeneity test: could scene from CA-1 be mistaken for CA-2? If yes, profiles are incomplete)
-- [ ] All Chekhov items in spec.md have an assigned pay-off scene
-- [ ] `timeline.md` has no contradictions
-- [ ] Chosen plot structure is documented in `plan.md`
-
----
-
-## Phase 2: Act I — Setup (≈25% of word count target)
-
-<!-- Establish world, characters, inciting incident, first plot point.
-     Chapter IDs use the structure-aware prefix convention from plan.md Scene Outline: `{PREFIX}{phase}.{beat}_{Name}` -->
-
-- [ ] T007 [CA-1] Draft: Opening chapter — establish status quo and opening image (`draft/A1.101_Opening.md`)
-- [ ] T008 [CA-1] Draft: Inciting incident — the event that disrupts the status quo (`draft/A1.102_IncitingIncident.md`)
-- [ ] T009 [P] [CA-2] Draft: Introduce P2 subplot thread (`draft/A1.103_SubplotIntro.md`)
-- [ ] T010 [CA-1] Draft: Protagonist's first response — shows want, hints at wound (`draft/A1.104_FirstResponse.md`)
-- [ ] T011 [CA-1] Draft: First plot point — the threshold, life permanently changes (`draft/A1.105_FirstPlotPoint.md`)
+- [ ] T007 [CA-1] Draft: Opening & Status Quo (`draft/A1.101_Opening.md`)
+- [ ] T008 [CA-1] Draft: Inciting Incident (`draft/A1.102_IncitingIncident.md`)
+- [ ] T009 [P] [CA-2] Draft: Subplot thread intro (`draft/A1.103_SubplotIntro.md`)
+- [ ] T010 [CA-1] Draft: First Response (`draft/A1.104_FirstResponse.md`)
+- [ ] T011 [CA-1] Draft: First Plot Point (`draft/A1.105_FirstPlotPoint.md`)
 
 **Phase 2 Checkpoint**: Does the dramatic question feel urgent? Would a reader continue?
 

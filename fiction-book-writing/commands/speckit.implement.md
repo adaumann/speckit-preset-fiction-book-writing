@@ -78,26 +78,13 @@ You **MUST** consider the user input before proceeding (if not empty).
      - If `status: APPROVED` — proceed to drafting using the outline file as the working brief (see step 4)
    - If no outline file exists for this chapter — proceed using `plan.md ## Scene Outline` as a direction-of-travel guide (discovery mode, no gate applied)
 
-3. **Load context**:
-   - Read `tasks.md` — identify the first group of unchecked tasks (respect `[P]` markers for parallel drafting)
-   - Read `plan.md` for the full beat sheet and scene outlines (the `## Plot Beat Sheet` and `## Scene Outline` sections are the primary drafting brief)
-   - Read `.specify/memory/constitution.md` for story bible (style mode, stylistic parameters, story-specific Anti-AI phrases, series context, audiobook config). Explicitly extract:
-     - **Tense** (`§VII Tense`) — every sentence of prose must be in this tense; do not drift to a different tense even when summarising backstory or writing internal monologue unless the tense is `mixed` and the rule for when to switch is specified
-     - **Sentence Rhythm** (`§VII Sentence Rhythm`) — apply the story-specific rhythm pattern (e.g. "short/jagged during panic; long/winding during reflection") as the baseline; the active prose profile may override for specific scenes
-     - **Tone** (`§VII Tone`) and **Target Audience** (`§VII Target Audience`) — these govern emotional register, vocabulary ceiling, content complexity, and how explicit themes, violence, or sexuality may be rendered. If Tone is set, every scene must sustain it. If Target Audience is set, content, vocabulary register, and prose complexity must stay appropriate for that audience.
-   - Read `.specify/memory/craft-rules.md` for craft rules (Sections II–VI: Dirt Rule, Physical Feedback, Triple Purpose, Oblique Dialogue, universal Anti-AI Filter, active prose profile definition)
-   - **If outline file exists with status: APPROVED**: read the `## Required Context` section and use RAG queries for listed documents instead of loading full files
-   - Read `characters.md` (index) and the POV character's profile at `characters/[name].md` if present (voice signatures, micro-obsessions)
-   - Read the relevant section of `timeline.md` for the chapters being drafted
-   - Read the `LOC-NNN` block(s) in `locations.md` matching the chapter's setting — load: Sensory Anchors, Atmosphere by Time/Condition row matching `timeline_position`, Character Relationships for the POV character, Dirt Rule detail options, prohibited uses. If `locations.md` does not exist or the location has no entry, continue without it but flag it in the draft notes block.
-   - If user specified a chapter ID or range in `$ARGUMENTS` (e.g., `A1.101` or `A1.101–A1.103` for three-act, `JO3.201–JO3.203` for Hero's Journey), use that range
-   - If no argument given, use the first unchecked task that has a `draft/` output path
-   - **Large project optimization** (if `.specify/index/` exists and project has >30 drafted chapters): instead of loading all `characters/*.md` profiles and full `world-building.md`, run targeted queries scoped to this chapter's POV character and setting:
-     ```
-     python .specify/presets/fiction-book-writing/scripts/python/index.py query "[POV_CHARACTER] voice register micro-obsession stress tells" --type character --top 3
-     python .specify/presets/fiction-book-writing/scripts/python/index.py query "[SETTING_NAME] sensory anchors atmosphere" --type world --top 2
-     python .specify/presets/fiction-book-writing/scripts/python/index.py query "[CHAPTER_ID] [POV_CHARACTER]" --type outline --top 1
-     ```
+3. **Load context (Context Budget: 4k-8k tokens)**:
+   - **Mandatory**: `constitution.md`, the current scene outline, and the POV character profile.
+   - **Targeted**: Only load specific files listed in the outline's `Documents Needed`. 
+   - **RAG-First**: For world-building or secondary characters, use RAG queries instead of loading the full files. 
+   - **Summaries**: If a file is >5000 words, read only its `# Summary` or `## Recent Events` section.
+   - **Skip**: `spec.md` and `plan.md` unless the outline explicitly points to them for unresolved questions.
+
      Use returned chunks to supplement or replace loading full files when combined file size approaches context limits.
 
 - **Outline-required context** (if outline file exists with `status: APPROVED`): read the `## Required Context` section from the outline file and use it to determine which documents to load. For documents listed, use RAG queries instead of loading full files:
@@ -326,4 +313,19 @@ You **MUST** consider the user input before proceeding (if not empty).
 7. **Agent context update**: Run the agent script to refresh the story context file with the newly drafted chapters.
 
 8. **Check for extension hooks** (after drafting): check `hooks.after_implement`.
+
+9. **Token Usage Optimization**
+   - **Batch RAG Queries**: When multiple documents are listed in `## Required Context`, combine them into a single RAG query where possible (e.g., "character alara and location market details") to reduce the number of separate calls.
+   - **Cache Summaries**: Store a `*_summary.md` for any file >5k words (world-building, timeline). Subsequent drafts should load the summary instead of the full file unless a specific detail is missing.
+   - **Lazy Loading**: Defer loading of optional sections (e.g., `appendices/`, `research/`) until a `[NEEDS CLARIFICATION]` marker explicitly references them.
+   - **Trim Hook Payloads**: Extension hooks should return only essential key/value pairs; avoid returning large blobs of text.
+   - **Monitor Token Budget**: Before each major step, estimate the token count of loaded context (approx. 0.75 tokens per word). If projected usage exceeds 8k, drop the lowest‑priority document from the list and note it in the draft notes.
+   - **Reuse Draft Notes**: When a draft is re‑run, reuse the previous `<!-- DRAFT NOTES -->` block to avoid re‑loading the same large context.
+   - **Avoid Redundant `plan.md` Loads**: Only load the `## Plot Beat Sheet` section when the outline is missing; otherwise rely solely on the outline file.
+   - **Compress Inline Tables**: When including tables in the draft output, keep them minimal; use concise markdown or reference an external `tables/` file.
+   - **Log Token Consumption**: Append a small comment at the end of each draft file:
+     ```
+     <!-- Tokens used: [estimated] – context budget: 8k max -->
+     ```
+     This helps future runs stay within limits.
 

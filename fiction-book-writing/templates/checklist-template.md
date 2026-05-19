@@ -1,20 +1,6 @@
 # Scene Quality Checklist: [SCENE_NAME]
 
-<!-- Purpose: Quality gate for scene drafts — "unit tests for prose"
-     Created: [CREATION_DATE] | Feature: [FEATURE_DIR] | Scene: [SCENE_FILE] -->
-
-<!-- IMPORTANT: This checklist validates prose quality, not story events.
-     ✅ = satisfied  ❌ = needs revision  ⚠️ = marginal / discuss
-
-     DO NOT check:
-     - ❌ Whether the scene matches the outline
-     - ❌ Whether facts are accurate
-     - ❌ Whether the plot is logical
-
-     DO check:
-     - ✅ Whether the prose works as prose
-     - ✅ Whether the scene fulfills its craft obligations
-     - ✅ Whether it complies with the story bible -->
+<!-- Purpose: Quality gate for scene drafts. ✅ Pass | ❌ Fail | ⚠️ Marginal -->
 
 ---
 
@@ -22,11 +8,11 @@
 
 | # | Check | Status | Notes |
 |---|---|---|---|
-| SCN-001 | Scene has a clear goal (what does the POV character want to achieve or avoid?) | | |
-| SCN-002 | Scene has conflict (internal, interpersonal, or environmental — not necessarily dramatic) | | |
-| SCN-003 | Scene ends differently from how it began (state has changed — even subtly) | | |
-| SCN-004 | **Triple Purpose**: scene advances plot AND reveals character AND deepens world | | |
-| SCN-005 | Scene ending is off-balance (no tidy summary; ends on question, tension, or sensory impression) | | |
+| SCN-001 | Clear goal for POV character | | |
+| SCN-002 | Present conflict (internal/interpersonal/env) | | |
+| SCN-003 | State change/Shift by scene end | | |
+| SCN-004 | **Triple Purpose**: plot + character + world | | |
+| SCN-005 | Off-balance ending (ends on tension/question) | | |
 
 ---
 
@@ -34,11 +20,11 @@
 
 | # | Check | Status | Notes |
 |---|---|---|---|
-| CHR-001 | POV is consistent throughout (no unintentional head-hopping) | | |
-| CHR-002 | POV character's voice is distinct from all other POV characters | | |
-| CHR-003 | Emotions are shown through involuntary physical reaction, not named | | |
-| CHR-004 | POV character's micro-obsession appears or is conspicuously absent (under pressure) | | |
-| CHR-005 | Character deceives themselves or avoids confronting a deeper truth (Unreliable Self) | | |
+| CHR-001 | Consistent POV (no head-hopping) | | |
+| CHR-002 | Distinct voice signature | | |
+| CHR-003 | Show emotion via physical reaction (no naming) | | |
+| CHR-004 | Micro-obsession appears/conspicuously absent | | |
+| CHR-005 | Unreliable Self (character self-deception) | | |
 
 ---
 
@@ -46,12 +32,11 @@
 
 | # | Check | Status | Notes |
 |---|---|---|---|
-| DLG-001 | At least one character deflects, misinterprets, or uses silence before answering directly | | |
-| DLG-002 | At least one moment of misunderstanding OR failure to find the right word | | |
-| DLG-003 | Each character in dialogue has at least one physical action (not tagged with emotion) | | |
-| DLG-004 | No character accurately names their own worst motivation aloud | | |
-| DLG-005 | Em-dash usage ≤ 3 per 1,000 words | | |
-| DLG-006 | Ellipsis used only for genuine trailing off, never for dramatic pause | | |
+| DLG-001 | Oblique dialogue (deflection/silence) | | |
+| DLG-002 | Misunderstanding or word-search failure | | |
+| DLG-003 | Physical action during dialogue (no mood-tags) | | |
+| DLG-004 | Characters don't name their own motivation | | |
+| DLG-005 | Em-dash frequency ≤ 3 per 1k words | | |
 
 ---
 
@@ -59,11 +44,11 @@
 
 | # | Check | Status | Notes |
 |---|---|---|---|
-| SEN-001 | At least one concrete sensory detail (smell, texture, sound, temperature — not just visual) | | |
-| SEN-002 | **Dirt Rule**: at least one environmental imperfection (smudge, flicker, fray, scratch) | | |
-| SEN-003 | No lofty metaphors where concrete sensory truth would serve (check for prohibited phrases) | | |
-| SEN-004 | No statistics or scientific explanations unless they serve character voice directly | | |
-| SEN-005 | World details are consistent with `world-building.md` and `timeline.md` | | |
+| SEN-001 | Non-visual sensory detail (smell/sound/temp) | | |
+| SEN-002 | **Dirt Rule**: environmental imperfection | | |
+| SEN-003 | No lofty metaphors; use concrete truth | | |
+| SEN-004 | No sci/stat explanations unless in character | | |
+| SEN-005 | Consistency with world/timeline files | | |
 
 ---
 
