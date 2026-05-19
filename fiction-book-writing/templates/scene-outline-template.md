@@ -12,6 +12,31 @@ status: DRAFT
 # Change status to APPROVED when the outline is correct and ready to draft.
 # Use SKIP if you will write this chapter yourself (no AI prose will be generated).
 # You can also bypass this outline entirely with: /speckit.implement --dismiss-outline <CHAPTER_ID>
+
+## Required Context
+<!-- Populated by speckit.outline. Documents and sections needed for drafting this scene. -->
+<!-- speckit.implement will use these to query only the necessary context via RAG. -->
+
+### Documents Needed
+- [ ] constitution.md §VII (Tone, Target Audience, Tense, Sentence Rhythm, Language)
+- [ ] constitution.md §IX (Anti-AI Filter)
+- [ ] constitution.md §VI (Active prose profile)
+- [ ] characters/[pov_character].md (full profile)
+- [ ] characters/[secondary_char].md (if present)
+- [ ] locations.md LOC-[NNN] (if setting exists)
+- [ ] timeline.md (timeline_position section)
+- [ ] themes.md (active motif for this phase)
+- [ ] plan.md ## Scene Outline (this chapter's entry)
+- [ ] spec.md (character arcs, Key Scenes)
+- [ ] craft-rules.md (Dirt Rule, Triple Purpose, Oblique Dialogue)
+- [ ] [Other: specify file and section]
+
+### RAG Query Suggestions
+<!-- Use these queries when .specify/index/ exists -->
+- "[pov_character] voice register micro-obsession arc state"
+- "[setting] sensory anchors atmosphere dirt rule"
+- "[active_motif] thematic delivery"
+- "[chapter_id] [pov_character] scene context"
 ---
 
 ## Opening Hook

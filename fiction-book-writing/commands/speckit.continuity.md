@@ -26,6 +26,7 @@ If a chapter ID or range is given (e.g., `A1.101` or `JO3.201–JO3.203`), scope
   > `python .specify/presets/fiction-book-writing/scripts/python/index.py query "[character name] [rule or fact]" --type draft --top 10`
   > `python .specify/presets/fiction-book-writing/scripts/python/index.py query "[world rule text]" --top 8`
 - Use index results to prioritise which draft files to load in full. The index is an efficiency aid — it does not replace reading the actual draft files for any flagged passage.
+- If outline files exist with `status: APPROVED`, read their `## Required Context` sections to determine which supporting documents are needed for this chapter's continuity check.
 
 ## Goal
 
@@ -45,6 +46,7 @@ Identify story bible violations, continuity errors, and untracked narrative thre
    - Required: `spec.md`, `plan.md`, `tasks.md`, `.specify/memory/constitution.md`
    - Required: draft files in `FEATURE_DIR/draft/` — identified via their YAML frontmatter header (`chapter_id`, `beat_id`, `pov_character`, `status`, `constitution_version`). Abort with a clear error if no draft files exist.
    - Also load: `characters.md` (index) and `characters/` profiles, `timeline.md`, `world-building.md`, `locations.md` (if present), `glossary.md` (if present), `subplots.md` (if present), `relationships.md` (if present)
+   - **If outline file exists for this chapter with `status: APPROVED`**: read `## Required Context` to determine which supporting documents to load; use RAG queries for listed documents instead of loading full files
 
 3. **Draft file inventory**:
    - Scan all `draft/*.md` files (or the scoped range from `$ARGUMENTS`)

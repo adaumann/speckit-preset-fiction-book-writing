@@ -82,7 +82,11 @@ Accepted arguments:
    - Load their arc state at this phase from `spec.md` character arc progression
    - State what they want entering the scene and what they actually get
    - For non-POV characters: state their function (obstacle, mirror, catalyst, revelation)
-
+**Required Context** — document which supporting files and sections this outline needs:
+   - List each document that will be needed during drafting
+   - Note specific sections (e.g., "characters/[name].md: vocabulary pool, micro-obsession")
+   - If using RAG: write suggested query strings for each needed context
+   - This section is read by speckit.implement to determine what to load/query
    **Dialogue Requirements** — map each dialogue exchange from the plan entry:
    - Do NOT write dialogue — state what must be communicated and how it must be deflected or unspoken
    - Include the word-failure moment if the plan specifies one
@@ -92,7 +96,16 @@ Accepted arguments:
    - Pull the primary sensory anchor from the Sensory Anchors table
    - Pull one Dirt Rule detail option from the location's Dirt Rule row
    - If no `locations.md` entry: derive from the plan entry's setting description and note `TBD — populate locations.md`
-
+**Required Context** — populate the Required Context section in the outline file:
+   - List: constitution.md §VII, §IX, §VI
+   - List: characters/[pov_character].md (full), any secondary character profiles
+   - List: locations.md LOC-[NNN] (if exists)
+   - List: timeline.md (relevant section)
+   - List: themes.md (active motif)
+   - List: plan.md ## Scene Outline (this chapter)
+   - List: spec.md (character arcs)
+   - List: craft-rules.md
+   - Add RAG query suggestions for each context area
    **Thematic Work** — load from `themes.md` if available:
    - Identify which motif from the Motif Registry is scheduled for this scene's phase
    - Specify the delivery method (action / object / spatial relationship — never dialogue statement)

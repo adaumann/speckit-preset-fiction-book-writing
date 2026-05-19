@@ -47,6 +47,7 @@ You **MUST** consider the user input before proceeding (if not empty).
    - For each phase: identify which scenes can be drafted in parallel (`[P]`) vs. sequentially (dependency on prior scene's outcome)
    - Identify the critical checkpoint location (after Phase 1 research is complete, before any drafting begins)
    - Generate polish pass tasks from constitution.md compliance requirements
+   - For each task, note which supporting documents are needed (for implement to use RAG instead of loading all files)
 
 4. **Generate Phase 1 research tasks from `research.md`** (do NOT use the static T001–T006 from `tasks-template.md`):
    - If `research.md` exists in `FEATURE_DIR`:

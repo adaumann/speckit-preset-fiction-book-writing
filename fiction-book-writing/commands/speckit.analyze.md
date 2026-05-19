@@ -42,6 +42,7 @@ Run after `speckit.tasks` has produced a complete `tasks.md`. Does not require a
      python .specify/presets/fiction-book-writing/scripts/python/index.py query "world rules constraints forbidden" --type world --top 5
      python .specify/presets/fiction-book-writing/scripts/python/index.py query "subplot beats resolution" --type subplot --top 5
      ```
+   - If outline files exist with `status: APPROVED`, read their `## Required Context` sections to determine which documents are actually needed for analysis scope.
    - Abort with a clear error if any required document is missing
    - Do **not** scan `draft/` — this command is pre-draft only. If draft files are present, note their count in the report but do not analyze them.
 

@@ -86,6 +86,7 @@ You **MUST** consider the user input before proceeding (if not empty).
      - **Sentence Rhythm** (`§VII Sentence Rhythm`) — apply the story-specific rhythm pattern (e.g. "short/jagged during panic; long/winding during reflection") as the baseline; the active prose profile may override for specific scenes
      - **Tone** (`§VII Tone`) and **Target Audience** (`§VII Target Audience`) — these govern emotional register, vocabulary ceiling, content complexity, and how explicit themes, violence, or sexuality may be rendered. If Tone is set, every scene must sustain it. If Target Audience is set, content, vocabulary register, and prose complexity must stay appropriate for that audience.
    - Read `.specify/memory/craft-rules.md` for craft rules (Sections II–VI: Dirt Rule, Physical Feedback, Triple Purpose, Oblique Dialogue, universal Anti-AI Filter, active prose profile definition)
+   - **If outline file exists with status: APPROVED**: read the `## Required Context` section and use RAG queries for listed documents instead of loading full files
    - Read `characters.md` (index) and the POV character's profile at `characters/[name].md` if present (voice signatures, micro-obsessions)
    - Read the relevant section of `timeline.md` for the chapters being drafted
    - Read the `LOC-NNN` block(s) in `locations.md` matching the chapter's setting — load: Sensory Anchors, Atmosphere by Time/Condition row matching `timeline_position`, Character Relationships for the POV character, Dirt Rule detail options, prohibited uses. If `locations.md` does not exist or the location has no entry, continue without it but flag it in the draft notes block.
@@ -98,6 +99,12 @@ You **MUST** consider the user input before proceeding (if not empty).
      python .specify/presets/fiction-book-writing/scripts/python/index.py query "[CHAPTER_ID] [POV_CHARACTER]" --type outline --top 1
      ```
      Use returned chunks to supplement or replace loading full files when combined file size approaches context limits.
+
+- **Outline-required context** (if outline file exists with `status: APPROVED`): read the `## Required Context` section from the outline file and use it to determine which documents to load. For documents listed, use RAG queries instead of loading full files:
+     ```
+     python .specify/presets/fiction-book-writing/scripts/python/index.py query "[from outline Required Context]" --type [character|world|theme|outline] --top 3
+     ```
+     Only load full files for: constitution.md, plan.md ## Scene Outline (this chapter), and the outline file itself.
 
 4. **Resolve the target chapter outline**:
    - **Priority order for the working brief**:

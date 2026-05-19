@@ -49,10 +49,10 @@ from typing import Iterator, NamedTuple
 INDEX_DIR_NAME = ".specify/index"
 MANIFEST_FILE = "manifest.json"
 COLLECTION_NAME = "speckit_fiction"
-CHUNK_TARGET_TOKENS = 300          # ~1 200–1 500 characters for English prose
-CHUNK_OVERLAP_TOKENS = 30          # overlap to preserve sentence context
+CHUNK_TARGET_TOKENS = 200          # reduced from 300 to lower token usage
+CHUNK_OVERLAP_TOKENS = 20          # reduced overlap
 APPROX_CHARS_PER_TOKEN = 4.5       # rough estimate; avoids tiktoken dependency
-DEFAULT_TOP_K = 5
+DEFAULT_TOP_K = 3                  # reduced from 5 to limit context usage
 EMBEDDING_MODEL = "all-MiniLM-L6-v2"  # 45 MB, fast, good quality
 
 # Directories and files to index, relative to project root.
