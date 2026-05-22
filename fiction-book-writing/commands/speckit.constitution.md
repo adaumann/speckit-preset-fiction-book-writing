@@ -4,6 +4,9 @@ handoffs:
   - label: Create Story Brief
     agent: speckit.specify
     prompt: Create a story brief for...
+scripts:
+  sh: scripts/bash/setup-plan.sh
+  ps: scripts/powershell/setup-plan.ps1
 ---
 
 ## User Input
@@ -120,15 +123,37 @@ You **MUST** consider the user input before proceeding (if not empty).
    - `[STORY_SPECIFIC_PRINCIPLES]` — 3–5 rules unique to this story
    - `[ADDITIONAL_PROHIBITED_PHRASES]` — story/genre-specific additions to the Anti-AI filter
 
-3b. **RAG Index System** — mention as optional post-plan step (do not prompt during constitution):
+3b. **RAG Search Index** — ask if not already set:
 
-   After constitution is ratified and `speckit.plan` has generated all supporting documents (characters, locations, timeline, world-building, etc.), the user can build the search index:
+   > "Do you want to enable the offline search index for this project?
+   >
+   > It indexes all supporting documents (characters, locations, timeline, world-building, plan, etc.)
+   > so that speckit.implement, speckit.continuity, and speckit.research can retrieve relevant
+   > passages without loading all files into context.
+   >
+   > (a) **yes** — enable the index (requires pip install chromadb sentence-transformers rank-bm25)
+   > (b) **no** — skip for now (can be enabled later with `python scripts/python/index.py build`)"
 
-   > `python .specify/presets/fiction-book-writing/scripts/python/index.py build`
+   If **yes**:
+   - Set `[SEARCH_INDEX_ENABLED]` to `yes`
+  - Run `{SCRIPT}` from the project root to install chromadb, sentence-transformers, and rank-bm25
+  - Ensure the Python ChromeDB package is installed as demonstrated in `scripts/bash/setup-plan.sh` or `scripts/bash/setup-plan.ps1`
+   - Ask for backend preference:
+     > "Which backend?
+     > (a) **auto** — use best available (chromadb if installed, else bm25, else built-in)
+     > (b) **chroma** — force ChromaDB vector search (requires chromadb + sentence-transformers)
+     > (c) **bm25** — force rank-bm25 keyword search
+     > (d) **keyword** — use built-in TF scorer (no install needed)"
+   - Ask for embedding model (default: `all-MiniLM-L6-v2`):
+     > "Embedding model (press Enter for default `all-MiniLM-L6-v2`):"
+   - Ask for chunk size (default: 300):
+     > "Chunk size in tokens (200–600 recommended, press Enter for default 300):"
+   - Ask for top-k (default: 5):
+     > "Results per query (press Enter for default 5):"
 
-   The index enables `speckit.implement`, `speckit.continuity`, `speckit.research`, and other commands to retrieve relevant passages without loading all files into context. It works best after `speckit.plan` has produced the full document set.
-
-   **Do not ask the user about the index during constitution** — the document set is too small (only spec.md + constitution.md) to make an informed decision. The `speckit.plan` command handles index setup at the right time.
+   If **no**:
+   - Set `[SEARCH_INDEX_ENABLED]` to `no`
+   - Leave other RAG fields as defaults
 
 3c. **Resolve Audiobook Production section** (Section X of constitution.md):
 
@@ -136,8 +161,7 @@ You **MUST** consider the user input before proceeding (if not empty).
 
    > "What output do you want for this story?
    > (a) **book** — prose drafts only, no audiobook files
-   > (b) **audiobook** — audiobook TTS drafts generated alongside prose drafts
-   > (c) **both** — prose drafts AND audiobook TTS drafts"
+   > (b) **both** — prose drafts AND audiobook TTS drafts"
 
    If Output Mode is `book`: mark the section as inactive and stop here.
 
@@ -211,12 +235,18 @@ You **MUST** consider the user input before proceeding (if not empty).
    - Theme is stated as a question, not an answer
    - If `author-sample` mode: all 8 Extracted Style Markers have values (not `[NEEDS CLARIFICATION]`)
    - If Series Position is non-standalone: `## IX. Series Context` is present and has at least one populated SC-NNN or STC-NNN row, or is explicitly marked `[TBD pending series-bible.md creation]`. Any Series Variance Log row that is present but has an empty Justification column → WARNING.
-   - `[OUTPUT_MODE]` is one of: `book`, `audiobook`, `both`
+   - `[OUTPUT_MODE]` is one of: `book`, `both`
    - If Output Mode is `audiobook` or `both`:
      - `[TTS_ENGINE]` is one of: `ssml-cloud`, `elevenlabs`, `both`
      - `[SPEAKER_MODE]` is one of: `single`, `multi`
      - Narrator row in Speaker Configuration is populated (not `[NEEDS CLARIFICATION]`) — warn if not
      - If `multi` speaker mode: at least one character row present in Speaker Configuration — warn if none
+   - `[SEARCH_INDEX_ENABLED]` is one of: `yes`, `no`
+   - If `yes`:
+     - `[BACKEND_PREFERENCE]` is one of: `auto`, `chroma`, `bm25`, `keyword`
+     - `[EMBEDDING_MODEL]` is a valid model name (default: `all-MiniLM-L6-v2`)
+     - `[CHUNK_SIZE_TOKENS]` is an integer 200–600
+     - `[TOP_K_DEFAULT]` is a positive integer
 
 8. **Report**: Summarize all resolved fields, the new version number, and any remaining items requiring attention.
 

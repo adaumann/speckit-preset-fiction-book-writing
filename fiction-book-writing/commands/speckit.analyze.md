@@ -41,6 +41,7 @@ Run after `speckit.tasks` has produced a complete `tasks.md`. Does not require a
      python .specify/presets/fiction-book-writing/scripts/python/index.py query "character arc wound false belief dramatic question" --type character --top 8
      python .specify/presets/fiction-book-writing/scripts/python/index.py query "world rules constraints forbidden" --type world --top 5
      python .specify/presets/fiction-book-writing/scripts/python/index.py query "subplot beats resolution" --type subplot --top 5
+     python .specify/presets/fiction-book-writing/scripts/python/index.py query "[chapter_id] sequence beats dialogue requirements" --type outline --top 3
      ```
    - If outline files exist with `status: APPROVED`, read their `## Required Context` sections to determine which documents are actually needed for analysis scope.
    - Abort with a clear error if any required document is missing

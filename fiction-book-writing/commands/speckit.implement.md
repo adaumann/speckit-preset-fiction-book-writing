@@ -24,10 +24,7 @@ You **MUST** consider the user input before proceeding (if not empty).
 - Check whether `scripts/python/index.py` exists (check `.specify/presets/fiction-book-writing/scripts/python/index.py` first, then `scripts/python/index.py` as fallback) and `.specify/index/` exists (index has been built).
 - If both exist, run: `python .specify/presets/fiction-book-writing/scripts/python/index.py update` from the project root before drafting begins.
 - This ensures semantic search reflects the latest draft files and supporting documents.
-- If the command fails or either path is absent, skip silently.
-
-## Outline
-
+   - After drafting is complete, run: `python .specify/presets/fiction-book-writing/scripts/python/index.py update` again to index the newly written chapter.
 1. **Setup**: Resolve `FEATURE_DIR` by reading the project structure: the first subdirectory inside `specs/` that contains project files. Fall back to project root if `specs/` does not exist.
 
 2. **Check checklist gates** (if `FEATURE_DIR/checklists/` exists):
@@ -82,6 +79,7 @@ You **MUST** consider the user input before proceeding (if not empty).
    - **Mandatory**: `constitution.md`, the current scene outline, and the POV character profile.
    - **Targeted**: Only load specific files listed in the outline's `Documents Needed`. 
    - **RAG-First**: For world-building or secondary characters, use RAG queries instead of loading the full files. 
+   - **Context Retrieval (Drafts & Outlines)**: For checking past/future scene beats or specific draft details (to ensure setup/payoff), query the index instead of loading multiple full files.
    - **Summaries**: If a file is >5000 words, read only its `# Summary` or `## Recent Events` section.
    - **Skip**: `spec.md` and `plan.md` unless the outline explicitly points to them for unresolved questions.
 

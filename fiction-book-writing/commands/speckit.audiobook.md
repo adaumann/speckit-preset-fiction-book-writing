@@ -80,7 +80,7 @@ Accepted arguments:
 Resolve `FEATURE_DIR` by reading the project structure: the first subdirectory inside `specs/` that contains project files. Fall back to project root if `specs/` does not exist.
 
 Locate `constitution.md` (at `.specify/memory/constitution.md` or `FEATURE_DIR/constitution.md`). Parse `## X. Audiobook Production`:
-- `OUTPUT_MODE` — `book` / `audiobook` / `both`
+- `OUTPUT_MODE` — `book` / `both`
 - `TTS_ENGINE` — `ssml-cloud` / `elevenlabs` / `both`
 - `SPEAKER_MODE` — `single` / `multi`
 - Speaker Configuration table — all `| Role | Character / Function | SSML-Cloud Voice | ElevenLabs Voice ID | Notes |` rows
@@ -97,7 +97,7 @@ Audiobook production settings are configured in ## X. Audiobook Production.
 If `OUTPUT_MODE` is `book` and mode is `draft`:
 ```
 ⚠️ Output Mode is set to `book` in constitution.md ## X. Audiobook Production.
-Set Output Mode to `audiobook` or `both` to enable audiodraft generation.
+Set Output Mode to `both` to enable audiodraft generation.
 Run speckit.audiobook voice add to configure TTS settings and update Output Mode.
 ```
 For `voice`, `lexicon`, `check`, and `status` modes: proceed regardless of `OUTPUT_MODE`.

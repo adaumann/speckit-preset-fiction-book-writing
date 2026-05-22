@@ -58,10 +58,15 @@ EMBEDDING_MODEL = "all-MiniLM-L6-v2"  # 45 MB, fast, good quality
 # Directories and files to index, relative to project root.
 # Globs are evaluated against the project root.
 INDEX_GLOBS: list[tuple[str, str]] = [
+    ("spec.md",                            "spec"),
     ("specs/*/spec.md",                    "spec"),
+    ("plan.md",                            "plan"),
+    ("specs/*/plan.md",                    "plan"),
     (".specify/memory/constitution.md",    "constitution"),
     ("draft/*.md",                         "draft"),
+    ("drafts/*.md",                        "draft"),
     ("outlines/*.md",                      "outline"),
+    ("outline/*.md",                       "outline"),
     ("characters/*.md",                    "character"),
     ("characters.md",                      "character"),
     ("world-building.md",                  "world"),
@@ -74,6 +79,23 @@ INDEX_GLOBS: list[tuple[str, str]] = [
     ("locations.md",                       "location"),
     ("series/series-bible.md",             "series"),
     ("series/*.md",                        "series"),
+    ("tasks.md",                           "tasks"),
+    # Nested spec folder patterns (for specs/*/ structure)
+    ("specs/*/characters/*.md",            "character"),
+    ("specs/*/characters.md",              "character"),
+    ("specs/*/world-building.md",          "world"),
+    ("specs/*/research.md",                "research"),
+    ("specs/*/glossary.md",                "glossary"),
+    ("specs/*/relationships.md",           "relations"),
+    ("specs/*/subplots.md",                "subplot"),
+    ("specs/*/themes.md",                  "theme"),
+    ("specs/*/timeline.md",                "timeline"),
+    ("specs/*/locations.md",               "location"),
+    ("specs/*/draft/*.md",                 "draft"),
+    ("specs/*/drafts/*.md",                "draft"),
+    ("specs/*/outlines/*.md",              "outline"),
+    ("specs/*/outline/*.md",               "outline"),
+    ("specs/*/tasks.md",                   "tasks"),
 ]
 
 # ---------------------------------------------------------------------------
@@ -580,23 +602,33 @@ def build_parser() -> argparse.ArgumentParser:
         prog="index.py",
         description="Offline semantic/keyword search index for speckit fiction projects.",
     )
-    p.add_argument("--project-root", metavar="PATH", default=None)
-    p.add_argument("--index-dir",    metavar="PATH", default=None)
 
     sub = p.add_subparsers(dest="command", required=True)
 
-    sub.add_parser("build",  help="Build index from scratch")
-    sub.add_parser("update", help="Incrementally update index (changed files only)")
+    bp = sub.add_parser("build",  help="Build index from scratch")
+    bp.add_argument("--project-root", metavar="PATH", default=None)
+    bp.add_argument("--index-dir",    metavar="PATH", default=None)
+
+    up = sub.add_parser("update", help="Incrementally update index (changed files only)")
+    up.add_argument("--project-root", metavar="PATH", default=None)
+    up.add_argument("--index-dir",    metavar="PATH", default=None)
 
     qp = sub.add_parser("query", help="Search the index")
     qp.add_argument("query",       help="Search query string")
+    qp.add_argument("--project-root", metavar="PATH", default=None)
+    qp.add_argument("--index-dir",    metavar="PATH", default=None)
     qp.add_argument("--top",       type=int,   default=DEFAULT_TOP_K, metavar="N")
     qp.add_argument("--type",      metavar="TYPE", default=None,
                     help="Filter by doc type: spec|draft|character|world|research|…")
     qp.add_argument("--min-score", type=float, default=0.0, metavar="FLOAT")
 
-    sub.add_parser("status", help="Show index statistics and staleness")
-    sub.add_parser("purge",  help="Wipe index and rebuild from scratch")
+    sp = sub.add_parser("status", help="Show index statistics and staleness")
+    sp.add_argument("--project-root", metavar="PATH", default=None)
+    sp.add_argument("--index-dir",    metavar="PATH", default=None)
+
+    pp = sub.add_parser("purge",  help="Wipe index and rebuild from scratch")
+    pp.add_argument("--project-root", metavar="PATH", default=None)
+    pp.add_argument("--index-dir",    metavar="PATH", default=None)
 
     return p
 

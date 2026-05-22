@@ -25,6 +25,8 @@ If a chapter ID or range is given (e.g., `A1.101` or `JO3.201–JO3.203`), scope
 - If `.specify/index/` exists, you MAY query it to locate all draft passages referencing a specific character, location, or world rule before performing the full prose scan. This is especially useful for 5M-word projects where loading all draft files at once is impractical.
   > `python .specify/presets/fiction-book-writing/scripts/python/index.py query "[character name] [rule or fact]" --type draft --top 10`
   > `python .specify/presets/fiction-book-writing/scripts/python/index.py query "[world rule text]" --top 8`
+  > `python .specify/presets/fiction-book-writing/scripts/python/index.py query "[chapter_id] beats requirements" --type outline --top 3`
+  > `python .specify/presets/fiction-book-writing/scripts/python/index.py query "[character name] emotional state transition" --type draft --top 5`
 - Use index results to prioritise which draft files to load in full. The index is an efficiency aid — it does not replace reading the actual draft files for any flagged passage.
 - If outline files exist with `status: APPROVED`, read their `## Required Context` sections to determine which supporting documents are needed for this chapter's continuity check.
 

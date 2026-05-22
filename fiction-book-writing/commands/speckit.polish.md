@@ -48,6 +48,11 @@ Expected format: a chapter ID (e.g., `A1.101`) or a range (e.g., `A1.101â€“
 - If it exists, read it and look for entries under the `hooks.before_polish` key
 - Process as standard hook block (Optional/Mandatory). Skip silently if absent.
 
+**Update search index** (large projects):
+- Check whether `scripts/python/index.py` exists (check `.specify/presets/fiction-book-writing/scripts/python/index.py` first, then `scripts/python/index.py` as fallback) and `.specify/index/` exists (index has been built).
+- If both exist, run: `python .specify/presets/fiction-book-writing/scripts/python/index.py update` from the project root before polishing begins.
+- This ensures semantic search reflects the latest draft files and supporting documents.
+
 ## Operating Constraints
 
 **VOICE AUTHORITY**: `.specify/memory/constitution.md` is the final arbiter of what is correct prose. Polish must not "improve" a sentence into a voice that doesn't belong to the POV character. A low-register character must remain low-register even after polishing.
@@ -61,6 +66,7 @@ Expected format: a chapter ID (e.g., `A1.101`) or a range (e.g., `A1.101â€“
 ## Execution Steps
 
 1. **Setup**: Resolve `FEATURE_DIR` by reading the project structure: the first subdirectory inside `specs/` that contains project files. Fall back to project root if `specs/` does not exist.
+   - After polishing is complete, if `.specify/index/` exists, run: `python .specify/presets/fiction-book-writing/scripts/python/index.py update` again to index the polished chapter versions.
 
 2. **Identify the target**:
    - Parse `$ARGUMENTS` for chapter ID or range. Resolve to `draft/*.md` file(s).

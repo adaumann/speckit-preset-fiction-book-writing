@@ -544,8 +544,7 @@ Scale proportionally to [WORD_COUNT_TARGET].
      spec.md Key Scenes are high-level intentions; plan.md Scene Outline is the execution contract.
      
      One entry per chapter. Chapters are named: `{PREFIX}{phase}.{beat_number}_{ShortName}.md`
-     and will be written to: draft/
-     Examples: `draft/A1.101_Awakening.md` (three-act), `draft/JO3.201_SupremeOrdeal.md` (Hero's Journey)
+     Examples: `A1.101_Awakening` (three-act), `JO3.201_SupremeOrdeal` (Hero's Journey)
      
      This outline is the bridge between the beat sheet (what happens)
      and the actual prose (how it happens). The AI uses these outlines
@@ -553,7 +552,6 @@ Scale proportionally to [WORD_COUNT_TARGET].
 
 ### Chapter: [CHAPTER_ID] — [CHAPTER_NAME]
 <!-- Example: Chapter: A1.101 — Awakening -->
-<!-- Draft file: draft/A1.101_Awakening.md -->
 
 | Field | Value |
 |---|---|

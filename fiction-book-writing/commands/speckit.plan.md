@@ -131,36 +131,21 @@ You **MUST** consider the user input before proceeding (if not empty).
    Generate the full scene outline in the `## Scene Outline` section of `IMPL_PLAN`.
    For each chapter within each beat:
    - Assign the chapter ID using the structure-aware prefix: `{PREFIX}{phase}.{beat_number}_{ShortName}` (e.g., `A1.101_Awakening` for three-act, `JO3.201_SupremeOrdeal` for Hero's Journey)
-   - Note the draft file path: `draft/{CHAPTER_ID}.md`
+   - Note the chapter ID for reference: `{CHAPTER_ID}`
    - Fill all fields: POV (character + POV type), setting (location + time + atmosphere anchor), timeline position, estimated length, act/phase, status (= `outline`)
    - Write: opening hook (sensory, not summary), key beats (3–6 micro-events in causal order), character beats (internal POV change + visible secondary changes), dialogue requirements (each critical exchange: participants / subtext / oblique pattern), sensory details (≥1 non-visual, include Dirt Rule imperfection), thematic work (how theme is carried without being stated), closing beat (off-balance, what has irreversibly changed)
    - If a beat spans multiple chapters, give each chapter its own distinct entry with non-overlapping key beats
 
 4. **Stop and report**: Command ends after Phase 3. Report: `IMPL_PLAN` path, total beats generated, total chapters outlined, word count distribution across acts, any remaining `[NEEDS CLARIFICATION]` markers, open threads count.
 
-5. **Build search index** (offline keyword/semantic search — useful at any project size, recommended once supporting docs exist):
+5. **Build search index** (if enabled in constitution.md):
 
-   - Check whether the preset's `scripts/python/index.py` exists (check `.specify/presets/fiction-book-writing/scripts/python/index.py` first, then `scripts/python/index.py` as fallback). Let `INDEX_SCRIPT` = the found path.
-   - If it exists, ask:
-     ```
-     Do you want to enable the offline search index for this project?
-    
-     It indexes all supporting documents (characters, locations, timeline, world-building, plan, etc.)
-     so that speckit.implement, speckit.continuity, and speckit.research can retrieve relevant
-     passages without loading all files into context.
-    
-     The script auto-detects available backends:
-       • ChromaDB + sentence-transformers → semantic/vector search (install separately with pip)
-       • rank-bm25                         → keyword BM25 scoring (install separately with pip)
-       • built-in TF scorer                → zero-dependency fallback (works out of the box)
-    
-     (a) **Build now** — index with the best available backend
-     (b) **Skip** — can be built later with `python {INDEX_SCRIPT} build`
-     ```
-   - If the user chooses **(a)**:
-     - Run: `python {INDEX_SCRIPT} build` from the project root.
+   - Check `constitution.md` for `[SEARCH_INDEX_ENABLED]` value.
+   - If `yes`:
+     - Check whether the preset's `scripts/python/index.py` exists (check `.specify/presets/fiction-book-writing/scripts/python/index.py` first, then `../scripts/python/index.py` relative to this command as fallback). Let `INDEX_SCRIPT` = the found path.
+     - Run: `{SCRIPT} && (test -f .venv/bin/python && .venv/bin/python || .venv/Scripts/python.exe) {INDEX_SCRIPT} build` from the project root.
      - On success → emit: `✓ Search index built at .specify/index/ — {total_chunks} chunks across {total_files} files.`
-     - On failure → emit: `⚠️ Index build failed. You can retry with: python {INDEX_SCRIPT} build`
-   - If **(b)** or script absent: skip silently and note at end: `ℹ️ Search index not built — run python {INDEX_SCRIPT} build manually when ready.`
+     - On failure → emit: `⚠️ Index build failed. You can retry with: {SCRIPT} && python {INDEX_SCRIPT} build`
+   - If `no` or absent: skip silently and note at end: `ℹ️ Search index not built — enable in constitution.md and run python {INDEX_SCRIPT} build manually when ready.`
 
 6. **Check for extension hooks** (after planning): check `hooks.after_plan` and process as standard hook block.

@@ -28,6 +28,11 @@ If only a chapter ID is given and a matching checklist file exists, load the che
 - If it exists, read it and look for entries under the `hooks.before_revise` key
 - Process as standard hook block (Optional/Mandatory). Skip silently if absent.
 
+**Update search index** (large projects):
+- Check whether `scripts/python/index.py` exists (check `.specify/presets/fiction-book-writing/scripts/python/index.py` first, then `scripts/python/index.py` as fallback) and `.specify/index/` exists (index has been built).
+- If both exist, run: `python .specify/presets/fiction-book-writing/scripts/python/index.py update` from the project root before revision begins.
+- This ensures semantic search reflects the latest draft files and supporting documents.
+
 ## Goal
 
 Rewrite only the passages in a drafted chapter that are failing checklist items or continuity checks. Do not touch passing content. Produce a versioned output file and a diff summary so the writer can see exactly what changed and why.
@@ -43,6 +48,7 @@ Rewrite only the passages in a drafted chapter that are failing checklist items 
 ## Execution Steps
 
 1. **Setup**: Resolve `FEATURE_DIR` by reading the project structure: the first subdirectory inside `specs/` that contains project files. Fall back to project root if `specs/` does not exist.
+   - After revision is complete, if `.specify/index/` exists, run: `python .specify/presets/fiction-book-writing/scripts/python/index.py update` again to index the revised chapter.
 
 2. **Identify the revision target**:
    - Parse `$ARGUMENTS` for chapter ID. Resolve to `draft/<CHAPTER_ID>_<ChapterName>.md` in `FEATURE_DIR`.
