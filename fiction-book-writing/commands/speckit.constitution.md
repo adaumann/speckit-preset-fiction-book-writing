@@ -138,6 +138,20 @@ You **MUST** consider the user input before proceeding (if not empty).
    - Set `[SEARCH_INDEX_ENABLED]` to `yes`
   - Run `{SCRIPT}` from the project root to install chromadb, sentence-transformers, and rank-bm25
   - Ensure the Python ChromeDB package is installed as demonstrated in `scripts/bash/setup-plan.sh` or `scripts/bash/setup-plan.ps1`
+  - A configuration file `.specify/index/config.json` will be created on first run. Edit this file to adjust:
+    - `backend_preference` (auto, chroma, bm25, keyword)
+    - `embedding_model` (e.g., `all-MiniLM-L6-v2`)
+    - `chunk_size_tokens` (target tokens per chunk)
+    - `top_k` (default number of results per query)
+    
+    ```json
+    {
+      "backend_preference": "auto",
+      "embedding_model": "all-MiniLM-L6-v2",
+      "chunk_size_tokens": 300,
+      "top_k": 5
+    }
+    ```
    - Ask for backend preference:
      > "Which backend?
      > (a) **auto** — use best available (chromadb if installed, else bm25, else built-in)

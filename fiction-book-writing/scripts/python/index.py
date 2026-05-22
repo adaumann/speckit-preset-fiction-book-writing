@@ -49,10 +49,63 @@ from typing import Iterator, NamedTuple
 INDEX_DIR_NAME = ".specify/index"
 MANIFEST_FILE = "manifest.json"
 COLLECTION_NAME = "speckit_fiction"
-CHUNK_TARGET_TOKENS = 200          # reduced from 300 to lower token usage
+
+# ---------------------------------------------------------------------------
+# Configuration handling
+# ---------------------------------------------------------------------------
+# The index script historically used hard‑coded constants. To make the RAG
+# settings user‑configurable (backend, embedding model, chunk size, top‑k) we now
+# load an optional JSON config file located at `<project_root>/.specify/index/config.json`.
+# If the file does not exist, sensible defaults matching the previous behaviour
+# are used and a default config file is written for future runs.
+from pathlib import Path
+import json
+
+CONFIG_FILE_NAME = "config.json"
+
+def _load_config(project_root: Path) -> dict:
+    """Load RAG configuration from ``.specify/index/config.json``.
+
+    The config may contain:
+        - "backend_preference": one of "auto", "chroma", "bm25", "keyword"
+        - "embedding_model": string model name for sentence‑transformers
+        - "chunk_size_tokens": integer target token count per chunk
+        - "top_k": integer number of results to return per query
+
+    Missing keys fall back to the historic defaults.
+    """
+    config_path = project_root / INDEX_DIR_NAME / CONFIG_FILE_NAME
+    defaults = {
+        "backend_preference": "auto",
+        "embedding_model": "all-MiniLM-L6-v2",
+        "chunk_size_tokens": 300,
+        "top_k": 5,
+    }
+    if not config_path.is_file():
+        # Write default config for the user
+        config_path.parent.mkdir(parents=True, exist_ok=True)
+        config_path.write_text(json.dumps(defaults, indent=2), encoding="utf-8")
+        return defaults
+    try:
+        data = json.loads(config_path.read_text(encoding="utf-8"))
+        # Merge with defaults to ensure all keys exist
+        merged = {**defaults, **data}
+        return merged
+    except Exception:
+        # On any error fall back to defaults
+        return defaults
+
+# Load config early – project root detection occurs later, but we can defer
+# until ``find_project_root`` is called. Functions below will call ``_load_config``
+# with the discovered root.
+
+# ---------------------------------------------------------------------------
+# Chunking constants (will be overridden by config values at runtime)
+# ---------------------------------------------------------------------------
+CHUNK_TARGET_TOKENS = 200          # reduced from 300 to lower token usage (default)
 CHUNK_OVERLAP_TOKENS = 20          # reduced overlap
 APPROX_CHARS_PER_TOKEN = 4.5       # rough estimate; avoids tiktoken dependency
-DEFAULT_TOP_K = 3                  # reduced from 5 to limit context usage
+DEFAULT_TOP_K = 3                  # reduced from 5 to limit context usage (default)
 EMBEDDING_MODEL = "all-MiniLM-L6-v2"  # 45 MB, fast, good quality
 
 # Directories and files to index, relative to project root.
@@ -456,14 +509,45 @@ class KeywordBackend:
 # Backend selection
 # ---------------------------------------------------------------------------
 
-def get_backend(index_dir: Path, force_keyword: bool = False):
-    if not force_keyword:
-        chromadb, _ = _try_import_chroma()
-        if chromadb is not None:
-            try:
-                return ChromaBackend(index_dir), "chroma"
-            except Exception as exc:
-                print(f"[warn] ChromaDB unavailable ({exc}); falling back to keyword search.", file=sys.stderr)
+def get_backend(index_dir: Path, backend_preference: str | None = None, force_keyword: bool = False):
+    """Select the appropriate backend based on user configuration.
+
+    The function now reads ``backend_preference`` from the optional ``config.json``
+    located at ``<project_root>/.specify/index/config.json``. If ``backend_preference``
+    is supplied explicitly it overrides the config value. ``force_keyword`` retains
+    backward‑compatible behaviour – when ``True`` the keyword backend is forced.
+    """
+    if force_keyword:
+        return KeywordBackend(index_dir), "keyword"
+
+    # Load configuration if needed.
+    if backend_preference is None:
+        # ``index_dir`` is ``<project_root>/.specify/index`` → project root is two levels up.
+        project_root = index_dir.parent.parent
+        cfg = _load_config(project_root)
+        backend_preference = cfg.get("backend_preference", "auto")
+
+    pref = (backend_preference or "auto").lower()
+
+    if pref == "keyword":
+        return KeywordBackend(index_dir), "keyword"
+    if pref == "bm25":
+        # BM25 is provided by the KeywordBackend when rank_bm25 is available.
+        return KeywordBackend(index_dir), "bm25"
+    if pref == "chroma":
+        try:
+            return ChromaBackend(index_dir), "chroma"
+        except Exception as exc:
+            print(f"[warn] ChromaDB unavailable ({exc}); falling back to keyword.", file=sys.stderr)
+            return KeywordBackend(index_dir), "keyword"
+
+    # "auto" – try Chroma first, then fallback.
+    chromadb, _ = _try_import_chroma()
+    if chromadb is not None:
+        try:
+            return ChromaBackend(index_dir), "chroma"
+        except Exception as exc:
+            print(f"[warn] ChromaDB unavailable ({exc}); falling back to keyword.", file=sys.stderr)
     return KeywordBackend(index_dir), "keyword"
 
 
@@ -636,6 +720,25 @@ def build_parser() -> argparse.ArgumentParser:
 def main() -> None:
     parser = build_parser()
     args = parser.parse_args()
+
+    # Determine project root early to load configuration.
+    root = find_project_root(Path(args.project_root) if getattr(args, "project_root", None) else None)
+    # Load user‑provided RAG configuration (or defaults) from .specify/index/config.json.
+    config = _load_config(root)
+
+    # Apply configuration to module‑level defaults used throughout the script.
+    global CHUNK_TARGET_TOKENS, CHUNK_OVERLAP_TOKENS, EMBEDDING_MODEL, DEFAULT_TOP_K
+    CHUNK_TARGET_TOKENS = int(config.get("chunk_size_tokens", CHUNK_TARGET_TOKENS))
+    # Keep overlap at roughly 10 % of the target size (minimum 5 tokens).
+    CHUNK_OVERLAP_TOKENS = max(5, CHUNK_TARGET_TOKENS // 10)
+    EMBEDDING_MODEL = config.get("embedding_model", EMBEDDING_MODEL)
+    DEFAULT_TOP_K = int(config.get("top_k", DEFAULT_TOP_K))
+
+    # Dispatch command.
+    # Ensure query commands respect configured top_k.
+    if args.command == "query":
+        args.top = int(config.get("top_k", args.top))
+
     {
         "build":  cmd_build,
         "update": cmd_update,
