@@ -31,7 +31,30 @@ You **MUST** consider the user input before proceeding (if not empty).
 - Process as standard hook block (Optional/Mandatory). Skip silently if absent.
 
 ## Outline
+## Goal
 
+Generate a complete, ordered list of **scene‑by‑scene writing tasks** that drives the drafting process. The tasks include research, character profile creation, world‑building, timeline work, prose drafting, optional audiobook drafting, and final polish passes. They are grouped by phases (research, drafting, polish) and respect character‑arc priorities and parallelism constraints.
+
+## Command
+
+When the `speckit.tasks` command is invoked, the LLM should:
+1. **Read** any user arguments (`$ARGUMENTS`).
+2. **Perform** pre‑execution checks (extension hooks).
+3. **Resolve** the feature directory (`FEATURE_DIR`) by locating the first sub‑directory under `specs/` that contains project files (fallback to the project root).
+4. **Load** required story documents (`plan.md`, `spec.md`) and optional supporting files (`characters.md`, character profiles, `world-building.md`, `timeline.md`, `research.md`).
+5. **Extract** plot structure, character arcs (with priorities P1‑P3), and scene beats from the loaded documents.
+6. **Generate** tasks following the detailed workflow:
+  - Create Phase 1 research tasks from actual `research.md` R‑items (or a placeholder if missing).
+  - Create profile, world‑building, and timeline tasks using real character and setting names.
+  - Map each scene beat to a drafting task, marking parallelizable tasks with `[P]` only when scenes are truly independent.
+  - Insert a critical checkpoint task after Phase 1 research and before any drafting.
+  - Add polish pass tasks based on constitution compliance requirements.
+  - If the story bible specifies `OUTPUT_MODE` of `audiobook` or `both`, generate corresponding audiobook setup, audiodraft, and polish tasks as described.
+7. **Write** the resulting `tasks.md` using `templates/tasks-template.md`, filling in the correct story title, feature directory, scene names, character‑arc labels, file paths, and task statistics (total tasks, arc distribution, parallel vs sequential counts, audiobook task count).
+8. **Report** a summary header with task counts and any remaining `[BLOCKED]` or `[NEEDS CLARIFICATION]` markers.
+9. **Process** any post‑task extension hooks.
+
+The LLM must follow this sequence exactly and must not modify any files outside the newly generated `tasks.md`.
 1. **Setup**: Resolve `FEATURE_DIR` by reading the project structure: the first subdirectory inside `specs/` that contains project files. Fall back to project root if `specs/` does not exist.
 
 2. **Load story documents**: Read from `FEATURE_DIR`:

@@ -6,16 +6,18 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ---
 
+## [1.8.1] - 2026-05-24
+
+### Fixed
+- **Search Index (RAG)** — Fixed incorrect path references in all commands that invoke `index.py`. Commands now correctly resolve to `.specify/presets/fiction-book-writing/scripts/python/index.py` instead of the broken `scripts/python/index.py` path. This ensures the semantic search index is properly built and updated.
+- **plan.md Story Bible Check** — Fixed validation gates that were incorrectly passing when `constitution.md` fields were missing or mismatched. Now properly enforces: constitution version tracking, POV roster completeness, subplot beat sheet coverage, world rules registration, and open question resolution before allowing draft generation.
+- **implement.md** - Fixed task guideline follow
+
 ## [1.8.0] - 2026-05-17
 
 ### Fixed
 - **Anti-AI Filter** — Corrected the active prose profile enforcement in `speckit.implement` and `speckit.polish` to properly apply story-specific Anti-AI phrases from `constitution.md § VII`. Previously, custom phrases were sometimes ignored in favor of the universal filter only.
-- **Search Index (RAG)** — Fixed incorrect path references in all commands that invoke `index.py`. Commands now correctly resolve to `.specify/presets/fiction-book-writing/scripts/python/index.py` instead of the broken `scripts/python/index.py` path. This ensures the semantic search index is properly built and updated.
 - **plan.md Story Bible Check** — Fixed validation gates that were incorrectly passing when `constitution.md` fields were missing or mismatched. Now properly enforces: constitution version tracking, POV roster completeness, subplot beat sheet coverage, world rules registration, and open question resolution before allowing draft generation.
-
-### Changed
-- Updated `preset.yml` version to 1.8.0
-- Updated `catalog.community.json` `updated_at` timestamp to 2026-05-17
 
 ---
 

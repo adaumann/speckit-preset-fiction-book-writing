@@ -1,4 +1,3 @@
----
 description: POV architecture — design, audit, schedule, and validate point-of-view structure for single-POV and multi-POV narratives. Works with any plot structure.
 handoffs:
   - label: Update Story Structure
@@ -12,7 +11,38 @@ handoffs:
 agent_scripts:
   sh: scripts/bash/update-agent-context.sh __AGENT__
   ps: scripts/powershell/update-agent-context.ps1 -AgentType __AGENT__
----
+
+## Purpose
+
+The **`speckit.pov`** command defines, audits, and validates the *point‑of‑view* architecture of a story. It creates or updates the `pov-structure.md` file, checks that drafted chapters respect the intended POV schedule, and ensures information asymmetry is intentional. The command never rewrites prose unless the `draft` sub‑mode is invoked to generate a new structure.
+
+## When to Use
+
+- When you need to **design** a POV schedule for a new project (`draft` mode).
+- To **audit** existing drafts for voice consistency and information leakage (`audit` mode).
+- To **validate or generate** a chapter‑by‑chapter POV schedule (`schedule` mode).
+- To examine **information asymmetry** and hand‑off points (`asymmetry` and `relay` modes).
+- For any free‑form question about POV design without file changes.
+
+## Usage
+
+```bash
+speckit.pov <sub‑mode> [options]
+```
+
+* `<sub‑mode>` – one of `draft`, `audit`, `schedule`, `asymmetry`, `relay`, or any free‑text query.
+* Additional arguments may be supplied after the sub‑mode and are passed as `$ARGUMENTS` to the command.
+
+## High‑Level Execution Flow (LLM Friendly)
+
+1. **Pre‑checks** – run any `hooks.before_pov` and verify required files.
+2. **Resolve feature directory** – locate `FEATURE_DIR` (first sub‑folder under `specs/` or project root).
+3. **Load core documents** – `spec.md`, optional `plan.md`, existing `pov-structure.md`, character profiles, timeline, and drafts as needed.
+4. **Branch to sub‑mode** – execute the specific workflow for `draft`, `audit`, `schedule`, `asymmetry`, or `relay` (see detailed steps below).
+5. **Report results** – output a concise summary table or created file information.
+6. **Post‑checks** – run any `hooks.after_pov`.
+
+The detailed sub‑mode steps remain unchanged but are now preceded by this concise overview to guide the LLM.
 
 ## User Input
 

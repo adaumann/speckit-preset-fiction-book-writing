@@ -9,7 +9,10 @@ handoffs:
     agent: speckit.analyze
     prompt: Run a pre-draft structural alignment check
     send: true
----
+
+## Purpose
+
+The **`/speckit.outline`** command creates an editable outline file for each scene defined in `plan.md`. It extracts the authoritative scene information, enriches it with context (characters, locations, themes, etc.), and writes a concise, beat‑by‑beat outline that authors can review, edit, approve, or skip before any prose drafting occurs.
 
 ## User Input
 
@@ -25,6 +28,16 @@ Accepted arguments:
 - `all` — generate outlines for all scenes in `plan.md ## Scene Outline` that do not already have an outline file
 - *(no argument)* — generate the outline for the next scene without an outline file
 
+## Flags
+
+| Flag | Description |
+|---|---|
+| `all` | Generate outlines for every scene lacking an outline file. |
+| `--ending [END-ID]` | (Future use) Specify a particular ending identifier for downstream processing. |
+| `--target [N]` | (Future use) Target a specific book number when generating outlines in batch mode. |
+
+## Pre-Execution Checks
+
 ## Pre-Execution Checks
 
 **Check for extension hooks (before outline generation)**:
@@ -38,11 +51,10 @@ Accepted arguments:
 - This ensures semantic search reflects the latest supporting documents and draft files.
 
 ## Outline
+1. **Setup** – Resolve `FEATURE_DIR` by reading the project structure (first subdirectory inside `specs/` or project root).
+   - After all target outlines are generated, if `.specify/index/` exists, run the index update command again to index the new outlines.
 
-1. **Setup**: Resolve `FEATURE_DIR` by reading the project structure: the first subdirectory inside `specs/` that contains project files. Fall back to project root if `specs/` does not exist.
-   - After outline generation is complete for all target scenes, if `.specify/index/` exists, run: `python .specify/presets/fiction-book-writing/scripts/python/index.py update` again to index the new outlines.
-
-2. **Load source documents**:
+2. **Load source documents** – Required and optional files are listed (plan.md, spec.md, constitution.md, etc.).
    - **Required**: `plan.md` (the `## Scene Outline` section is the authoritative source for scene content), `spec.md` (character arcs, scene beats)
    - **Required**: `.specify/memory/constitution.md` (plot structure prefix, POV rules, thematic contract, **Tone** `§VII`, **Target Audience** `§VII`). Tone shapes the beat sequence's emotional register and closing beat type. Target Audience constrains content complexity, vocabulary in dialogue requirements, and how explicitly themes may be stated in the outline notes.
    - **Optional**: `characters.md` and `characters/[name].md` profiles (voice signatures, micro-obsessions, arc progression table)
@@ -63,7 +75,9 @@ Accepted arguments:
    - If `$ARGUMENTS` is `all`: use all scenes without an existing outline file
    - **Skip any scene that already has an outline file with `status: APPROVED` or `status: SKIP`** — never overwrite approved or skipped outlines
 
-4. **For each target scene, generate an outline file**:
+3. **Determine target scenes** based on `$ARGUMENTS` (single ID, range, `all`, or next pending scene).
+
+4. **Generate outline files** – For each target scene, create `outlines/<CHAPTER_ID>_<ChapterName>-outline.md` using the template and populate sections as described.
 
    **Output path**: `outlines/<CHAPTER_ID>_<ChapterName>-outline.md`
    Create `outlines/` directory in `FEATURE_DIR` if it does not exist.
@@ -123,25 +137,24 @@ Accepted arguments:
    - Flag any tension between the plan entry's content and constitution.md principles
 
    **Deviations from plan.md** — default to `None`. Only populate if the outline generation process identified a discrepancy or impossible beat that requires plan.md to be updated first.
-
-5. **Outline quality rules**:
+5. **Outline quality rules** – Enforce one‑sentence beats, concrete opening/exit hooks, and propagate any `[NEEDS CLARIFICATION]` markers.
    - Every beat must be one sentence — no prose, no dialogue fragments
    - "Opening Hook" and "Exit beat" must be the most concrete, specific items in the file
    - If a `[NEEDS CLARIFICATION]` marker is present in the plan entry, propagate it into the outline and do not invent a resolution — the author must resolve it
    - If the plan entry is incomplete (missing key beats, no closing beat), generate what can be derived and mark gaps with `[NEEDS CLARIFICATION: <description>]`
    - The outline is a brief, not a draft — no narrative prose, no atmospheric description, no named emotions
 
-6. **Report**: List all outline files created with their output paths and `status: DRAFT`. Include a summary line per scene: `[CHAPTER_ID] [ChapterName] — [N] beats, POV: [name], [word estimate] words`. Flag any scenes where `[NEEDS CLARIFICATION]` markers were propagated. Remind the author to:
+6. **Report** – List all outline files created with their output paths and `status: DRAFT`. Include a summary line per scene: `[CHAPTER_ID] [ChapterName] — [N] beats, POV: [name], [word estimate] words`. Flag any scenes where `[NEEDS CLARIFICATION]` markers were propagated. Remind the author to:
    - Review each outline file
    - Edit beats, sensory anchors, and dialogue requirements as needed
    - Change `status: DRAFT` → `status: APPROVED` when satisfied, or `status: SKIP` to write the chapter themselves
    - Run `/speckit.implement` once outlines are approved
 
-7. **Update search index** (large projects):
+7. **Update search index** – If `.specify/index/` exists, run the index update command to index newly created outlines.
    - If `.specify/index/` exists, run: `python .specify/presets/fiction-book-writing/scripts/python/index.py update` from the project root.
    - This incrementally indexes all newly created outline files (`outlines/` glob, doc type `outline`).
    - Outline chunks allow later `speckit.implement` and `speckit.continuity` runs to query beat sequences by meaning: e.g. `query "confrontation scene Act II" --type outline`.
    - If the command fails or the index does not exist, skip silently.
 
-8. **Check for extension hooks** (after generation): check `hooks.after_outline`.
+8. **Check for extension hooks** – After generation, run any `hooks.after_outline` defined in `.specify/extensions.yml`.
 

@@ -23,13 +23,28 @@ handoffs:
 
 ```text
 $ARGUMENTS
-```
 
 You **MUST** consider the user input before proceeding (if not empty).
 
 Accepted arguments:
 - *(no argument)* — display the audiobook status dashboard (same as `status`)
 - `draft [CHAPTER_ID]` — convert a prose draft chapter to an audiodraft file (e.g. `draft A1.101`)
+## Purpose
+
+The **`/speckit.audiobook`** command manages the end‑to‑end audiobook production pipeline. It reads and writes the **Audiobook Production** section of `constitution.md`, generates SSML/ElevenLabs audiodraft files from prose drafts, configures narrator and character voice assignments, maintains a pronunciation lexicon, and provides status and validation utilities.
+
+## Flags
+
+| Flag | Description |
+|---|---|
+| *(none)* | The command does not accept operational flags; the mode is selected via the first positional argument (`draft`, `voice`, `lexicon`, `check`, `status`). |
+
+## Execution Flow
+
+1. **Setup** – Resolve `FEATURE_DIR` and load `constitution.md ## X. Audiobook Production`. Abort if missing.
+2. **Parse arguments** – Determine the mode (`draft`, `voice add`, `voice list`, `lexicon add`, `lexicon list`, `lexicon export`, `check`, `status`) and any additional parameters.
+3. **Run mode‑specific steps** – Each mode follows the detailed sub‑steps described later in the file (e.g., Draft resolves scope, loads configuration, parses prose, generates SSML/ElevenLabs files; Voice Add updates the speaker table; Lexicon Add updates the pronunciation table; Check scans for stale or missing audiodrafts; Status displays a dashboard).
+4. **Post‑mode hooks** – Execute any `hooks.after_audiobook` defined in `.specify/extensions.yml`.
 - `draft all` — convert all prose draft chapters that do not yet have an up-to-date audiodraft
 - `voice add [CHARACTER_NAME]` — add or update a voice assignment for a character or the narrator
 - `voice list` — list all current voice assignments from constitution.md

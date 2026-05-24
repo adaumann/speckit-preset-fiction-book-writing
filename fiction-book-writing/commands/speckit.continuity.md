@@ -1,9 +1,38 @@
----
 description: Post-draft prose analysis — story bible compliance, character arc consistency, timeline coherence, and open narrative thread coverage across drafted chapters. Run after speckit.implement. For pre-draft structural alignment use speckit.analyze.
 agent_scripts:
   sh: scripts/bash/update-agent-context.sh __AGENT__
   ps: scripts/powershell/update-agent-context.ps1 -AgentType __AGENT__
----
+
+## Purpose
+
+The **`speckit.continuity`** command performs a *comprehensive, read‑only* audit of all drafted chapters. It checks that the prose respects the story bible, maintains character‑arc and timeline continuity, and that open narrative threads are tracked. The command never modifies files; it only produces a structured analysis report.
+
+## When to Use
+
+- After `speckit.implement` has generated one or more draft chapters.
+- When you need to verify that new prose does not break any established rules before moving on to the next drafting phase.
+- For large projects where you want an optional index‑based performance boost.
+
+## Usage
+
+```bash
+speckit.continuity [<CHAPTER_ID|RANGE>]
+```
+
+* `<CHAPTER_ID|RANGE>` – optional. If supplied (e.g. `A1.101` or `JO3.201–JO3.203`), the analysis is limited to those chapters; otherwise the full project is scanned.
+
+## High‑Level Execution Flow (LLM Friendly)
+
+1. **Pre‑checks** – run any `hooks.before_continuity` and optionally update the search index.
+2. **Resolve feature directory** – locate `FEATURE_DIR` (first sub‑folder under `specs/` or project root).
+3. **Load required documents** – constitution, spec, plan, draft files, character profiles, timeline, world‑building, etc.
+4. **Inventory drafts** – verify YAML front‑matter, flag malformed, orphan, missing, or stale‑constitution drafts; also audit audiobook drafts.
+5. **Run analysis dimensions** – story‑bible compliance, character‑arc consistency, timeline & world‑state continuity, relationship continuity, open narrative threads, thematic consistency, series canon compliance (as applicable).
+6. **Generate structured report** – tables for draft inventory, constitution impact, critical issues, warnings, passes, and a summary with recommended actions.
+7. **Update agent context** – refresh the story‑context file.
+8. **Post‑checks** – run any `hooks.after_continuity`.
+
+The detailed steps below remain unchanged but are now preceded by this concise overview to guide the LLM.
 
 ## User Input
 

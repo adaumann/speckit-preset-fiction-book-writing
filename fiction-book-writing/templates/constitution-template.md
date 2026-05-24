@@ -394,7 +394,7 @@ top_k_default: [TOP_K_DEFAULT]
 <!-- Semantic / keyword search index for projects of any size.
      Enables speckit.implement, speckit.continuity, speckit.research, and speckit.query
      to retrieve relevant passages without loading all files into context.
-     Powered by scripts/python/index.py. -->
+     Powered by .specify/presets/fiction-book-writing/scripts/python/index.py. -->
 
 **Installation** (one-time, optional — enables semantic and/or keyword search):
 ```bash
@@ -408,11 +408,11 @@ If packages are not installed, the script auto-falls-back:
 
 **Commands**:
 ```bash
-python scripts/python/index.py build           # full build (run once after plan)
-python scripts/python/index.py update          # incremental update (run after each draft/outline)
-python scripts/python/index.py query "..."     # search
-python scripts/python/index.py status          # staleness report
-python scripts/python/index.py purge           # wipe and rebuild
+python .specify/presets/fiction-book-writing/scripts/python/index.py build           # full build (run once after plan)
+python .specify/presets/fiction-book-writing/scripts/python/index.py update          # incremental update (run after each draft/outline)
+python .specify/presets/fiction-book-writing/scripts/python/index.py query "..."     # search
+python .specify/presets/fiction-book-writing/scripts/python/index.py status          # staleness report
+python .specify/presets/fiction-book-writing/scripts/python/index.py purge           # wipe and rebuild
 ```
 
 | Setting | Value |

@@ -1,4 +1,3 @@
----
 description: Sensitivity and representation review — flags cultural misrepresentation, harmful tropes, anachronisms in historical fiction, and identity portrayal issues across drafted chapters. Read-only analysis with severity tiers (CRITICAL / WARNING / NOTE) and per-issue remediation guidance. Scope to a single chapter, a demographic category, or the full manuscript.
 handoffs:
   - label: Revise Chapter
@@ -13,7 +12,41 @@ handoffs:
     agent: speckit.continuity
     prompt: Run a full continuity check after sensitivity revisions
     send: true
----
+
+## Purpose
+
+The **`speckit.sensitivity`** command performs a *read‑only* audit of drafted chapters for cultural misrepresentation, harmful tropes, historical anachronisms, and identity‑portrayal issues. It flags problems with severity tiers (CRITICAL / WARNING / NOTE) and provides concise remediation guidance, but never rewrites prose.
+
+## When to Use
+
+- After `speckit.implement` has produced draft chapters and before polishing or publishing.
+- When you need a systematic first‑pass check for representation, trope, historical, language, or trauma concerns.
+- To generate a report that can be handed off to a human sensitivity reader or used to update the story bible.
+
+## Usage
+
+```bash
+speckit.sensitivity [options]
+```
+
+*No arguments* – full sensitivity review of the entire manuscript.
+`[CHAPTER_ID]` – limit the review to a single chapter.
+`[CHAPTER_ID]–[CHAPTER_ID]` – limit to a contiguous range of chapters.
+`--category <name>` – restrict to one check category (`representation`, `tropes`, `historical`, `language`, `trauma`).
+`--genre <genre>` – override automatic genre detection (e.g. `--genre historical-fiction`).
+
+## High‑Level Execution Flow (LLM Friendly)
+
+1. **Pre‑checks** – run any `hooks.before_sensitivity` and verify required draft files exist.
+2. **Resolve feature directory** – locate `FEATURE_DIR` (first sub‑folder under `specs/` or project root).
+3. **Load core documents** – all relevant `draft/*.md` files (or scoped subset), optional `spec.md`, `constitution.md`, `characters.md`/`characters/`, and `world-building.md`.
+4. **Detect genre** – infer from `spec.md` or `constitution.md`; apply genre‑specific rule sets.
+5. **Build identity map** – extract identity fields from character profiles; note any missing data.
+6. **Run category checks** – for each selected category (or all), scan the drafts for the patterns described in the detailed sections below, assigning CRITICAL, WARNING, or NOTE severity.
+7. **Assemble report** – summarize counts, list each issue with chapter ID, category, brief finding, why it matters, and a concrete remediation suggestion.
+8. **Post‑checks** – run any `hooks.after_sensitivity`.
+
+The detailed execution steps that follow remain unchanged but are now preceded by this concise overview to guide the LLM.
 
 ## User Input
 

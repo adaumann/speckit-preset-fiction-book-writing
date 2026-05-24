@@ -1,4 +1,3 @@
----
 description: Project dashboard — scan all draft chapters, tasks, and checklists to produce a word-count table, status breakdown, and completion estimate. Run at any time during the draft.
 handoffs:
   - label: Continue Drafting
@@ -13,7 +12,31 @@ handoffs:
     agent: speckit.polish
     prompt: Run a final line-edit polish pass on a chapter
     send: true
----
+
+## Command Definition
+
+**Command name**: `speckit.status`
+
+**Purpose**: Generate a live, read‑only snapshot of the manuscript project, summarising chapter progress, word counts, task completion and checklist status.
+
+**Invocation**:
+```bash
+speckit.status [options]
+```
+
+**Supported options**:
+* `--brief` – Output a concise two‑line summary instead of the full report.
+* `--act <ACT>` – Limit the report to chapters belonging to the specified act (e.g. `A1`).
+* `--chapter <ID>` – Limit the report to a specific chapter ID.
+* `--no‑audio` – Skip the audiobook draft section even if audio files are present.
+
+All other arguments are passed through as `$ARGUMENTS` and can be used by the script for custom filtering.
+
+**Environment variables**:
+* `FEATURE_DIR` – Determined automatically (see Steps) but can be overridden to point to a different project root.
+* `OUTPUT_MODE` – If set to `book`, the audiobook section is omitted.
+
+The command never modifies files; it only reads front‑matter and generates console output.
 
 ## User Input
 

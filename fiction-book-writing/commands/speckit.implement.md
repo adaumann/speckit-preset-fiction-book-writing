@@ -1,9 +1,46 @@
----
 description: Draft scenes and chapters — supports discovery mode (--discovery), outline dismissal (--dismiss-outline), and voice sample calibration (--voice <file>).
 agent_scripts:
   sh: scripts/bash/update-agent-context.sh __AGENT__
   ps: scripts/powershell/update-agent-context.ps1 -AgentType __AGENT__
----
+## Purpose
+
+The **`/speckit.implement`** command generates a prose draft for a specified chapter (or chapters) based on the project's planning files. It:
+* Loads the appropriate scene outline or plan entry.
+* Enforces checklist and outline gates unless overridden.
+  * Supports optional modes (flags):
+    * `--discovery` – Draft the scene in discovery mode, letting the POV character explore the moment.
+    * `--dismiss-outline` – Bypass outline gates and draft without a predefined beat map.
+    * `--outline-only` – Produce only an outline file for the chapter; no prose is written.
+    * `--voice <file>` – Use the provided writing‑sample file to calibrate prose style (rhythm, register, sensory density).
+* Updates draft files, task status, and story‑bible metadata, then reports the results.
+
+## Flags
+
+| Flag | Description |
+|------|-------------|
+| `--discovery` | Write the chapter in a discovery style, using the POV character’s senses as the primary guide.
+| `--dismiss-outline` | Skip outline validation and draft freely; the outline is treated only as a loose guide.
+| `--outline-only` | Generate an outline file (`outlines/<CHAPTER_ID>_<ChapterName>-outline.md`) with status `DRAFT` and stop; no prose draft is created.
+| `--voice <file>` | Provide a path to a writing‑sample file; the command will read a few paragraphs to align its prose style with the author's voice.
+
+These flags can be combined as needed (e.g., `/speckit.implement --dismiss-outline --discovery`).
+
+## Execution Flow
+
+1. **Validate input** – Ensure `$ARGUMENTS` are present; abort if required arguments are missing.
+2. **Run pre‑hooks** – Execute any `hooks.before_implement` defined in `.specify/extensions.yml`.
+3. **Update search index** – If the project has a Python index script, run it before and after drafting.
+4. **Resolve `FEATURE_DIR`** – Determine the feature directory (first sub‑folder in `specs/` or project root).
+5. **Checklist gate** – Scan `checklists/`; if any are incomplete, stop and report unless the user explicitly overrides.
+6. **Outline gate** – Locate the target outline file; apply `--dismiss-outline` or `--outline-only` behavior as requested.
+7. **Load context** – Pull required files (constitution, outline, character profiles) respecting the token budget.
+8. **Prepare working brief** – Assemble the brief from the outline or plan entry according to the selected mode.
+9. **Draft prose** – Write the chapter following the brief, applying discovery mode, voice calibration, and style rules.
+10. **Post‑draft actions** – Save the draft, update `tasks.md`, modify the scene‑outline status, log any new Chekhov items, and adjust location state logs.
+11. **Generate reports** – Summarize drafted chapters, word counts, deviations, and any `[NEEDS CLARIFICATION]` markers.
+12. **Run post‑hooks** – Execute any `hooks.after_implement` defined in `.specify/extensions.yml`.
+
+The command exits after step 12, leaving the workspace updated and ready for the next task.
 
 ## User Input
 
@@ -44,7 +81,11 @@ You **MUST** consider the user input before proceeding (if not empty).
    - If the user explicitly confirms, proceed with a warning in the draft output
 
 2b. **Check outline gate** (if `FEATURE_DIR/outlines/` exists):
-   - After resolving the target chapter ID (from `$ARGUMENTS` or the first unchecked task), look for a matching outline file at `outlines/<CHAPTER_ID>_<ChapterName>-outline.md`
+   - **Resolve target chapter ID**:
+     - If `$ARGUMENTS` contains a chapter ID (e.g., `A1.101`), use that
+     - Else if `tasks.md` exists in `FEATURE_DIR`, use the first unchecked task
+     - Else if `tasks.md` does not exist, use the first unchecked scene in `plan.md ## Scene Outline` (status not `done` or `skip`)
+   - After resolving the target chapter ID, look for a matching outline file at `outlines/<CHAPTER_ID>_<ChapterName>-outline.md`
    - **`--dismiss-outline` mode**: If `$ARGUMENTS` contains `--dismiss-outline`:
      - Skip the outline gate entirely for this chapter
      - Use `plan.md ## Scene Outline` entry as a direction-of-travel guide, not a beat map
@@ -69,9 +110,9 @@ You **MUST** consider the user input before proceeding (if not empty).
        ```
      - If `status: SKIP` — do not generate any prose for this chapter. Instead:
        - Report: `⏭ SKIP: <CHAPTER_ID> <ChapterName> — author will write this chapter. No prose generated.`
-       - Mark the corresponding task `[x]` in `tasks.md` with a note: `[author-written — no AI draft]`
-       - Update the `## Scene Outline` entry status in `plan.md` from `outline` → `author-draft`
-       - Advance to the next unchecked task and repeat the outline gate check
+       - If `tasks.md` exists: Mark the corresponding task `[x]` in `tasks.md` with a note: `[author-written — no AI draft]`
+       - If `tasks.md` does not exist: Update the `## Scene Outline` entry status in `plan.md` from `outline` → `author-draft`
+       - Advance to the next unchecked task (from tasks.md or plan.md) and repeat the outline gate check
      - If `status: APPROVED` — proceed to drafting using the outline file as the working brief (see step 4)
    - If no outline file exists for this chapter — proceed using `plan.md ## Scene Outline` as a direction-of-travel guide (discovery mode, no gate applied)
 
@@ -175,7 +216,8 @@ You **MUST** consider the user input before proceeding (if not empty).
    **After writing the chapter**:
    - Write draft to `draft/<CHAPTER_ID>_<ChapterName>.md`
    - Update `status` field in the matching `## Scene Outline` entry from `outline` → `in-draft`
-   - Mark the corresponding task `[x]` in `tasks.md`
+   - If `tasks.md` exists in `FEATURE_DIR`: Mark the corresponding task `[x]` in `tasks.md`
+   - If `tasks.md` does not exist: Update the `status` field in `plan.md ## Scene Outline` entry to `done`
    - Note any new Chekhov items discovered during drafting — add to the Open Threads table in `plan.md`
    - If the scene changes the physical state of any `LOC-NNN` location (damage, new fixture, change of ownership, destruction), add a row to that location's **State Log** in `locations.md`
    - Note any deviations from the scene outline (additions, cuts, structural changes) as a comment block at the top of the draft file:
@@ -295,8 +337,9 @@ You **MUST** consider the user input before proceeding (if not empty).
    - Notify the user: "Drafting [CHAPTER_ID] requires an unplanned beat: [description]. This must be added to plan.md before drafting continues."
    - Add a full Scene Outline entry for the new chapter in `plan.md ## Scene Outline` (all required fields: POV, setting, opening hook, key beats, closing beat, etc.)
    - Assign the new chapter a beat ID that fits sequentially (insert fractional if needed, e.g., `A1.103b` for three-act or `JO3.201b` for Hero's Journey)
-   - Add a corresponding task entry in `tasks.md` immediately after the related task — `plan.md` is updated first, `tasks.md` mirrors it
-   - Resume drafting only after both files are updated
+   - If `tasks.md` exists: Add a corresponding task entry in `tasks.md` immediately after the related task — `plan.md` is updated first, `tasks.md` mirrors it
+   - If `tasks.md` does not exist: No task entry needed; the new chapter will be tracked via `plan.md` status updates
+   - Resume drafting only after `plan.md` is updated (and `tasks.md` if it exists)
    - **`plan.md` is the authoritative chapter list. `tasks.md` must never contain chapters that are not in `plan.md ## Scene Outline`.**
 
 6. **Stop and report**: After completing the requested chapter(s) (or one beat, if no range specified), report:

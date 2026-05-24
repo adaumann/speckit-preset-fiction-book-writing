@@ -1,6 +1,23 @@
----
 description: Pre-draft structural alignment check — spec↔plan coverage, act proportions, task completeness. Run after speckit.tasks, before speckit.implement. For post-draft prose analysis use speckit.continuity.
----
+
+## Purpose
+
+The **`/speckit.analyze`** command performs a pre‑draft structural validation of the project. It ensures that the **specification** (`spec.md`), **plan** (`plan.md`), and **tasks** (`tasks.md`) are internally consistent, that act proportions match the plot structure defined in the constitution, and that all required elements (characters, arcs, Chekhov items, subplots, relationships, series constraints) are accounted for before any prose drafting begins.
+
+## Flags
+
+| Flag | Description |
+|---|---|
+| *(none)* | The command does not accept any operational flags; it runs the full analysis based on the current project state. |
+
+## Execution Flow
+
+1. **Setup** – Resolve `FEATURE_DIR` by locating the first subdirectory inside `specs/` that contains a `spec.md` file (or fall back to the project root).
+2. **Load documents** – Required: `spec.md`, `plan.md`, `tasks.md`, and `.specify/memory/constitution.md`. Optionally load supporting files such as `characters.md`, `timeline.md`, `subplots.md`, `relationships.md`, etc. For large projects, use the semantic index to query needed excerpts.
+3. **Run analysis** across the dimensions defined in the command (Spec ↔ Plan alignment, Chekhov coverage, act proportions, subplot integrity, relationship arc integrity, series constraints, etc.).
+4. **Generate report** – Output a structured analysis report listing CRITICAL issues, WARNINGS, PASSes, and a concise summary line.
+5. **Post‑analysis hooks** – Execute any `hooks.after_analyze` defined in `.specify/extensions.yml`.
+
 
 ## User Input
 

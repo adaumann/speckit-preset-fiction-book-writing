@@ -1,6 +1,6 @@
 # Spec Kit Fiction Book Writing Preset
 
-**Version 1.8.0** Part of [Spec Kit](https://github.com/adaumann/speckit-preset-fiction-book-writing)
+**Version 1.8.1** Part of [Spec Kit](https://github.com/adaumann/speckit-preset-fiction-book-writing)
 
 A Spec-Driven Development preset purpose-built for novel and long-form fiction writing. It applies the discipline of structured software development to creative fiction: story bibles instead of architecture docs, scene tasks instead of tickets, quality gates instead of CI checks.
 
@@ -1154,7 +1154,7 @@ Unresolved HIGH-priority research items before drafting those chapters are flagg
 
 ### Search Index (RAG)
 
-For large projects (50k+ words), maintaining a mental map of every character mention, world detail, and subplot beat becomes difficult. The Fiction Book Writing preset includes a local **Search Index (RAG)** powered by `scripts/python/index.py` to provide offline semantic and keyword search.
+For large projects (50k+ words), maintaining a mental map of every character mention, world detail, and subplot beat becomes difficult. The Fiction Book Writing preset includes a local **Search Index (RAG)** powered by `.specify/presets/fiction-book-writing/scripts/python/index.py` to provide offline semantic and keyword search.
 
 #### How it Works
 
@@ -1171,18 +1171,18 @@ The RAG index is managed via terminal commands (using your Python environment):
 
 ```powershell
 # 1. Build the initial index (run once your core planning is done)
-python scripts/python/index.py build
+python .specify/presets/fiction-book-writing/scripts/python/index.py build
 
 # 2. Incrementally update the index (run after drafting or significant edits)
-python scripts/python/index.py update
+python .specify/presets/fiction-book-writing/scripts/python/index.py update
 
 # 3. Query the index
-python scripts/python/index.py query "how does the protagonist react to fire?"
-python scripts/python/index.py query "ancient magic rules" --type world
-python scripts/python/index.py query "Elowen" --type draft --top 10
+python .specify/presets/fiction-book-writing/scripts/python/index.py query "how does the protagonist react to fire?"
+python .specify/presets/fiction-book-writing/scripts/python/index.py query "ancient magic rules" --type world
+python .specify/presets/fiction-book-writing/scripts/python/index.py query "Elowen" --type draft --top 10
 
 # 4. Check status and staleness
-python scripts/python/index.py status
+python .specify/presets/fiction-book-writing/scripts/python/index.py status
 ```
 
 #### Backends

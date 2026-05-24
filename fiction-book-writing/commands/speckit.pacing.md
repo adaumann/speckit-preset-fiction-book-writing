@@ -1,4 +1,3 @@
----
 description: Emotional rhythm and pacing audit — scores each drafted chapter for tension level, identifies plateaus, sagging middles, premature peaks, and act-boundary misalignments. Outputs a tension arc chart (Mermaid xychart), a pacing plateau report, and a remediation task list. Read-only except when writing the chart file. Run after speckit.implement, before speckit.polish or speckit.export.
 handoffs:
   - label: Revise Low-Tension Chapter
@@ -13,7 +12,42 @@ handoffs:
     agent: speckit.plan
     prompt: The pacing audit exposed structural problems — revisit the plan
     send: false
----
+
+## Purpose
+
+The **`speckit.pacing`** command audits the *emotional rhythm* of a draft manuscript. It scores each chapter on a 1‑10 tension scale, detects plateaus, sagging middles, premature peaks, and act‑boundary mis‑alignments, then produces a Mermaid tension‑arc chart and a remediation task list. The command is **read‑only** for source files; it only writes the chart output file.
+
+## When to Use
+
+- After `speckit.implement` has generated draft chapters and before you move on to polishing or exporting.
+- When you need a quantitative view of tension flow across the whole story or a specific act/chapter range.
+- To identify structural pacing problems that may require revising chapters (`speckit.revise`) or adjusting the story plan (`speckit.plan`).
+
+## Usage
+
+```bash
+speckit.pacing [options]
+```
+
+*No arguments* – full pacing audit of all drafted chapters and generate the full tension‑arc chart.
+`[CHAPTER_ID]` – audit a single chapter.
+`[CHAPTER_ID]–[CHAPTER_ID]` – audit a contiguous range of chapters.
+`chart` – output **only** the Mermaid chart (no remediation report).
+`--act "Act label"` – limit the audit to a specific act (e.g. `--act "Act II"`).
+
+## High‑Level Execution Flow (LLM Friendly)
+
+1. **Pre‑checks** – run any `hooks.before_pacing` and verify required files exist.
+2. **Resolve feature directory** – locate `FEATURE_DIR` (first sub‑folder under `specs/` or project root).
+3. **Load core documents** – `plan.md`, `tasks.md`, all relevant `draft/*.md` files (or a scoped subset based on arguments). If the project is large and an index exists, query the index for tension‑bearing passages instead of loading every file.
+4. **Score each chapter** – compute a tension score (1‑10) from conflict type, stakes, scene‑ending hook, dialogue subtext, pacing signals, and POV character emotional state. Calibrate scores against the act‑level expectations defined in `plan.md`.
+5. **Detect problems** – apply the critical, warning, and info rules (sagging middle, premature peak, false plateau, closing‑hook failures, act mis‑alignment, etc.).
+6. **Generate Mermaid chart** – write `FEATURE_DIR/pacing-arc.md` containing an `xychart-beta` block with chapter sequence vs. tension score, marking act boundaries.
+7. **Build remediation list** – for each identified issue, create a concrete suggestion (e.g., add a subplot complication, move a high‑tension scene, insert a micro‑tension beat).
+8. **Report** – output a concise summary including total chapters analyzed, issue counts, and next‑step recommendations.
+9. **Post‑checks** – run any `hooks.after_pacing`.
+
+The detailed steps below remain unchanged but are now preceded by this concise overview to guide the LLM.
 
 ## User Input
 

@@ -1,4 +1,3 @@
----
 description: Targeted chapter revision — rewrites specific failing passages identified by speckit.checklist or speckit.continuity without touching passing content. Produces a versioned draft file with a diff summary.
 handoffs:
   - label: Re-run Checklist
@@ -9,7 +8,43 @@ handoffs:
     agent: speckit.implement
     prompt: Continue drafting the next scene in phase order
     send: true
----
+
+## Purpose
+
+The **`speckit.revise`** command is a *surgical* revision tool. It takes a chapter that has failed one or more checklist or continuity items and rewrites **only** the offending passages. All other prose is left untouched. The command produces a new versioned draft and a detailed diff summary so the writer can see exactly what changed and why.
+
+## When to Use
+
+- After running `speckit.checklist` or `speckit.continuity` and receiving **FAIL** or **WARNING** items.
+- When you want to keep the overall scene structure (opening hook, beats, closing beat) intact.
+- When you need a versioned output that can be re‑indexed for semantic search.
+
+## Usage
+
+```bash
+speckit.revise <CHAPTER_ID> [<CHECKLIST_PATH>|"<FAILURE_CODES>"]
+```
+
+* `<CHAPTER_ID>` – e.g. `A1.101`. Required.
+* `<CHECKLIST_PATH>` – optional path to a specific checklist file for the chapter.
+* `"<FAILURE_CODES>"` – optional quoted list of item codes (e.g. `"CHR-002 STB-004"`).
+
+If only the chapter ID is supplied and a matching checklist exists, the checklist is loaded automatically.
+
+## High‑Level Execution Flow (LLM Friendly)
+
+1. **Pre‑checks** – look for extension hooks and optionally update the search index.
+2. **Resolve target draft** – map the chapter ID to `draft/<CHAPTER_ID>_<Title>.md`.
+3. **Determine failure scope** – read the checklist or quoted codes to build a fixed list of items to fix.
+4. **Load context** – constitution, craft‑rules, scene outline, character files, and (if indexed) similar drafts.
+5. **Present scope** – show a table of items, failing passages, and root causes; wait for user confirmation or adjustments.
+6. **Revise passages** – for each confirmed item, rewrite only the offending text while obeying all story‑bible rules.
+7. **Assemble revised draft** – replace revised passages, bump `version`, update word count and constitution version, add `revised` date.
+8. **Write output** – save a versioned draft (`*_v<N>.md`) and prepend a `<!-- REVISION NOTES -->` block summarising changes.
+9. **Sync audiobook drafts** – if applicable, regenerate only changed audio segments.
+10. **Post‑hooks** – run any `hooks.after_revise` and optionally re‑index the project.
+
+The detailed steps below remain unchanged but are now preceded by this concise overview to help the LLM understand *what* to execute.
 
 ## User Input
 

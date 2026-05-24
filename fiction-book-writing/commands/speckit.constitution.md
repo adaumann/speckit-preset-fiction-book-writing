@@ -1,5 +1,5 @@
 ---
-description: Create or update the story bible — style mode selection, plot structure choice, craft principles, and propagation to all dependent templates.
+description: Create or update the story bible (constitution) by selecting a style mode, choosing a plot structure, defining craft principles, and automatically propagating these settings to all dependent templates. This command prepares the core metadata that drives subsequent speckit commands.
 handoffs:
   - label: Create Story Brief
     agent: speckit.specify
@@ -7,7 +7,28 @@ handoffs:
 scripts:
   sh: scripts/bash/setup-plan.sh
   ps: scripts/powershell/setup-plan.ps1
----
+
+## Goal
+
+Create or update the central **Story Bible** (`.specify/memory/constitution.md`). The command:
+1. Determines the story's **style mode** (author‑sample or humanized‑AI).
+2. Selects a **plot structure** and defines core **craft principles**.
+3. Populates or amends the constitution file with these values.
+4. Propagates any changes to dependent templates (e.g., `craft‑rules.md`, export settings).
+
+All subsequent `speckit.*` commands rely on the data produced here.
+
+## Command
+
+When the `speckit.constitution` command is run, the LLM should:
+1. **Read** any user‑provided arguments (`$ARGUMENTS`).
+2. **Perform** the pre‑execution checks (extension hooks, optional search‑index queries).
+3. **Interact** with the user only for information that cannot be inferred (style mode, prose profile, author name, copyright, language, plot structure, dramatic question, theme, tone, target audience, etc.).
+4. **Create or update** the file `.specify/memory/constitution.md` with the collected values, replacing all `[NEEDS CLARIFICATION]` and `[PLACEHOLDER]` tokens.
+5. **Generate** the impact report and propagate changes to dependent templates as described in the Outline.
+6. **Exit** without modifying any other files.
+
+The LLM must follow this flow exactly and avoid performing any actions outside the scope of the command.
 
 ## User Input
 
@@ -94,7 +115,17 @@ You **MUST** consider the user input before proceeding (if not empty).
    - `[PLOT_STRUCTURE]` — if not set, present the 8 options with a brief description of each and ask the user to choose
    - `[DRAMATIC_QUESTION]` — one sentence, the story's spine
    - `[THEME]` — stated as a question, not an answer
-   - `[POV_STRATEGY]` and `[TENSE]` — from style mode or user input
+   - `[POV_STRATEGY]` — ask if not already set:
+     > "What is the POV strategy?
+     > (a) **single** — one POV character throughout
+     > (b) **alternating** — two or more POV characters, alternating chapters/sections
+     > (c) **multiple** — three or more POV characters
+     > (d) **first-person-multiple** — each POV uses 'I' with distinct voice"
+   - `[TENSE]` — ask if not already set:
+     > "What tense?
+     > (a) **past** — standard past tense
+     > (b) **present** — present tense for immediacy
+     > (c) **dual** — past for story, present for flashbacks"
    - `[TONE]` — ask if `STYLE_MODE` is `humanized-ai` and not already set:
      > "What is the emotional register of this story?
      > (a) **warm-dark** — emotional intimacy with genuine threat and consequence
@@ -111,7 +142,14 @@ You **MUST** consider the user input before proceeding (if not empty).
      > (c) **young-adult** — 13–18; sexual content limited to non-explicit; violence permitted with consequence
      > (d) **middle-grade** — 8–12; no sexual content; violence must be consequence-free or off-page
      > (e) **literary** — adult literary fiction readership; elevated register, ambiguity permitted"
-   - `[WORD_COUNT_TARGET]`, `[GENRE]`, `[SERIES_POSITION]`
+   - `[SERIES_POSITION]` — ask if not already set:
+     > "What is the series position?
+     > (a) **standalone** — a complete story with no series context needed
+     > (b) **book-1** — first book in a series (series-bible.md will be created by speckit.plan)
+     > (c) **book-2** — second book in a series
+     > (d) **book-3** — third book in a series
+     > (e) **book-N** — specify the book number"
+   - `[WORD_COUNT_TARGET]`, `[GENRE]`
    - `[AUTHOR_BIO_SHORT]` and `[AUTHOR_BIO_LONG]` — both optional at this stage. Inform the user:
      > "Author bios are optional now. Run `/speckit.bio draft` at any time to generate and save them. They are consumed automatically by `speckit.query` (short bio) and `speckit.export` (long bio as 'About the Author' back matter)."
      
@@ -132,13 +170,13 @@ You **MUST** consider the user input before proceeding (if not empty).
    > passages without loading all files into context.
    >
    > (a) **yes** — enable the index (requires pip install chromadb sentence-transformers rank-bm25)
-   > (b) **no** — skip for now (can be enabled later with `python scripts/python/index.py build`)"
+   > (b) **no** — skip for now (can be enabled later with `python .specify/presets/fiction-book-writing/scripts/python/index.py build`)"
 
    If **yes**:
    - Set `[SEARCH_INDEX_ENABLED]` to `yes`
-  - Run `{SCRIPT}` from the project root to install chromadb, sentence-transformers, and rank-bm25
-  - Ensure the Python ChromeDB package is installed as demonstrated in `scripts/bash/setup-plan.sh` or `scripts/bash/setup-plan.ps1`
-  - A configuration file `.specify/index/config.json` will be created on first run. Edit this file to adjust:
+   - **Execute** `scripts/bash/setup-plan.sh` (Unix/macOS) or `scripts/powershell/setup-plan.ps1` (Windows) from the project root. This installs chromadb, sentence-transformers, and rank-bm25. Both scripts auto-create a `.venv` virtual environment if one doesn't exist.
+   - Verify the Python ChromaDB package is installed by checking that `.venv` exists and contains the packages. If the script fails, inform the user: "⚠️ Failed to install search index packages. You can run the script manually later with `bash scripts/bash/setup-plan.sh` or `.\scripts\powershell\setup-plan.ps1`."
+   - A configuration file `.specify/index/config.json` will be created on first run. Edit this file to adjust:
     - `backend_preference` (auto, chroma, bm25, keyword)
     - `embedding_model` (e.g., `all-MiniLM-L6-v2`)
     - `chunk_size_tokens` (target tokens per chunk)

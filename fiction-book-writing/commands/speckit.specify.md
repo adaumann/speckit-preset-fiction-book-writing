@@ -1,5 +1,4 @@
----
-description: Create a story brief from a natural language story idea — logline, character arcs, scene beats, and plot requirements.
+description: Create a detailed story brief from a natural‑language story idea, generating a logline, character arcs, key scene beats, and essential plot requirements.
 handoffs:
   - label: Build Story Structure
     agent: speckit.plan
@@ -8,7 +7,6 @@ handoffs:
     agent: speckit.clarify
     prompt: Clarify the story elements in this brief
     send: true
----
 ## User Input
 ```text
 $ARGUMENTS
@@ -16,12 +14,6 @@ $ARGUMENTS
 You **MUST** consider the user input before proceeding (if not empty).
 ## Pre-Execution Checks
 **Check for extension hooks (before story brief creation)**:
-- Check if `.specify/extensions.yml` exists in the project root.
-- If it exists, read it and look for entries under the `hooks.before_specify` key
-- If the YAML cannot be parsed or is invalid, skip hook checking silently and continue normally
-- Filter out hooks where `enabled` is explicitly `false`. Treat hooks without an `enabled` field as enabled by default.
-- For each remaining hook with no `condition` field or a null/empty `condition`, output the appropriate hook block (Optional or Mandatory), then wait for mandatory hook results before continuing.
-- If no hooks are registered or `.specify/extensions.yml` does not exist, skip silently
 ## Outline
 The text the user typed after `/speckit.specify` is the story idea. Assume it is always available in this conversation. Do not ask the user to repeat it unless they provided nothing.
 Given that story idea, do this:
@@ -58,3 +50,21 @@ Given that story idea, do this:
    - If `.specify/index/` exists, run: `python scripts/python/index.py update` from the project root.
    - This indexes the new `spec.md` so `speckit.constitution` can query it for genre, tone, and theme inference.
    - If the command fails or the index does not exist, skip silently.
+
+## Goal
+
+Create a complete **story brief** (`spec.md`) that serves as the foundation for all downstream speckit commands. The brief captures the logline, premise, character arcs, key scenes, plot requirements, entities, reader experience goals, and scope assumptions.
+
+## Command
+
+When the `speckit.specify` command is invoked, the LLM should:
+1. **Read** the user‑provided story idea (`$ARGUMENTS`).
+2. **Perform** pre‑execution checks (extension hooks).
+3. **Generate** a concise short name for the spec directory.
+4. **Create** the spec directory using the appropriate numbering scheme (timestamp or sequential) and, if applicable, incorporate series information.
+5. **Copy** the `spec-template.md` into the new directory as `spec.md`.
+6. **Populate** the brief sections listed in the Outline, prompting the user only for information that cannot be inferred (e.g., missing series data, unclear plot requirements).
+7. **Report** the location of the created `spec.md` and any remaining `[NEEDS CLARIFICATION]` placeholders.
+8. **Optionally update** the search index if it exists.
+
+The LLM must follow this flow exactly and must not modify any files other than the newly created spec directory and its `spec.md`.

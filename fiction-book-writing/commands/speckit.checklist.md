@@ -1,6 +1,4 @@
----
 description: Generate scene quality checklists — triple purpose test, dialogue subtext, sensory detail, off-balance ending, and story bible compliance. "Unit tests for prose."
----
 
 ## Checklist Purpose: "Unit Tests for Prose"
 
@@ -18,6 +16,12 @@ description: Generate scene quality checklists — triple purpose test, dialogue
 - ✅ "Are prohibited phrases absent?" (Anti-AI filter)
 
 **Metaphor**: If your scene is a chapter written in prose, the checklist is its unit test suite — testing whether the prose works as prose and the scene fulfills its story bible contract.
+
+## Purpose
+
+The **`/speckit.checklist`** command creates a quality‑gate checklist for a scene (or a set of scenes). The checklist acts as a *unit test suite* for prose, ensuring the draft meets craft standards such as the Triple Purpose, dialogue subtext, sensory detail, off‑balance ending, and story‑bible compliance.
+
+It does **not** verify plot correctness or outline alignment; its focus is purely on prose quality.
 
 ## User Input
 
@@ -72,4 +76,29 @@ You **MUST** consider the user input before proceeding (if not empty).
    - If found: compare `version` field in the audiodraft YAML against the prose draft's `version`. If lower: `⚠️ Audiodraft is stale (prose v[N], audio v[M]) — resync by running speckit.revise or speckit.implement for this chapter.`
    - If not found: `ℹ️ No audiodraft found for this chapter — run speckit.implement to generate one.`
    - If in sync: `✓ Audiodraft in sync (v[N]).`
+
+## Flags
+
+| Flag | Description |
+|------|-------------|
+| `<scene‑path>` | Path to a specific scene markdown file for which to generate a checklist.
+| `--all` | Generate checklists for **all** scene files under `FEATURE_DIR/scenes/` (or the appropriate directory).
+| `--phase <PHASE>` | Limit checklist generation to scenes belonging to a particular act/phase (e.g., `Act I`, `Climax`).
+| `--no‑questions` | Skip the interactive clarification step and generate the checklist based solely on available context.
+
+These flags can be combined; if none are provided, the command defaults to the most recently modified scene file.
+
+## Execution Flow
+
+1. **Validate input** – Parse `$ARGUMENTS` and determine the target scene(s) based on flags.
+2. **Run pre‑hooks** – Execute any `hooks.before_checklist` defined in `.specify/extensions.yml`.
+3. **Resolve `FEATURE_DIR`** – Identify the feature directory (first sub‑folder in `specs/` or project root).
+4. **Checklist gate** – Ensure any required pre‑conditions (e.g., completed outline) are met; abort if not.
+5. **Load context** – Pull constitution, craft‑rules, and relevant character/scene files.
+6. **Optional clarification** – Ask up to three targeted questions unless `--no‑questions` is set.
+7. **Generate checklist** – Populate `templates/checklist-template.md` with scene‑specific items.
+8. **Score & verdict** – Compute the weighted rating (RTG) and determine PASS/FAIL.
+9. **Write file** – Save the checklist to `FEATURE_DIR/checklists/<scene‑short‑name>-checklist.md`.
+10. **Report** – Output path, score, verdict, and any required revisions; suggest `speckit.revise` if needed.
+11. **Run post‑hooks** – Execute any `hooks.after_checklist` defined in `.specify/extensions.yml`.
 

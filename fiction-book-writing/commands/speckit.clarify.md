@@ -4,7 +4,27 @@ handoffs:
   - label: Build Story Structure
     agent: speckit.plan
     prompt: Create a story structure plan for this brief. The plot structure I want to use is...
----
+
+## Purpose
+
+The **`/speckit.clarify`** command scans the active story brief (`spec.md`) for narrative ambiguities, missing decisions, and inconsistencies. It asks targeted clarification questions, writes the answers back into the brief, and ensures the story brief is complete and unambiguous before planning (`speckit.plan`).
+
+## Flags
+
+| Flag | Description |
+|---|---|
+| *(none)* | The command does not accept operational flags; it runs the clarification workflow based on the current `spec.md` content.
+
+## Execution Flow
+
+1. **Setup** – Resolve `FEATURE_DIR` by locating the first subdirectory inside `specs/` containing project files (or fall back to the project root).
+2. **Load `spec.md`** – Read the full story brief and identify any existing `[NEEDS CLARIFICATION]` markers.
+3. **Ambiguity Scan** – Examine key domains (character motivation, voice distinctiveness, relationships, narrative arc logic, timeline, POV, world‑building, dramatic question, reader‑experience goals) and generate a list of potential clarification questions.
+4. **Select Questions** – Choose up to five highest‑impact questions (blocking planning, core character wounds, Chekhov items, voice gaps, etc.).
+5. **Prompt User** – Present the selected questions (one‑by‑one or as a numbered list) and collect answers.
+6. **Write Back** – Replace `[NEEDS CLARIFICATION]` markers in `spec.md` with the provided answers, and add any new entries (e.g., new Chekhov items, scene beats, relationship details) as needed.
+7. **Report** – Summarize the clarifications made, note any remaining `[NEEDS CLARIFICATION]` markers, and remind the user to run `speckit.plan` next.
+8. **Post‑execution Hooks** – Execute any `hooks.after_clarify` defined in `.specify/extensions.yml`.
 
 ## User Input
 

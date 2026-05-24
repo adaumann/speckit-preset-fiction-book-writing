@@ -1,4 +1,3 @@
----
 description: Final line-edit pass  prose rhythm, sentence variety, word repetition, filter words, adverb density, and voice register consistency. Runs after speckit.checklist PASS. Distinct from speckit.revise (structural/checklist failures) and speckit.checklist (craft gates).
 handoffs:
   - label: Run Checklist
@@ -9,7 +8,41 @@ handoffs:
     agent: speckit.implement
     prompt: Continue drafting the next scene in phase order
     send: true
----
+
+## Purpose
+
+The **`/speckit.polish`** command performs the final line‑edit pass on a chapter that has already passed the `speckit.checklist` quality gates. It focuses on surface‑level prose quality—rhythm, word choice, repetition, filter‑word removal, adverb density, and voice‑register consistency—without altering the scene’s structure or meaning.
+
+It is distinct from:
+* `speckit.revise` – which addresses structural or checklist failures.
+* `speckit.checklist` – which validates craft gates before polishing.
+
+## Flags
+
+| Flag | Description |
+|------|-------------|
+| `<chapter‑id>` or `<range>` | Target chapter ID (e.g., `A1.101`) or a range (e.g., `A1.101‑A1.103`). If omitted, the most recently drafted chapter with a **PASS** checklist verdict is used.
+| `--no‑confirm` | Skip the interactive audit confirmation step and apply all automatically‑approved fixes.
+| `--skip <ID>` | Provide a comma‑separated list of issue IDs to skip (e.g., `--skip WR-002,PR-001`).
+| `--dry‑run` | Run the audit and present the report **without** making any file changes.
+
+These flags can be combined as needed.
+
+## Execution Flow
+
+1. **Validate input** – Parse `$ARGUMENTS` and resolve target chapter files.
+2. **Pre‑hook** – Execute any `hooks.before_polish` defined in `.specify/extensions.yml`.
+3. **Checklist gate** – Verify the latest checklist for each target has `Verdict: PASS`; abort with an error if any are `FAIL`.
+4. **Load context** – Read `constitution.md`, `craft-rules.md`, the POV character profile, and optionally `glossary.md` and voice‑sample files.
+5. **Run audit** – Scan the prose for rhythm, word‑level, voice‑register, and dialogue‑internal issues (PR‑001‑004, WR‑001‑005, VR‑001‑006, DI‑001‑003).
+6. **Present report** – Show a table of detected issues with proposed fixes. If `--dry-run` or `--no‑confirm` is set, skip user interaction.
+7. **Apply fixes** – Respect any `--skip` list or user‑provided confirmations; make only the approved edits.
+8. **Update draft** – Increment `version`, recalculate `actual_words`, add a `polished:` timestamp, and write the polished file (optionally versioned).
+9. **Audiobook sync** – If audiobook drafts exist, regenerate them from the polished prose according to the rules in `speckit.implement`.
+10. **Post‑hook** – Execute any `hooks.after_polish`.
+11. **Index update** – Run the project index script if it exists.
+
+The command finishes by reporting the polished file path, issue statistics, and any audiobook sync results.
 
 ## Polish Purpose: "Making Prose Invisible"
 
