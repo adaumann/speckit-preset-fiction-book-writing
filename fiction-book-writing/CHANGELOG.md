@@ -6,6 +6,83 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ---
 
+## [1.9.4] - 2026-05-26
+
+### Added
+- `export.py` — added missing features from speckit.export.md specification:
+  - **Audio export format** — generates audiobook manifest from `audiodraft/` directory
+  - **Blurb support** — reads `blurb.md` for EPUB description metadata; generates blurb from spec.md if missing
+  - **Illustration processing** — handles both `per-chapter` and `manual` automation modes
+    - `per-chapter` — embeds `illustrations/<CHAPTER_ID>.png` at chapter boundaries
+    - `manual` — processes `<!-- illustration: filename.png -->` comments in draft files; warns if none found
+  - **ISBN warning** — warns when IngramSpark platform used without ISBN
+  - **Audiobook config reading** — reads TTS_ENGINE and SPEAKER_MODE from constitution.md § X
+  - **Missing audiobook draft detection** — compares prose chapters vs audiobook drafts, reports missing
+  - **Lexicon validation** — validates `audiodraft/lexicon.pls` XML well-formedness
+  - **Distribution guidance** — outputs TTS platform instructions for SSML-cloud and ElevenLabs
+- `constitution-template.md` — added illustration variables to YAML frontmatter
+- `test_export.py` — comprehensive unit tests (39 tests) for export.py
+- `test_index.py` — comprehensive unit tests (36 tests) for index.py
+
+### Fixed
+- Unicode warning characters (⚠️✓✅) replaced with ASCII-safe `[WARN]` and `[OK]` for Windows terminal compatibility
+- `_slugify()` function now handles multiple consecutive spaces correctly using regex
+
+---
+
+## [1.9.3] - 2026-05-26
+
+---
+
+## [1.9.2] - 2026-05-25
+
+### Added
+- Illustration automation mode in constitution.md § XI Illustration Guidelines
+  - `Illustration Automation` — choose `per-chapter` or `manual`
+  - `per-chapter` — speckit.implement/tasks integrate illustration references; speckit.export embeds PNG files automatically
+  - `manual` — only illustration-brief.md files generated; user adds image links manually
+- `speckit.illustrate` Step 8 — handles automation mode:
+  - `per-chapter` — creates PNG placeholder and adds `<!-- illustration: <CHAPTER_ID>.png -->` comment in draft
+  - `manual` — generates only illustration-brief.md
+- `speckit.export` Step 5 — processes illustrations for EPUB, DOCX, and LaTeX:
+  - `per-chapter` — auto-embeds `illustrations/<CHAPTER_ID>.png` at chapter boundaries
+  - `manual` — processes `<!-- illustration: filename.png -->` comments in draft files
+
+---
+
+## [1.9.1] - 2026-05-25
+
+### Added
+- Illustration defaults in constitution.md — new § XI Illustration Guidelines section
+  - `Illustrations` — yes/no toggle to enable illustration workflow
+  - `Default Style` — base style preset for all illustrations
+  - `Default Color Range` — base color range (full, 2color, greyscale)
+  - `Default Aspect Ratio` — base aspect ratio (portrait, landscape, square)
+  - `Base Design Guideline` — free-text field for overall visual direction
+- `speckit.illustrate` now reads illustration defaults from constitution.md § XI
+  - Uses constitution defaults when arguments are not provided
+  - Checks if illustrations are enabled before proceeding
+  - Includes base design guideline in prompt construction for visual consistency
+
+---
+
+## [1.9.0] - 2026-05-24
+
+### Added
+- `speckit.illustrate` command — book illustration brief generator with AI image prompts
+  - `--chapter <id>` — generate illustration brief for a specific chapter
+  - `--scene all` — generate illustration briefs for all drafted chapters
+  - `--scene description` — interactive scene description mode
+  - `--style [name]` — 10 book-appropriate style presets (penandink, 2color, greyscale, woodcut, lineart, engraving, artnouveau, artdeco, vintage, minimalist)
+  - `--color [range]` — color range for book printing (full, 2color, greyscale)
+  - `--aspect [ratio]` — output aspect ratio (portrait, landscape, square)
+  - `prompt-only` — output only the image generation prompt
+  - `brief-only` — write brief only, no chat output
+- `illustration-brief-template.md` — template for book illustration briefs
+- 10 book-appropriate style presets optimized for interior illustrations (2-color and greyscale options for cost-effective printing)
+
+---
+
 ## [1.8.1] - 2026-05-24
 
 ### Fixed

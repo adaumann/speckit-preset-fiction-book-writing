@@ -19,6 +19,12 @@ backend_preference: [BACKEND_PREFERENCE]
 embedding_model: [EMBEDDING_MODEL]
 chunk_size_tokens: [CHUNK_SIZE_TOKENS]
 top_k_default: [TOP_K_DEFAULT]
+illustrations_enabled: [ILLUSTRATIONS_ENABLED]
+illustration_automation: [ILLUSTRATION_AUTOMATION]
+default_style: [DEFAULT_STYLE]
+default_color_range: [DEFAULT_COLOR_RANGE]
+default_aspect_ratio: [DEFAULT_ASPECT_RATIO]
+base_design_guideline: [BASE_DESIGN_GUIDELINE]
 ---
 
 # [STORY_TITLE] Story Bible
@@ -423,6 +429,51 @@ python .specify/presets/fiction-book-writing/scripts/python/index.py purge      
 | **Embedding Model** | <!-- change only if you have a preferred model --> [EMBEDDING_MODEL] |
 | **Chunk Size (tokens)** | <!-- 200–600 recommended --> [CHUNK_SIZE_TOKENS] |
 | **Top-K Default** | <!-- results returned per query --> [TOP_K_DEFAULT] |
+
+---
+
+## XI. Illustration Guidelines
+<!-- Conditional section: Only configure if Illustrations: yes -->
+
+**Illustrations**: [ILLUSTRATIONS_ENABLED]
+<!-- Set to ONE of the following values:
+     - yes   → This book will include illustrations; configure all fields below
+     - no    → No illustrations planned; skip this entire section -->
+
+<!-- ONLY if Illustrations: yes → Configure the following -->
+
+**Illustration Automation**: [ILLUSTRATION_AUTOMATION]
+<!-- Set to ONE of the following values:
+     - per-chapter  → speckit.implement, speckit.tasks, and speckit.draft automatically generate illustration references in draft files. Illustrations are assumed to be PNG files at `illustrations/<CHAPTER_ID>.png`. speckit.export embeds illustrations at chapter boundaries.
+     - manual       → Only illustration-brief.md files are generated. User must manually add image links in draft files. speckit.export includes placeholder markers for manual insertion. -->
+
+### Base Illustration Style
+<!-- These values are used as defaults by speckit.illustrate.
+     They ensure visual consistency across all illustrations in the book. -->
+
+| Parameter | Value |
+|---|---|
+| **Default Style** | [DEFAULT_ILLUSTRATION_STYLE] |
+| **Default Color Range** | [DEFAULT_ILLUSTRATION_COLOR] |
+| **Default Aspect Ratio** | [DEFAULT_ILLUSTRATION_ASPECT] |
+
+**Default Style** — *(Required if Illustrations: yes. Used by `speckit.illustrate` as the default style preset.)*
+<!-- Choose from: penandink, 2color, greyscale, woodcut, lineart, engraving, artnouveau, artdeco, vintage, minimalist -->
+
+**Default Color Range** — *(Required if Illustrations: yes. Used by `speckit.illustrate` as the default color range.)*
+<!-- Choose from: full, 2color, greyscale -->
+
+**Default Aspect Ratio** — *(Required if Illustrations: yes. Used by `speckit.illustrate` as the default aspect ratio.)*
+<!-- Choose from: portrait, landscape, square -->
+
+### Base Design Guideline
+[BASE_DESIGN_GUIDELINE]
+<!-- Free-text field for overall illustration direction. Examples:
+     - "Minimalist line art with single accent color for chapter openers"
+     - "Cross-hatched engraving style for historical authenticity"
+     - "Art Nouveau flowing lines with duotone palette"
+     - "High contrast woodcut style for horror atmosphere"
+     This guidance helps maintain visual consistency across all illustrations. -->
 
 ---
 

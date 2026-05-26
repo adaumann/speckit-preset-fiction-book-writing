@@ -78,8 +78,8 @@ def _load_config(project_root: Path) -> dict:
     defaults = {
         "backend_preference": "auto",
         "embedding_model": "all-MiniLM-L6-v2",
-        "chunk_size_tokens": 300,
-        "top_k": 5,
+        "chunk_size_tokens": 200,
+        "top_k": 3,
     }
     if not config_path.is_file():
         # Write default config for the user
@@ -212,7 +212,7 @@ def _estimate_chars(tokens: int) -> int:
 
 
 def _slugify(text: str) -> str:
-    return text.strip().lower().replace(" ", "-")
+    return re.sub(r"\s+", "-", text.strip().lower())
 
 
 def _extract_character_ids(body: str, meta: dict[str, str]) -> str:
@@ -485,7 +485,7 @@ class KeywordBackend:
 
         if BM25Okapi:
             bm25 = BM25Okapi(corpus)
-            scores = list(bm25.get_scores(query_tokens))
+            scores = [float(s) for s in bm25.get_scores(query_tokens)]
         else:
             # Built-in TF scoring — zero dependencies
             scores = []
@@ -493,12 +493,20 @@ class KeywordBackend:
                 token_set = set(tokens)
                 scores.append(float(sum(1 for t in query_tokens if t in token_set)))
 
+        # Normalize scores to 0-1 range
+        min_score = min(scores) if scores else 0.0
         max_score = max(scores) if scores else 1.0
-        ranked = sorted(zip(scores, pool), key=lambda x: x[0], reverse=True)[:top_k]
+        score_range = max_score - min_score
+        if score_range > 0:
+            normalized_scores = [(s - min_score) / score_range for s in scores]
+        else:
+            normalized_scores = [1.0 if s > 0 else 0.0 for s in scores]
+        
+        ranked = sorted(zip(normalized_scores, pool), key=lambda x: x[0], reverse=True)[:top_k]
         return [
-            {"score": s / max(max_score, 1e-9), **d}
+            {"score": s, **d}
             for s, d in ranked
-            if s > 0
+            if s > 0 or (s == 0 and any(t in d["text"].lower() for t in query_tokens))
         ]
 
     def count(self) -> int:

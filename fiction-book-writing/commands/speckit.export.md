@@ -121,7 +121,17 @@ If no reference doc is found, pandoc uses its built-in defaults (functional but 
 
    If `FEATURE_DIR/blurb.md` already exists, read the first non-comment paragraph as the description text. Validate it is 100–150 words; warn if outside that range but proceed.
 
-5. **Run the export script**:
+5. **Process illustrations** (EPUB and DOCX only):
+   - Read `constitution.md § XI Illustration Guidelines` for `Illustration Automation`:
+     - `per-chapter` — scan `illustrations/` for PNG files matching chapter IDs (`<CHAPTER_ID>.png`)
+       - For EPUB: embed images at chapter boundaries using HTML `<img>` tags with `width="100%"`
+       - For DOCX: insert images at chapter boundaries using pandoc raw blocks
+       - For LaTeX: insert images using `\includegraphics` at chapter boundaries
+     - `manual` — scan draft files for `<!-- illustration: <filename>.png -->` comments
+       - Replace with appropriate image insertion syntax for the target format
+       - If no illustration comments found, emit: "⚠️ No illustration references found in draft files. Add `<!-- illustration: <filename>.png -->` comments where images should appear."
+
+6. **Run the export script**:
    ```
    python .specify/presets/fiction-book-writing/scripts/python/export.py <format> \
      --draft-dir FEATURE_DIR/draft \
@@ -135,7 +145,7 @@ If no reference doc is found, pandoc uses its built-in defaults (functional but 
    ```
    On Windows, use `python` or `python3` as available.
 
-6. **Report the result**:
+7. **Report the result**:
    ```
    ✅ Export complete
 
@@ -169,12 +179,12 @@ If no reference doc is found, pandoc uses its built-in defaults (functional but 
    > `pdflatex manuscript.tex` (or `xelatex` for full Unicode/font support).
    > For Overleaf, upload the `.tex` file directly.
 
-7. **Optional — export polished chapters only**:
+8. **Optional — export polished chapters only**:
    If the user passes `polished` or `--polished-only` in `$ARGUMENTS`, add the
    `--polished-only` flag to the script invocation. Report which chapters were
    **skipped** (no polished version yet) in the output table.
 
-8. **Audio export** (format `audio` only — skip for all other formats):
+9. **Audio export** (format `audio` only — skip for all other formats):
 
    8a. **Locate audiobook drafts**:
    - Look for `FEATURE_DIR/audiodraft/` containing `.ssml` and/or `_el.xml` files

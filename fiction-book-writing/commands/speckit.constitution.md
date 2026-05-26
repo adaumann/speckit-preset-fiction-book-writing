@@ -207,7 +207,54 @@ You **MUST** consider the user input before proceeding (if not empty).
    - Set `[SEARCH_INDEX_ENABLED]` to `no`
    - Leave other RAG fields as defaults
 
-3c. **Resolve Audiobook Production section** (Section X of constitution.md):
+3c. **Resolve Illustration Guidelines section** (Section XI of constitution.md):
+
+   If `[ILLUSTRATIONS_ENABLED]` is `[NEEDS CLARIFICATION]` or absent, ask:
+
+   > "Will this book include illustrations?
+   > (a) **yes** — configure illustration defaults for speckit.illustrate
+   > (b) **no** — skip illustration configuration"
+
+   If Illustrations is `no`: mark the section as inactive and proceed to audiobook configuration.
+
+   If Illustrations is `yes`:
+
+   **Illustration Automation** — ask if not set:
+   > "How should illustrations be handled?
+   > (a) **per-chapter** — automatically create illustration placeholders and add references to draft files
+   > (b) **manual** — only generate illustration briefs; you manually add image links"
+
+   **Default Style** — ask if not set:
+   > "Which illustration style?
+   > (a) **penandink** — Pen and Ink (literary fiction, classics, MG)
+   > (b) **2color** — Two-Color Print (chapter openers, section dividers)
+   > (c) **greyscale** — Greyscale (interior illustrations, budget printing)
+   > (d) **woodcut** — Woodcut Print (historical, literary, horror)
+   > (e) **lineart** — Line Art (MG, chapter headers)
+   > (f) **engraving** — Copperplate Engraving (period pieces)
+   > (g) **artnouveau** — Art Nouveau (fantasy, historical romance)
+   > (h) **artdeco** — Art Deco (1920s-1930s settings)
+   > (i) **vintage** — Vintage Book Style (period pieces, nostalgia)
+   > (j) **minimalist** — Minimalist (contemporary, literary)"
+
+   **Default Color Range** — ask if not set:
+   > "Which color range?
+   > (a) **full** — Full color (CMYK/RGB) for premium editions
+   > (b) **2color** — Two-color printing (black + 1 spot color)
+   > (c) **greyscale** — Greyscale only for interior illustrations"
+
+   **Default Aspect Ratio** — ask if not set:
+   > "Which aspect ratio?
+   > (a) **portrait** — 2:3 ratio (standard book)
+   > (b) **landscape** — 3:2 ratio (wide format)
+   > (c) **square** — 1:1 ratio"
+
+   **Base Design Guideline** — ask if not set:
+   > "Any overall visual direction for illustrations? (e.g., 'Minimalist line art with single accent color', 'Cross-hatched engraving style', or press Enter to skip)"
+
+   Validate: if Illustrations is `yes` but Default Style, Default Color Range, or Default Aspect Ratio are not set → emit `⚠️ Illustration defaults incomplete. These fields are required when Illustrations: yes.`
+
+3d. **Resolve Audiobook Production section** (Section X of constitution.md):
 
    If `[OUTPUT_MODE]` is `[NEEDS CLARIFICATION]` or absent, ask:
 
@@ -215,7 +262,64 @@ You **MUST** consider the user input before proceeding (if not empty).
    > (a) **book** — prose drafts only, no audiobook files
    > (b) **both** — prose drafts AND audiobook TTS drafts"
 
-   If Output Mode is `book`: mark the section as inactive and stop here.
+   If Output Mode is `book`: skip the audiobook configuration.
+
+   If Output Mode is `audiobook` or `both`:
+
+   If `[ILLUSTRATIONS_ENABLED]` is `[NEEDS CLARIFICATION]` or absent, ask:
+
+   > "Will this book include illustrations?
+   > (a) **yes** — configure illustration defaults for speckit.illustrate
+   > (b) **no** — skip illustration configuration"
+
+   If Illustrations is `no`: mark the section as inactive and stop here.
+
+   If Illustrations is `yes`:
+
+   **Illustration Automation** — ask if not set:
+   > "How should illustrations be handled?
+   > (a) **per-chapter** — automatically create illustration placeholders and add references to draft files
+   > (b) **manual** — only generate illustration briefs; you manually add image links"
+
+   **Default Style** — ask if not set:
+   > "Which illustration style?
+   > (a) **penandink** — Pen and Ink (literary fiction, classics, MG)
+   > (b) **2color** — Two-Color Print (chapter openers, section dividers)
+   > (c) **greyscale** — Greyscale (interior illustrations, budget printing)
+   > (d) **woodcut** — Woodcut Print (historical, literary, horror)
+   > (e) **lineart** — Line Art (MG, chapter headers)
+   > (f) **engraving** — Copperplate Engraving (period pieces)
+   > (g) **artnouveau** — Art Nouveau (fantasy, historical romance)
+   > (h) **artdeco** — Art Deco (1920s-1930s settings)
+   > (i) **vintage** — Vintage Book Style (period pieces, nostalgia)
+   > (j) **minimalist** — Minimalist (contemporary, literary)"
+
+   **Default Color Range** — ask if not set:
+   > "Which color range?
+   > (a) **full** — Full color (CMYK/RGB) for premium editions
+   > (b) **2color** — Two-color printing (black + 1 spot color)
+   > (c) **greyscale** — Greyscale only for interior illustrations"
+
+   **Default Aspect Ratio** — ask if not set:
+   > "Which aspect ratio?
+   > (a) **portrait** — 2:3 ratio (standard book)
+   > (b) **landscape** — 3:2 ratio (wide format)
+   > (c) **square** — 1:1 ratio"
+
+   **Base Design Guideline** — ask if not set:
+   > "Any overall visual direction for illustrations? (e.g., 'Minimalist line art with single accent color', 'Cross-hatched engraving style', or press Enter to skip)"
+
+   Validate: if Illustrations is `yes` but Default Style, Default Color Range, or Default Aspect Ratio are not set → emit `⚠️ Illustration defaults incomplete. These fields are required when Illustrations: yes.`
+
+3d. **Resolve Audiobook Production section** (Section X of constitution.md):
+
+   If `[OUTPUT_MODE]` is `[NEEDS CLARIFICATION]` or absent, ask:
+
+   > "What output do you want for this story?
+   > (a) **book** — prose drafts only, no audiobook files
+   > (b) **both** — prose drafts AND audiobook TTS drafts"
+
+   If Output Mode is `book`: skip the audiobook configuration.
 
    If Output Mode is `audiobook` or `both`:
 
@@ -299,6 +403,12 @@ You **MUST** consider the user input before proceeding (if not empty).
      - `[EMBEDDING_MODEL]` is a valid model name (default: `all-MiniLM-L6-v2`)
      - `[CHUNK_SIZE_TOKENS]` is an integer 200–600
      - `[TOP_K_DEFAULT]` is a positive integer
+   - `[ILLUSTRATIONS_ENABLED]` is one of: `yes`, `no`
+   - If Illustrations is `yes`:
+     - `[ILLUSTRATION_AUTOMATION]` is one of: `per-chapter`, `manual`
+     - `[DEFAULT_ILLUSTRATION_STYLE]` is one of: `penandink`, `2color`, `greyscale`, `woodcut`, `lineart`, `engraving`, `artnouveau`, `artdeco`, `vintage`, `minimalist`
+     - `[DEFAULT_ILLUSTRATION_COLOR]` is one of: `full`, `2color`, `greyscale`
+     - `[DEFAULT_ILLUSTRATION_ASPECT]` is one of: `portrait`, `landscape`, `square`
 
 8. **Report**: Summarize all resolved fields, the new version number, and any remaining items requiring attention.
 

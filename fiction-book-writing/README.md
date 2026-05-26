@@ -1,13 +1,13 @@
 # Spec Kit Fiction Book Writing Preset
 
-**Version 1.8.1** Part of [Spec Kit](https://github.com/adaumann/speckit-preset-fiction-book-writing)
+**Version 1.9.0** Part of [Spec Kit](https://github.com/adaumann/speckit-preset-fiction-book-writing)
 
 A Spec-Driven Development preset purpose-built for novel and long-form fiction writing. It applies the discipline of structured software development to creative fiction: story bibles instead of architecture docs, scene tasks instead of tickets, quality gates instead of CI checks.
 
 **Key features at a glance:**
 
 - **Story Bible governance** - `constitution.md` is the single source of truth for voice, tense, prose profile, tone, target audience, and language. Every command reads from it; no style drift across sessions.
-- **Full story pipeline** - 27 AI commands from first idea (`speckit.specify`) through structural planning (`speckit.plan`, `speckit.outline`), drafting (`speckit.implement`), quality loop (`speckit.checklist`, `speckit.revise`, `speckit.polish`), feedback (`speckit.feedback`), and submission (`speckit.synopsis`, `speckit.query`, `speckit.export`).
+- **Full story pipeline** - 28 AI commands from first idea (`speckit.specify`) through structural planning (`speckit.plan`, `speckit.outline`), drafting (`speckit.implement`), quality loop (`speckit.checklist`, `speckit.revise`, `speckit.polish`), feedback (`speckit.feedback`), and submission (`speckit.synopsis`, `speckit.query`, `speckit.export`).
 - **Multi-POV architecture** - 9 POV modes including alternating, dual, braided, ensemble, mosaic, frame, chorus, and first-person-multiple. `speckit.pov` designs and audits the POV schedule and information asymmetry map.
 - **All major plot structures** - Three-Act, Save the Cat, Hero's Journey, Story Circle, Fichtean Curve, KishÅtenketsu, Freytag's Pyramid, Five-Act, and custom. `speckit.plan` adapts the chapter map to your chosen framework.
 - **Two style modes** - `author-sample` (extract 8 voice markers from your own prose) or `humanized-ai` (built-in craft ruleset: 5 prose profiles, sensory grounding, filter word purge, off-balance endings, Triple Purpose).
@@ -174,6 +174,8 @@ After initialization, your project will have this layout:
         <CHAPTER_ID>_<Title>.md        -> Chapter draft
         <CHAPTER_ID>_<Title>_v2.md     -> Revised version
         <CHAPTER_ID>_<Title>_polished.md
+      illustrations/
+        <CHAPTER_ID>-brief.md          -> Scene illustration brief and prompts
       checklists/
         <CHAPTER_ID>_<Title>-checklist.md
       feedback/
@@ -232,6 +234,7 @@ After initialization, your project will have this layout:
 | `speckit.export` | Submission | Export manuscript to DOCX (Word), EPUB (KDP/IngramSpark), or LaTeX via pandoc. `--platform` selects KDP, IngramSpark, D2D, Shunn, or Smashwords formatting |
 | `speckit.audiobook` | Audiobook | Convert prose chapters to SSML/ElevenLabs audiodraft files, manage voice assignments and pronunciation lexicon, check for stale drafts, export `lexicon.pls` |
 | `speckit.cover` | Submission | Generate a cover brief, AI image-generation prompts (3 variants), and platform specs for KDP, IngramSpark, D2D, and social. 10 style presets. Reads spec.md for title/author/genre/series |
+| `speckit.illustrate` | Submission | Generate illustration briefs and AI image-generation prompts for interior book illustrations. Creates chapter opener illustrations, section dividers, and full-page interior art. Focuses on book-appropriate styles with 2-color and greyscale options typical for published books. 10 style presets: penandink, 2color, greyscale, woodcut, lineart, engraving, artnouveau, artdeco, vintage, minimalist. Supports --chapter, --scene, --style, --color, and --aspect arguments. |
 | `speckit.bio` | Submission | Draft, refine, and generate author bio variants (agent / reader / platform / social / first-person). Stores canonical short and long bios in constitution.md. Short bio used by `speckit.query`; long bio appended by `speckit.export` as "About the Author" |
 
 ---
@@ -547,6 +550,18 @@ All sub-commands and arguments for every command.
 /speckit.cover brief-only                  -> write cover-brief.md only, no chat prompt output
 ```
 
+#### `speckit.illustrate`
+```
+/speckit.illustrate --chapter A1.101       -> generate illustration brief for a specific chapter
+/speckit.illustrate --scene all            -> generate illustration briefs for all drafted chapters
+/speckit.illustrate --scene description    -> interactive: describe a scene for illustration
+/speckit.illustrate --chapter A1.101 --style penandink  -> specify visual style (penandink, 2color, greyscale, woodcut, lineart, engraving, artnouveau, artdeco, vintage, minimalist)
+/speckit.illustrate --chapter A1.101 --color 2color    -> specify color range (full, 2color, greyscale)
+/speckit.illustrate --chapter A1.101 --aspect portrait -> specify aspect ratio (portrait, landscape, square)
+/speckit.illustrate --chapter A1.101 prompt-only       -> output only the image prompt
+/speckit.illustrate --chapter A1.101 brief-only          -> write brief only, no chat output
+```
+
 #### `speckit.bio`
 
 ```
@@ -592,6 +607,7 @@ All sub-commands and arguments for every command.
 | `feedback-template.md` | Beta/editorial feedback: raw notes, categorized issues, severity, revision tasks |
 | `query-letter-template.md` | Query letter: hook, story body, housekeeping, comp titles, bio, submission tracker |
 | `cover-brief-template.md` | Cover design brief: elements, colour palette, typography zones, 3 AI image prompts (hero/environment/symbol), platform specs, print spine calculation |
+| `illustration-brief-template.md` | Scene illustration brief: character references, setting details, mood, 3 AI image prompts (hero moment/environment/character study) |
 
 ---
 
