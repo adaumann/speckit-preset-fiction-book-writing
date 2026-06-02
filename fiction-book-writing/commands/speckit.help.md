@@ -124,6 +124,8 @@ For each blocker:
 **Blocker detection rules:**
 - `constitution.md` missing → blocks everything
 - `spec.md` has `[NEEDS CLARIFICATION]` items and `plan.md` already exists → constitution/spec drift risk
+- `illustrations/` has briefs but no image files AND `Illustration Automation` is `per-chapter` → illustration placeholders missing for export
+- `draft/` has `<!-- illustration: ... -->` comments but `illustrations/` has no matching image files → manual illustrations not generated
 - `plan.md` Story Bible Check has ❌ VIOLATION → blocks drafting
 - `research.md` has HIGH-priority OPEN items AND any chapters are in `draft` or later → factual debt compounding
 - `checklists/` has chapters with failing gates AND those chapters are already `revised` or `polished` → quality regression
@@ -181,6 +183,8 @@ Things that are not on the critical path but would strengthen the manuscript:
 - `Author Bio (Short)` in `constitution.md` is `[PLACEHOLDER]` or absent → `speckit.bio draft` (becomes a hard blocker before query submission; surface as URGENT in Phase 6)
 - `cover-brief.md` absent AND project is Phase 5 or later → `speckit.cover` (platform-ready visual brief for cover design or AI-assisted image generation)
 - All chapters polished but `speckit.statistics` never run → `speckit.statistics` (word-count and POV/act breakdown for submission metadata and pacing audit)
+- `illustrations/` has briefs but no image files AND `Illustration Automation` is `per-chapter` → `speckit.illustrate --scene all` to generate illustration prompts and placeholders
+- `draft/` has `<!-- illustration: ... -->` comments but `illustrations/` has no matching image files → manually add illustration images or run `speckit.illustrate` to generate them
 
 ### Section F — Phase-Relevant Command Cheatsheet
 

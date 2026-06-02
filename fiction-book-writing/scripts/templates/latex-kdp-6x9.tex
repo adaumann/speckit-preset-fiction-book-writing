@@ -42,6 +42,7 @@
 \usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc}
 \usepackage{lmodern}
+\usepackage{graphicx}  % Required for images
 
 % xelatex font block — uncomment and replace font names to use system fonts:
 % \usepackage{fontspec}
@@ -73,12 +74,18 @@
 % ── Chapter formatting ─────────────────────────────────────────────────────
 % Chapter title 1/3 down the page, centred, no "Chapter N" prefix
 \usepackage{titlesec}
+% Suppress chapter numbers
+\renewcommand{\thechapter}{}
 \titleformat{\chapter}[display]
   {\normalfont\large\centering}
   {}                    % no "Chapter N" label
   {0pt}
   {\vspace{2.5in}}      % pushes title ~1/3 down a 9" page
 \titlespacing*{\chapter}{0pt}{0pt}{2\baselineskip}
+
+% ── Pandoc compatibility for images ────────────────────────────────────────
+% Define \pandocbounded if pandoc uses it (for --embed-resources)
+\providecommand{\pandocbounded}[2]{#2}
 
 % ── Scene break ────────────────────────────────────────────────────────────
 % \scenebreak produces a centred * * * between scenes
@@ -110,7 +117,26 @@
 \begin{document}
 
 \frontmatter
+
+$if(cover-image)$
+\thispagestyle{empty}
+\vspace*{2in}
+\begin{center}
+\includegraphics[width=0.8\paperwidth]{$cover-image$}
+\end{center}
+\newpage
+$endif$
+
 \maketitle
+
+$if(rights)$
+\vspace{2in}
+\begin{center}
+\small
+\textit{$rights$}
+\end{center}
+\vspace{1in}
+$endif$
 
 $if(toc)$
 \tableofcontents

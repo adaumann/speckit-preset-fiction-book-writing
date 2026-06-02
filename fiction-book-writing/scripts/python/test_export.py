@@ -219,16 +219,29 @@ class TestReadSpecMeta(unittest.TestCase):
 class TestReadIllustrationConfig(unittest.TestCase):
     """Tests for read_illustration_config function."""
 
-    def test_read_illustration_settings(self):
-        """Illustration settings are read from constitution.md."""
+    def test_read_illustration_settings_yaml(self):
+        """Illustration settings are read from YAML format in constitution.md."""
         with tempfile.TemporaryDirectory() as tmpdir:
             draft_dir = Path(tmpdir) / "draft"
             draft_dir.mkdir()
             const_path = draft_dir.parent / "constitution.md"
-            const_path.write_text("illustrations_enabled: true\nillustration_automation: per-chapter\ndefault_style: penandink\n")
+            const_path.write_text("illustrations_enabled: yes\nillustration_automation: per-chapter\ndefault_style: penandink\n")
             
             config = export.read_illustration_config(draft_dir)
-            self.assertEqual(config.get("illustrations_enabled"), "true")
+            self.assertEqual(config.get("illustrations_enabled"), "yes")
+            self.assertEqual(config.get("illustration_automation"), "per-chapter")
+            self.assertEqual(config.get("default_style"), "penandink")
+
+    def test_read_illustration_settings_markdown(self):
+        """Illustration settings are read from markdown format in constitution.md."""
+        with tempfile.TemporaryDirectory() as tmpdir:
+            draft_dir = Path(tmpdir) / "draft"
+            draft_dir.mkdir()
+            const_path = draft_dir.parent / "constitution.md"
+            const_path.write_text("**Illustrations**: yes\n**Illustration Automation**: per-chapter\n**Default Style**: penandink\n")
+            
+            config = export.read_illustration_config(draft_dir)
+            self.assertEqual(config.get("illustrations_enabled"), "yes")
             self.assertEqual(config.get("illustration_automation"), "per-chapter")
             self.assertEqual(config.get("default_style"), "penandink")
 
@@ -252,8 +265,8 @@ class TestReadAudiobookConfig(unittest.TestCase):
 class TestProcessIllustrations(unittest.TestCase):
     """Tests for process_illustrations function."""
 
-    def test_per_chapter_mode(self):
-        """Per-chapter mode embeds images at chapter boundaries."""
+    def test_per_chapter_mode_png(self):
+        """Per-chapter mode embeds PNG images at chapter boundaries."""
         with tempfile.TemporaryDirectory() as tmpdir:
             draft_dir = Path(tmpdir) / "draft"
             draft_dir.mkdir()
@@ -268,10 +281,31 @@ class TestProcessIllustrations(unittest.TestCase):
             ]
             
             const_path = draft_dir.parent / "constitution.md"
-            const_path.write_text("illustration_automation: per-chapter\n")
+            const_path.write_text("illustrations_enabled: yes\nillustration_automation: per-chapter\n")
             
             result = export.process_illustrations(chapters, draft_dir, "epub")
             self.assertIn("<img src=", result[0][1])
+
+    def test_per_chapter_mode_jpg(self):
+        """Per-chapter mode embeds JPG images at chapter boundaries."""
+        with tempfile.TemporaryDirectory() as tmpdir:
+            draft_dir = Path(tmpdir) / "draft"
+            draft_dir.mkdir()
+            illustrations_dir = draft_dir.parent / "illustrations"
+            illustrations_dir.mkdir()
+            
+            # Create a dummy JPG file
+            (illustrations_dir / "A1.101.jpg").write_bytes(b"fake jpg")
+            
+            chapters = [
+                ({"chapter_id": "A1.101", "chapter_name": "Intro"}, "# Intro\n\nContent here"),
+            ]
+            
+            const_path = draft_dir.parent / "constitution.md"
+            const_path.write_text("illustrations_enabled: yes\nillustration_automation: per-chapter\n")
+            
+            result = export.process_illustrations(chapters, draft_dir, "docx")
+            self.assertIn("![](A1.101.jpg)", result[0][1])
 
     def test_manual_mode_with_comments(self):
         """Manual mode processes illustration comments."""
@@ -284,10 +318,26 @@ class TestProcessIllustrations(unittest.TestCase):
             ]
             
             const_path = draft_dir.parent / "constitution.md"
-            const_path.write_text("illustration_automation: manual\n")
+            const_path.write_text("illustrations_enabled: yes\nillustration_automation: manual\n")
             
             result = export.process_illustrations(chapters, draft_dir, "docx")
             self.assertIn("![](image.png)", result[0][1])
+
+    def test_manual_mode_jpg_comments(self):
+        """Manual mode processes JPG illustration comments."""
+        with tempfile.TemporaryDirectory() as tmpdir:
+            draft_dir = Path(tmpdir) / "draft"
+            draft_dir.mkdir()
+            
+            chapters = [
+                ({"chapter_id": "A1.101"}, "Text<!-- illustration: image.jpg -->more text"),
+            ]
+            
+            const_path = draft_dir.parent / "constitution.md"
+            const_path.write_text("illustrations_enabled: yes\nillustration_automation: manual\n")
+            
+            result = export.process_illustrations(chapters, draft_dir, "latex")
+            self.assertIn("includegraphics", result[0][1])
 
     def test_manual_mode_no_comments(self):
         """Manual mode warns when no illustration comments found."""
@@ -300,7 +350,7 @@ class TestProcessIllustrations(unittest.TestCase):
             ]
             
             const_path = draft_dir.parent / "constitution.md"
-            const_path.write_text("illustration_automation: manual\n")
+            const_path.write_text("illustrations_enabled: yes\nillustration_automation: manual\n")
             
             # Capture stderr
             import io
@@ -313,6 +363,82 @@ class TestProcessIllustrations(unittest.TestCase):
                 self.assertIn("No illustration references found", stderr_output)
             finally:
                 sys.stderr = old_stderr
+
+
+class TestFindCoverImage(unittest.TestCase):
+    """Tests for find_cover_image function."""
+
+    def test_find_cover_png(self):
+        """Cover PNG is found with cover*.png pattern."""
+        with tempfile.TemporaryDirectory() as tmpdir:
+            project_dir = Path(tmpdir)
+            (project_dir / "cover.png").write_bytes(b"fake png")
+            
+            result = export.find_cover_image(project_dir)
+            self.assertEqual(result.name, "cover.png")
+
+    def test_find_cover_jpg(self):
+        """Cover JPG is found with cover*.jpg pattern."""
+        with tempfile.TemporaryDirectory() as tmpdir:
+            project_dir = Path(tmpdir)
+            (project_dir / "cover.jpg").write_bytes(b"fake jpg")
+            
+            result = export.find_cover_image(project_dir)
+            self.assertEqual(result.name, "cover.jpg")
+
+    def test_find_cover_jpeg(self):
+        """Cover JPEG is found with cover*.jpeg pattern."""
+        with tempfile.TemporaryDirectory() as tmpdir:
+            project_dir = Path(tmpdir)
+            (project_dir / "cover.jpeg").write_bytes(b"fake jpeg")
+            
+            result = export.find_cover_image(project_dir)
+            self.assertEqual(result.name, "cover.jpeg")
+
+    def test_no_cover_returns_none(self):
+        """Returns None when no cover image found."""
+        with tempfile.TemporaryDirectory() as tmpdir:
+            project_dir = Path(tmpdir)
+            result = export.find_cover_image(project_dir)
+            self.assertIsNone(result)
+
+
+class TestFindIllustrationFile(unittest.TestCase):
+    """Tests for find_illustration_file function."""
+
+    def test_find_png(self):
+        """PNG illustration is found."""
+        with tempfile.TemporaryDirectory() as tmpdir:
+            ill_dir = Path(tmpdir)
+            (ill_dir / "A1.101.png").write_bytes(b"fake png")
+            
+            result = export.find_illustration_file(ill_dir, "A1.101")
+            self.assertEqual(result.name, "A1.101.png")
+
+    def test_find_jpg(self):
+        """JPG illustration is found."""
+        with tempfile.TemporaryDirectory() as tmpdir:
+            ill_dir = Path(tmpdir)
+            (ill_dir / "A1.101.jpg").write_bytes(b"fake jpg")
+            
+            result = export.find_illustration_file(ill_dir, "A1.101")
+            self.assertEqual(result.name, "A1.101.jpg")
+
+    def test_find_jpeg(self):
+        """JPEG illustration is found."""
+        with tempfile.TemporaryDirectory() as tmpdir:
+            ill_dir = Path(tmpdir)
+            (ill_dir / "A1.101.jpeg").write_bytes(b"fake jpeg")
+            
+            result = export.find_illustration_file(ill_dir, "A1.101")
+            self.assertEqual(result.name, "A1.101.jpeg")
+
+    def test_no_illustration_returns_none(self):
+        """Returns None when no illustration file found."""
+        with tempfile.TemporaryDirectory() as tmpdir:
+            ill_dir = Path(tmpdir)
+            result = export.find_illustration_file(ill_dir, "A1.101")
+            self.assertIsNone(result)
 
 
 class TestBuildCombinedMarkdown(unittest.TestCase):
@@ -348,6 +474,32 @@ class TestBuildCombinedMarkdown(unittest.TestCase):
         result = export.build_combined_markdown(chapters, "Title", "Author", author_bio="Author bio text")
         self.assertIn("# About the Author", result)
         self.assertIn("Author bio text", result)
+
+    def test_cover_image_included(self):
+        """Cover image is included at the beginning for DOCX/EPUB."""
+        chapters = [
+            ({"chapter_id": "A1.101"}, "Content"),
+        ]
+        
+        with tempfile.TemporaryDirectory() as tmpdir:
+            cover_path = Path(tmpdir) / "cover.png"
+            cover_path.write_bytes(b"fake cover")
+            
+            result = export.build_combined_markdown(chapters, "Title", "Author", cover_image=cover_path, fmt="docx")
+            self.assertIn("![](cover.png)", result)
+
+    def test_cover_image_skipped_for_latex(self):
+        """Cover image is skipped for LaTeX output."""
+        chapters = [
+            ({"chapter_id": "A1.101"}, "Content"),
+        ]
+        
+        with tempfile.TemporaryDirectory() as tmpdir:
+            cover_path = Path(tmpdir) / "cover.png"
+            cover_path.write_bytes(b"fake cover")
+            
+            result = export.build_combined_markdown(chapters, "Title", "Author", cover_image=cover_path, fmt="latex")
+            self.assertNotIn("![](cover.png)", result)
 
 
 class TestFindDraftDir(unittest.TestCase):

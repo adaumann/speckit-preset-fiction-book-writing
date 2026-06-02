@@ -16,14 +16,15 @@ Usage:
 
 Options:
     --draft-dir PATH        Path to draft/ directory (auto-detected if omitted)
+    --illustrations-dir PATH  Path to illustrations/ directory (auto-detected if omitted)
     --output FILE, -o FILE  Output file (default: manuscript.docx / manuscript.tex / manuscript.epub)
     --title TITLE           Manuscript title (reads from spec.md if omitted)
     --author NAME           Author name (reads from constitution.md/spec.md if omitted)
-    --lang LANG             BCP-47 language code for EPUB metadata (reads from constitution.md if omitted; default: en)
+    --lang LANG             BCP-47 language code for EPUB/DOCX/LaTeX metadata (reads from constitution.md if omitted; default: en)
     --rights TEXT           Copyright statement for dc:rights metadata (reads from constitution.md if omitted)
     --author-bio TEXT       "About the Author" back matter text (reads from constitution.md if omitted)
     --no-author-bio         Suppress "About the Author" back matter even if set in constitution.md
-    --cover-image FILE      Cover image for EPUB (jpg/png)
+    --cover-image FILE      Cover image for all formats (jpg/png) - auto-detected as cover*.{png,jpg,jpeg}
     --reference-doc FILE    Custom pandoc reference .docx for DOCX formatting
     --epub-css FILE         Custom CSS stylesheet for EPUB
     --polished-only         Skip chapters that have no polished (_vN) version
@@ -176,6 +177,27 @@ _PLATFORM_DEFAULTS: dict[str, str] = {
 }
 
 
+def _ensure_docx_templates(templates_dir: Path) -> None:
+    """Generate DOCX templates on-demand if missing."""
+    import importlib.util
+    
+    creator_script = Path(__file__).parent / "create_docx_templates.py"
+    if not creator_script.exists():
+        return
+    
+    # Check if templates exist
+    shunn = templates_dir / "docx-shunn.docx"
+    smashwords = templates_dir / "docx-smashwords.docx"
+    
+    if not shunn.exists() or not smashwords.exists():
+        print("DOCX templates not found — generating them now...")
+        spec = importlib.util.spec_from_file_location("create_docx_templates", creator_script)
+        if spec and spec.loader:
+            module = importlib.util.module_from_spec(spec)
+            spec.loader.exec_module(module)
+            module.main()
+
+
 def resolve_platform_templates(
     fmt: str,
     platform: str | None,
@@ -204,7 +226,15 @@ def resolve_platform_templates(
         if candidate.exists():
             result[key] = candidate
         else:
-            print(f"Note: platform template '{filename}' not found in {templates_dir} — skipping.")
+            # Auto-generate DOCX templates if missing
+            if fmt == "docx" and key == "reference_doc":
+                _ensure_docx_templates(templates_dir)
+                if candidate.exists():
+                    result[key] = candidate
+                else:
+                    print(f"Note: platform template '{filename}' not found in {templates_dir} — skipping.")
+            else:
+                print(f"Note: platform template '{filename}' not found in {templates_dir} — skipping.")
     return result
 
 
@@ -295,12 +325,23 @@ def build_combined_markdown(
     author: str,
     author_bio: str | None = None,
     blurb: str | None = None,
+    cover_image: Path | None = None,
+    fmt: str = "docx",
+    rights: str | None = None,
 ) -> str:
     """Assemble chapters into a single pandoc-compatible markdown document."""
     parts: list[str] = []
 
     # Pandoc title block (% Title / % Author)
     parts.append(f"% {title}\n% {author}\n\n")
+
+    # Add cover image if provided (for DOCX and EPUB; LaTeX uses title page)
+    if cover_image and cover_image.exists() and fmt != "latex":
+        parts.append(f"![]({cover_image.name})\n\n")
+
+    # Add copyright page if provided (for DOCX and EPUB)
+    if rights and fmt != "latex":
+        parts.append(f"\n\n# Copyright\n\n\n\n{rights}\n\n\n\n")
 
     # Add blurb as description if provided (EPUB metadata)
     if blurb:
@@ -328,18 +369,41 @@ def build_combined_markdown(
 def read_illustration_config(draft_dir: Path) -> dict[str, str]:
     """Read illustration settings from constitution.md."""
     for candidate in (
-        draft_dir.parent / ".specify" / "memory" / "constitution.md",
+        draft_dir.parent / ".." / ".." / ".specify" / "memory" / "constitution.md",
         draft_dir.parent / "constitution.md",
     ):
         if candidate.exists():
             text = candidate.read_text(encoding="utf-8", errors="replace")
             meta: dict[str, str] = {}
-            for key in ("illustrations_enabled", "illustration_automation", "default_style", "default_color_range", "default_aspect_ratio"):
+            # Check both YAML format (key:) and markdown format (**Key**:)
+            # Note: "illustrations_enabled" maps to "**Illustrations**:" in the template
+            for key, label in (
+                ("illustrations_enabled", "Illustrations"),
+                ("illustration_automation", "Illustration Automation"),
+                ("default_style", "Default Style"),
+                ("default_color_range", "Default Color Range"),
+                ("default_aspect_ratio", "Default Aspect Ratio"),
+            ):
+                # Try YAML format first
                 m = re.search(rf"^{key}:\s*(.+)$", text, re.MULTILINE | re.IGNORECASE)
                 if m:
                     meta[key] = m.group(1).strip()
+                else:
+                    # Try markdown format: **Key**: value
+                    m = re.search(rf"\*\*{label}\*\*:\s*(.+)$", text, re.MULTILINE | re.IGNORECASE)
+                    if m:
+                        meta[key] = m.group(1).strip()
             return meta
     return {}
+
+
+def find_illustration_file(illustrations_dir: Path, chapter_id: str) -> Path | None:
+    """Find illustration file for a chapter, checking multiple extensions."""
+    for ext in (".png", ".jpg", ".jpeg"):
+        ill_file = illustrations_dir / f"{chapter_id}{ext}"
+        if ill_file.exists():
+            return ill_file
+    return None
 
 
 def process_illustrations(
@@ -349,22 +413,26 @@ def process_illustrations(
 ) -> list[tuple[dict[str, str], str]]:
     """Process illustrations and insert image references at chapter boundaries."""
     config = read_illustration_config(draft_dir)
+    enabled = config.get("illustrations_enabled", "no")
     automation = config.get("illustration_automation", "manual")
     illustrations_dir = draft_dir.parent / "illustrations"
 
+    if enabled != "yes":
+        return chapters
+
     if automation == "per-chapter" and illustrations_dir.is_dir():
-        # Per-chapter mode: look for <CHAPTER_ID>.png files
+        # Per-chapter mode: look for <CHAPTER_ID>.* files (png/jpg/jpeg)
         for i, (meta, body) in enumerate(chapters):
             chapter_id = meta.get("chapter_id", "")
-            ill_file = illustrations_dir / f"{chapter_id}.png"
-            if ill_file.exists():
+            ill_file = find_illustration_file(illustrations_dir, chapter_id)
+            if ill_file is not None:
                 # Insert image reference after chapter heading
                 if fmt == "epub":
                     img_tag = f'<img src="{ill_file.name}" width="100%" alt="Chapter illustration"/>\n\n'
                 elif fmt == "docx":
                     img_tag = f"![]({ill_file.name})\n\n"
                 else:  # latex
-                    img_tag = f"\\includegraphics[width=\\textwidth]{{{ill_file.name}}}\n\n"
+                    img_tag = f"\\begin{{center}}\n\\includegraphics[width=0.8\\textwidth]{{{ill_file.name}}}\n\\end{{center}}\n\n"
                 # Insert after first heading or at start
                 if body.strip().startswith("#"):
                     # Find end of first line
@@ -377,26 +445,26 @@ def process_illustrations(
                     body = img_tag + body
                 chapters[i] = (meta, body)
     else:
-        # Manual mode: look for <!-- illustration: filename.png --> comments
+        # Manual mode: look for <!-- illustration: filename.* --> comments
         found_illustration = False
         for i, (meta, body) in enumerate(chapters):
-            # Replace illustration comments with format-appropriate syntax
+            # Replace illustration comments with format-appropriate syntax (supports png, jpg, jpeg)
             if fmt == "epub":
                 new_body = re.sub(
-                    r"<!--\s*illustration:\s*(\S+\.png)\s*-->",
+                    r"<!--\s*illustration:\s*(\S+\.(png|jpg|jpeg))\s*-->",
                     r'<img src="\1" width="100%" alt="Illustration"/>',
                     body,
                 )
             elif fmt == "docx":
                 new_body = re.sub(
-                    r"<!--\s*illustration:\s*(\S+\.png)\s*-->",
+                    r"<!--\s*illustration:\s*(\S+\.(png|jpg|jpeg))\s*-->",
                     r"![](\1)",
                     body,
                 )
             else:  # latex
                 new_body = re.sub(
-                    r"<!--\s*illustration:\s*(\S+\.png)\s*-->",
-                    r"\\includegraphics[width=\\textwidth]{\1}",
+                    r"<!--\s*illustration:\s*(\S+\.(png|jpg|jpeg))\s*-->",
+                    r"\\begin{center}\\includegraphics[width=0.8\\textwidth]{\1}\\end{center}",
                     body,
                 )
             if "illustration:" in body:
@@ -414,10 +482,24 @@ def process_illustrations(
 # ---------------------------------------------------------------------------
 
 def _run_pandoc(args: list[str]) -> None:
+    print(f"Running pandoc command: {' '.join(args)}")
     result = subprocess.run(args, capture_output=True, text=True)
     if result.returncode != 0:
         print(f"pandoc error:\n{result.stderr}", file=sys.stderr)
+        print(f"pandoc stdout:\n{result.stdout}", file=sys.stderr)
+        print(f"Command failed with return code: {result.returncode}", file=sys.stderr)
         sys.exit(1)
+    else:
+        print("pandoc command succeeded")
+
+
+def find_cover_image(project_dir: Path) -> Path | None:
+    """Find cover image file in project root (cover*.png/jpg/jpeg)."""
+    for pattern in ("cover*.png", "cover*.jpg", "cover*.jpeg"):
+        matches = list(project_dir.glob(pattern))
+        if matches:
+            return matches[0]
+    return None
 
 
 def export_docx(
@@ -426,6 +508,8 @@ def export_docx(
     title: str,
     author: str,
     reference_doc: Path | None,
+    cover_image: Path | None,
+    illustrations_dir: Path | None,
     lang: str = "en",
     rights: str | None = None,
 ) -> None:
@@ -436,29 +520,52 @@ def export_docx(
     1-inch margins, running header).  Without a reference doc pandoc
     uses its built-in defaults.
     """
-    with tempfile.NamedTemporaryFile(
-        mode="w", suffix=".md", delete=False, encoding="utf-8"
-    ) as tmp:
-        tmp.write(combined_md)
-        tmp_path = tmp.name
+    with tempfile.TemporaryDirectory() as tmpdir:
+        tmp_path = Path(tmpdir) / "combined.md"
+        tmp_path.write_text(combined_md, encoding="utf-8")
 
-    try:
+        # Copy cover image to temp dir if found
+        if cover_image and cover_image.exists():
+            cover_dest = Path(tmpdir) / cover_image.name
+            cover_dest.write_bytes(cover_image.read_bytes())
+            print(f"Copied cover image: {cover_image.name} to {cover_dest}")
+
+        # Copy illustrations to temp dir if found
+        if illustrations_dir and illustrations_dir.is_dir():
+            print(f"Found illustrations directory: {illustrations_dir}")
+            for img_file in illustrations_dir.glob("*.png"):
+                img_dest = Path(tmpdir) / img_file.name
+                img_dest.write_bytes(img_file.read_bytes())
+                print(f"Copied PNG illustration: {img_file.name}")
+            for img_file in illustrations_dir.glob("*.jpg"):
+                img_dest = Path(tmpdir) / img_file.name
+                img_dest.write_bytes(img_file.read_bytes())
+                print(f"Copied JPG illustration: {img_file.name}")
+            for img_file in illustrations_dir.glob("*.jpeg"):
+                img_dest = Path(tmpdir) / img_file.name
+                img_dest.write_bytes(img_file.read_bytes())
+                print(f"Copied JPEG illustration: {img_file.name}")
+        else:
+            print(f"No illustrations directory found: {illustrations_dir}")
+
+        # Use absolute paths for pandoc
         cmd = [
-            "pandoc", tmp_path,
+            "pandoc", str(tmp_path),
             "-o", str(output_path),
             "--from", "markdown",
             "--to", "docx",
             "--metadata", f"title={title}",
             "--metadata", f"author={author}",
             "--metadata", f"lang={lang}",
+            "--embed-resources",
+            "--resource-path", str(tmpdir),
+            "--link-images",
         ]
         if rights:
             cmd += ["--metadata", f"rights={rights}"]
         if reference_doc and reference_doc.exists():
             cmd += ["--reference-doc", str(reference_doc)]
         _run_pandoc(cmd)
-    finally:
-        os.unlink(tmp_path)
 
 
 def export_latex(
@@ -466,7 +573,9 @@ def export_latex(
     output_path: Path,
     title: str,
     author: str,
-    latex_template: Path | None = None,
+    latex_template: Path | None,
+    cover_image: Path | None,
+    illustrations_dir: Path | None,
     lang: str = "en",
     rights: str | None = None,
 ) -> None:
@@ -475,23 +584,40 @@ def export_latex(
     Uses a platform-specific LaTeX template when provided (e.g. KDP 6×9 trim).
     Falls back to pandoc built-in book class with 1-inch margins.
     """
-    with tempfile.NamedTemporaryFile(
-        mode="w", suffix=".md", delete=False, encoding="utf-8"
-    ) as tmp:
-        tmp.write(combined_md)
-        tmp_path = tmp.name
+    with tempfile.TemporaryDirectory() as tmpdir:
+        tmp_path = Path(tmpdir) / "combined.md"
+        tmp_path.write_text(combined_md, encoding="utf-8")
 
-    try:
+        # Copy cover image to temp dir if found
+        if cover_image and cover_image.exists():
+            cover_dest = Path(tmpdir) / cover_image.name
+            cover_dest.write_bytes(cover_image.read_bytes())
+
+        # Copy illustrations to temp dir if found
+        if illustrations_dir and illustrations_dir.is_dir():
+            for img_file in illustrations_dir.glob("*.png"):
+                img_dest = Path(tmpdir) / img_file.name
+                img_dest.write_bytes(img_file.read_bytes())
+            for img_file in illustrations_dir.glob("*.jpg"):
+                img_dest = Path(tmpdir) / img_file.name
+                img_dest.write_bytes(img_file.read_bytes())
+            for img_file in illustrations_dir.glob("*.jpeg"):
+                img_dest = Path(tmpdir) / img_file.name
+                img_dest.write_bytes(img_file.read_bytes())
+
         cmd = [
-            "pandoc", tmp_path,
+            "pandoc", str(tmp_path),
             "-o", str(output_path),
             "--from", "markdown",
             "--to", "latex",
             "--standalone",
+            "--top-level-division=chapter",
             "--metadata", f"title={title}",
             "--metadata", f"author={author}",
             "--metadata", f"lang={lang}",
         ]
+        if cover_image and cover_image.exists():
+            cmd += ["--metadata", f"cover-image={cover_image.name}"]
         if rights:
             cmd += ["--metadata", f"rights={rights}"]
         if latex_template and latex_template.exists():
@@ -506,8 +632,6 @@ def export_latex(
                 "-V", "indent=true",
             ]
         _run_pandoc(cmd)
-    finally:
-        os.unlink(tmp_path)
 
 
 def export_epub(
@@ -517,7 +641,8 @@ def export_epub(
     author: str,
     cover_image: Path | None,
     epub_css: Path | None,
-    epub_defaults: Path | None = None,
+    epub_defaults: Path | None,
+    illustrations_dir: Path | None,
     isbn: str | None = None,
     lang: str = "en",
     rights: str | None = None,
@@ -529,15 +654,29 @@ def export_epub(
     IngramSpark, and other distributors.  Chapter H1 headings become the
     table of contents.
     """
-    with tempfile.NamedTemporaryFile(
-        mode="w", suffix=".md", delete=False, encoding="utf-8"
-    ) as tmp:
-        tmp.write(combined_md)
-        tmp_path = tmp.name
+    with tempfile.TemporaryDirectory() as tmpdir:
+        tmp_path = Path(tmpdir) / "combined.md"
+        tmp_path.write_text(combined_md, encoding="utf-8")
 
-    try:
+        # Copy cover image to temp dir if found
+        if cover_image and cover_image.exists():
+            cover_dest = Path(tmpdir) / cover_image.name
+            cover_dest.write_bytes(cover_image.read_bytes())
+
+        # Copy illustrations to temp dir if found
+        if illustrations_dir and illustrations_dir.is_dir():
+            for img_file in illustrations_dir.glob("*.png"):
+                img_dest = Path(tmpdir) / img_file.name
+                img_dest.write_bytes(img_file.read_bytes())
+            for img_file in illustrations_dir.glob("*.jpg"):
+                img_dest = Path(tmpdir) / img_file.name
+                img_dest.write_bytes(img_file.read_bytes())
+            for img_file in illustrations_dir.glob("*.jpeg"):
+                img_dest = Path(tmpdir) / img_file.name
+                img_dest.write_bytes(img_file.read_bytes())
+
         cmd = [
-            "pandoc", tmp_path,
+            "pandoc", str(tmp_path),
             "-o", str(output_path),
             "--from", "markdown",
             "--to", "epub3",
@@ -547,6 +686,8 @@ def export_epub(
             "--metadata", f"title={title}",
             "--metadata", f"author={author}",
             "--metadata", f"lang={lang}",
+            "--embed-resources",
+            "--resource-path", str(tmpdir),            
         ]
         if rights:
             cmd += ["--metadata", f"rights={rights}"]
@@ -555,15 +696,13 @@ def export_epub(
         if isbn:
             cmd += ["--metadata", f"isbn={isbn}"]
         if cover_image and cover_image.exists():
-            cmd += ["--epub-cover-image", str(cover_image)]
+            cmd += ["--epub-cover-image", str(cover_dest)]
         if epub_css and epub_css.exists():
             cmd += ["--css", str(epub_css)]
         # Add description from blurb if present
         if blurb:
             cmd += ["--metadata", f"description={blurb}"]
         _run_pandoc(cmd)
-    finally:
-        os.unlink(tmp_path)
 
 
 def read_audiobook_config(draft_dir: Path) -> dict[str, str]:
@@ -806,6 +945,13 @@ def main() -> None:
         help="Custom LaTeX template file (overrides platform default)",
     )
     parser.add_argument(
+        "--illustrations-dir",
+        type=Path,
+        default=None,
+        metavar="PATH",
+        help="Directory containing illustration images (default: illustrations/ next to draft/)",
+    )
+    parser.add_argument(
         "--polished-only",
         action="store_true",
         help="Only include chapters that have a polished (_vN) version",
@@ -905,14 +1051,18 @@ def main() -> None:
         ext = ".docx" if fmt == "docx" else (".epub" if fmt == "epub" else ".tex")
         output: Path = args.output or (draft_dir.parent / f"manuscript{ext}")
 
-    # Auto-detect cover image for EPUB when not explicitly provided
-    if fmt == "epub" and cover_image is None:
-        for candidate_name in ("cover.jpg", "cover.png", "cover.jpeg"):
-            candidate = draft_dir.parent / candidate_name
-            if candidate.exists():
-                cover_image = candidate
-                print(f"Cover image: {cover_image.name} (auto-detected)")
-                break
+    # Auto-detect cover image for all formats when not explicitly provided
+    if cover_image is None:
+        cover_image = find_cover_image(draft_dir.parent)
+        if cover_image:
+            print(f"Cover image: {cover_image.name} (auto-detected)")
+
+    # Auto-detect illustrations directory (use --illustrations-dir if provided)
+    illustrations_dir = args.illustrations_dir
+    if illustrations_dir is None:
+        illustrations_dir = draft_dir.parent / "illustrations"
+    if illustrations_dir is None or not illustrations_dir.is_dir():
+        illustrations_dir = None
 
     # Auto-detect EPUB CSS when not explicitly provided
     if fmt == "epub" and epub_css is None:
@@ -966,7 +1116,7 @@ def main() -> None:
         chapters = process_illustrations(chapters, draft_dir, fmt)
 
     # Build combined markdown and export
-    combined = build_combined_markdown(chapters, title, author, author_bio, blurb)
+    combined = build_combined_markdown(chapters, title, author, author_bio, blurb, cover_image, fmt=fmt, rights=rights)
     if author_bio:
         bio_words = len(author_bio.split())
         print(f"Bio:        {bio_words} words (\"About the Author\" appended)")
@@ -977,13 +1127,13 @@ def main() -> None:
 
     print(f"\nExporting to {output.resolve()} ...")
     if fmt == "docx":
-        export_docx(combined, output, title, author, reference_doc, lang, rights)
+        export_docx(combined, output, title, author, reference_doc, cover_image, illustrations_dir, lang, rights)
     elif fmt == "epub":
-        export_epub(combined, output, title, author, cover_image, epub_css, epub_defaults, getattr(args, "isbn", None), lang, rights, blurb)
+        export_epub(combined, output, title, author, cover_image, epub_css, epub_defaults, illustrations_dir, getattr(args, "isbn", None), lang, rights, blurb)
     elif fmt == "audio":
         export_audio(draft_dir, output)
     else:
-        export_latex(combined, output, title, author, latex_template, lang, rights)
+        export_latex(combined, output, title, author, latex_template, cover_image, illustrations_dir, lang, rights)
 
     tips = {
         "docx": (

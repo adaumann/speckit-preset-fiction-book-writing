@@ -321,6 +321,35 @@ After writing the illustration brief, check `Illustration Automation` from const
 
 ---
 
+## File Naming for Export Integration
+
+Illustration files must follow specific naming conventions for proper export integration:
+
+### Cover Images
+Place in the project root:
+- `cover.png`
+- `cover.jpg` or `cover.jpeg`
+
+### Interior Illustration Files
+
+| Automation Mode | File Location | Naming Pattern |
+|---|---|---|
+| `per-chapter` | `illustrations/` | `<CHAPTER_ID>.*.{png,jpg,jpeg}` (e.g., `A1.101.png`, `A2.201.jpg`) |
+| `manual` | Anywhere in project | Any filename referenced in `<!-- illustration: filename.png -->` comments |
+
+**Supported formats:** PNG, JPG, JPEG
+
+### Export Behavior
+
+When you run `speckit.export`:
+- **Cover images** are automatically detected and embedded at the manuscript start
+- **Per-chapter illustrations** are embedded at chapter boundaries
+- **Manual illustrations** are embedded where `<!-- illustration: ... -->` comments appear in draft files
+
+The export script copies all images to a temporary directory alongside the combined markdown, ensuring pandoc can properly embed them in DOCX, EPUB, and LaTeX outputs.
+
+---
+
 ## Constraints
 - **Read-only for source files** — spec.md, constitution.md, outlines, and character files are never modified
 - **No image generation** — this command produces briefs and prompts; actual image generation requires an external tool

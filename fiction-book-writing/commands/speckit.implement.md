@@ -326,6 +326,32 @@ You **MUST** consider the user input before proceeding (if not empty).
    | Lexicon   | audiodraft/lexicon.pls                        | Entries: N      |
    ```
    If any Pronunciation Lexicon entries still have `[NEEDS CLARIFICATION]` for IPA or Substitute: emit `⚠️ Lexicon incomplete — review audiodraft/lexicon.pls before synthesis.`
+
+5c. **Generate illustration reference** (if `Illustrations` is `yes` in `constitution.md § XI`):
+
+   Read from `constitution.md § XI Illustration Guidelines`:
+   - `Illustrations` (`yes` or `no`)
+   - `Illustration Automation` (`per-chapter` or `manual`)
+   - `Default Style` (style preset)
+   - `Default Color Range` (color range)
+   - `Default Aspect Ratio` (aspect ratio)
+
+   **Illustration Automation: per-chapter**:
+   - Create `illustrations/` directory in `FEATURE_DIR` if it does not exist
+   - Generate a placeholder PNG file at `illustrations/<CHAPTER_ID>.png` (empty or minimal placeholder)
+   - Add an HTML comment at the top of the draft file: `<!-- illustration: <CHAPTER_ID>.png -->`
+   - This placeholder will be replaced with actual artwork later
+
+   **Illustration Automation: manual**:
+   - Do NOT create any illustration files
+   - The user will manually add `<!-- illustration: filename.png -->` comments in draft files
+
+   **Report** (append to step 6 output):
+   ```
+   | Illustration | illustrations/[CHAPTER_ID].png | Placeholder created |
+   ```
+
+   **Note**: Full illustration briefs are generated separately via `speckit.illustrate` command. The illustration task in `tasks.md` tracks this work.
           Deviation from outline: [describe any deviation]
           New Chekhov items: [list any]
           Unresolved items: [list any]

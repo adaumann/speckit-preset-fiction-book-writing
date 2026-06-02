@@ -47,6 +47,7 @@
 \usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc}
 \usepackage{lmodern}   % Latin Modern: fully embeddable, IngramSpark-safe
+\usepackage{graphicx}  % Required for images
 
 % xelatex font block — uncomment to use OpenType fonts (they embed automatically):
 % \usepackage{fontspec}
@@ -79,12 +80,18 @@
 
 % ── Chapter formatting ─────────────────────────────────────────────────────
 \usepackage{titlesec}
+% Suppress chapter numbers
+\renewcommand{\thechapter}{}
 \titleformat{\chapter}[display]
   {\normalfont\large\centering}
   {}
   {0pt}
   {\vspace{2.5in}}
 \titlespacing*{\chapter}{0pt}{0pt}{2\baselineskip}
+
+% ── Pandoc compatibility for images ────────────────────────────────────────
+% Define \pandocbounded if pandoc uses it (for --embed-resources)
+\providecommand{\pandocbounded}[2]{#2}
 
 % ── Scene break ────────────────────────────────────────────────────────────
 \newcommand{\scenebreak}{%
@@ -108,7 +115,26 @@
 \begin{document}
 
 \frontmatter
+
+$if(cover-image)$
+\thispagestyle{empty}
+\vspace*{2in}
+\begin{center}
+\includegraphics[width=0.8\paperwidth]{$cover-image$}
+\end{center}
+\newpage
+$endif$
+
 \maketitle
+
+$if(rights)$
+\vspace{2in}
+\begin{center}
+\small
+\textit{$rights$}
+\end{center}
+\vspace{1in}
+$endif$
 
 $if(toc)$
 \tableofcontents

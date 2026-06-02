@@ -1,6 +1,6 @@
 # Spec Kit Fiction Book Writing Preset
 
-**Version 1.9.0** Part of [Spec Kit](https://github.com/adaumann/speckit-preset-fiction-book-writing)
+**Version 1.9.0** Part of [Spec Kit](https://github.com/github/spec-kit)
 
 A Spec-Driven Development preset purpose-built for novel and long-form fiction writing. It applies the discipline of structured software development to creative fiction: story bibles instead of architecture docs, scene tasks instead of tickets, quality gates instead of CI checks.
 
@@ -200,7 +200,7 @@ After initialization, your project will have this layout:
 | `speckit.pov` | Structure | Design and audit multi-POV architecture, generate POV schedule, validate information asymmetry |
 | `speckit.tasks` | Pre-draft | Generate scene-by-scene writing tasks ordered by act and character arc |
 | `speckit.outline` | Pre-draft | Generate editable per-scene outline files from `plan.md`; authors approve or skip before AI drafts |
-| `speckit.analyze` | Pre-draft | Read-only structural alignment check (specâ†”planâ†”tasks coverage, act proportions) |
+| `speckit.analyze` | Pre-draft | Read-only structural alignment check (spec, plan, tasks coverage, act proportions) |
 
 ### Drafting & Quality
 
@@ -222,15 +222,15 @@ After initialization, your project will have this layout:
 | `speckit.versions` | Monitoring | Version timeline, narrative diff between two chapter versions, revision log, and milestone tagging |
 | `speckit.glossary` | Consistency | Add terms, check drafts for glossary violations, audit unregistered terms, view coverage dashboard |
 | `speckit.subplot` | Consistency | Add P2/P3 arcs mid-draft, check beat gaps and arc absence streaks, rebuild Convergence Map, resolve dramatic questions |
-| `speckit.pacing` | Quality | Tension arc audit per chapter (1â€“10 score), plateau/peak/valley detection, act-band calibration, Mermaid xychart output. Flags sagging middles, undersold climaxes, and premature peaks |
+| `speckit.pacing` | Quality | Tension arc audit per chapter (1-10 score), plateau/peak/valley detection, act-band calibration, Mermaid xychart output. Flags sagging middles, undersold climaxes, and premature peaks |
 | `speckit.statistics` | Quality | Sentence-level prose statistics: readability score (Flesch/Kincaid), sentence length variance, passive voice %, adverb density, filter word count, weak verb %, and dialogue balance (% dialogue vs. action vs. narration). Read-only. Run after drafting or polishing |
 | `speckit.sensitivity` | Quality | Cultural representation, harmful tropes, anachronism review (historical fiction), identity portrayal, trauma depictions. CRITICAL/WARNING/NOTE tiers. Scoped by chapter, category, or full manuscript |
 | `speckit.research` | Research | Log knowledge gaps, resolve findings, check factual claims in drafts, view open-item dashboard |
 | `speckit.series` | Series | Init/audit/update the series bible and run cross-book continuity checks |
 | `speckit.interview` | Character | Interactive one-on-one conversation with a character voiced by AI; export as notes |
 | `speckit.help` | Navigation | Workflow advisor: scans project state, identifies blockers, recommends next steps |
-| `speckit.synopsis` | Submission | Generate a one-page (250â€“350 words) and full (1,000â€“2,000 words) synopsis; reveals the ending; present tense, third person |
-| `speckit.query` | Submission | Generate a 250â€“350 word query letter with hook, body, comp titles, and submission tracker |
+| `speckit.synopsis` | Submission | Generate a one-page (250-350 words) and full (1,000-2,000 words) synopsis; reveals the ending; present tense, third person |
+| `speckit.query` | Submission | Generate a 250-350 word query letter with hook, body, comp titles, and submission tracker |
 | `speckit.export` | Submission | Export manuscript to DOCX (Word), EPUB (KDP/IngramSpark), or LaTeX via pandoc. `--platform` selects KDP, IngramSpark, D2D, Shunn, or Smashwords formatting |
 | `speckit.audiobook` | Audiobook | Convert prose chapters to SSML/ElevenLabs audiodraft files, manage voice assignments and pronunciation lexicon, check for stale drafts, export `lexicon.pls` |
 | `speckit.cover` | Submission | Generate a cover brief, AI image-generation prompts (3 variants), and platform specs for KDP, IngramSpark, D2D, and social. 10 style presets. Reads spec.md for title/author/genre/series |
@@ -250,7 +250,7 @@ All sub-commands and arguments for every command.
                                               locations, series, glossary, pov, research, timeline
 /speckit.brainstorm character [name]       -> pre-fill a specific character
 /speckit.brainstorm [topic] challenge      -> Challenge Mode: stress-test existing decisions
-/speckit.brainstorm [topic] quick          -> short session (3â€“5 questions)
+/speckit.brainstorm [topic] quick          -> short session (3-5 questions)
 /speckit.brainstorm [topic] standard       -> standard session (default)
 /speckit.brainstorm [topic] deep           -> exhaustive session
 ```
@@ -305,7 +305,7 @@ All sub-commands and arguments for every command.
 /speckit.outline                           -> generate outline for the next scene without one
 /speckit.outline all                       -> generate outlines for all unoutlined scenes
 /speckit.outline [CHAPTER_ID]              -> generate outline for one scene (e.g. A1.101)
-/speckit.outline [CHAPTER_ID]â€“[CHAPTER_ID] -> generate outlines for a chapter range
+/speckit.outline [CHAPTER_ID]-[CHAPTER_ID] -> generate outlines for a chapter range
 ```
 
 #### `speckit.analyze`
@@ -331,7 +331,7 @@ All sub-commands and arguments for every command.
 ```
 /speckit.continuity                        -> full post-draft continuity analysis (read-only)
 /speckit.continuity [CHAPTER_ID]           -> scope to a single chapter
-/speckit.continuity [CHAPTER_ID]â€“[CHAPTER_ID] -> scope to a chapter range
+/speckit.continuity [CHAPTER_ID]-[CHAPTER_ID] -> scope to a chapter range
 ```
 
 #### `speckit.revise`
@@ -345,7 +345,7 @@ All sub-commands and arguments for every command.
 ```
 /speckit.polish                            -> polish most recently PASS-checked draft
 /speckit.polish [CHAPTER_ID]               -> polish a specific chapter
-/speckit.polish [CHAPTER_ID]â€“[CHAPTER_ID]  -> polish a chapter range
+/speckit.polish [CHAPTER_ID]-[CHAPTER_ID]  -> polish a chapter range
 ```
 
 #### `speckit.roleplay`
@@ -411,7 +411,7 @@ All sub-commands and arguments for every command.
 ```
 /speckit.pacing                            -> full tension arc audit of all drafted chapters
 /speckit.pacing [CHAPTER_ID]              -> scope to a single chapter
-/speckit.pacing [CHAPTER_ID]â€“[CHAPTER_ID] -> scope to a chapter range
+/speckit.pacing [CHAPTER_ID]-[CHAPTER_ID] -> scope to a chapter range
 /speckit.pacing chart                     -> output only the Mermaid tension arc chart
 /speckit.pacing --act "Act II"            -> scope to one act band
 ```
@@ -420,7 +420,7 @@ All sub-commands and arguments for every command.
 ```
 /speckit.statistics                        -> full prose statistics report across all drafted chapters
 /speckit.statistics [CHAPTER_ID]           -> scope to a single chapter
-/speckit.statistics [CHAPTER_ID]â€“[CHAPTER_ID] -> scope to a chapter range
+/speckit.statistics [CHAPTER_ID]-[CHAPTER_ID] -> scope to a chapter range
 /speckit.statistics --act "Act II"         -> scope to one act band
 /speckit.statistics dialogue               -> output only the dialogue balance report
 /speckit.statistics readability            -> output only readability and sentence-level metrics
@@ -430,7 +430,7 @@ All sub-commands and arguments for every command.
 ```
 /speckit.sensitivity                       -> full sensitivity review of all drafted chapters
 /speckit.sensitivity [CHAPTER_ID]          -> scope to a single chapter
-/speckit.sensitivity [CHAPTER_ID]â€“[CHAPTER_ID] -> scope to a chapter range
+/speckit.sensitivity [CHAPTER_ID]-[CHAPTER_ID] -> scope to a chapter range
 /speckit.sensitivity --category [name]     -> representation, tropes, historical, language, trauma
 /speckit.sensitivity --genre [genre]       -> override genre detection (e.g. historical-fiction, fantasy)
 ```
@@ -468,8 +468,8 @@ All sub-commands and arguments for every command.
 #### `speckit.synopsis`
 ```
 /speckit.synopsis                          -> generate both one-page and full synopsis
-/speckit.synopsis one-page                 -> generate only the 250â€“350 word synopsis
-/speckit.synopsis full                     -> generate only the 1,000â€“2,000 word synopsis
+/speckit.synopsis one-page                 -> generate only the 250-350 word synopsis
+/speckit.synopsis full                     -> generate only the 1,000-2,000 word synopsis
 /speckit.synopsis update                   -> regenerate from current draft (post-draft accuracy)
 /speckit.synopsis check                    -> validate synopsis.md against spec.md and plan.md
 ```
@@ -493,16 +493,16 @@ All sub-commands and arguments for every command.
 /speckit.export epub --platform ingramspark -> EPUB for IngramSpark + accessibility metadata
 /speckit.export epub --platform ingramspark --isbn 978-3-16-148410-0  -> with ISBN
 /speckit.export epub --platform d2d        -> EPUB for Draft2Digital (stripped CSS; cover separate)
-/speckit.export latex                      -> LaTeX 6Ã—9 KDP print (default)
-/speckit.export latex --platform kdp-print-6x9     -> KDP Print trim 6"Ã—9"
-/speckit.export latex --platform ingramspark-6x9   -> IngramSpark 6"Ã—9" (PDF/X-1a notes)
+/speckit.export latex                      -> LaTeX 6x9 KDP print (default)
+/speckit.export latex --platform kdp-print-6x9     -> KDP Print trim 6"x9"
+/speckit.export latex --platform ingramspark-6x9   -> IngramSpark 6"x9" (PDF/X-1a notes)
 /speckit.export audio                      -> assemble audiobook chapter manifest; validate drafts
 /speckit.export --polished-only            -> skip chapters without a polished version
 /speckit.export --title "My Novel"         -> override title (default: reads from spec.md)
 /speckit.export --author "Jane Smith"      -> override author byline (default: reads from constitution.md)
 /speckit.export --lang de                  -> override BCP-47 language code (default: reads from constitution.md : en)
-/speckit.export --rights "Â© 2026 Jane Smith. All rights reserved."  -> override dc:rights metadata
-/speckit.export --author-bio "Jane Smith writesâ€¦"  -> override "About the Author" back matter text
+/speckit.export --rights "(c) 2026 Jane Smith. All rights reserved."  -> override dc:rights metadata
+/speckit.export --author-bio "Jane Smith writes"  -> override "About the Author" back matter text
 /speckit.export --no-author-bio            -> suppress "About the Author" even if set in constitution.md
 /speckit.export --status polished          -> filter by chapter status
 ```
@@ -524,10 +524,10 @@ All sub-commands and arguments for every command.
 #### `speckit.cover`
 ```
 /speckit.cover                             -> interactive: prompts for platform, style, elements
-/speckit.cover --platform kdp-ebook        -> KDP ebook (2560Ã—1600 RGB) [default]
+/speckit.cover --platform kdp-ebook        -> KDP ebook (2560x1600 RGB) [default]
 /speckit.cover --platform kdp-print        -> KDP print (300 DPI CMYK, spine calculated)
 /speckit.cover --platform ingramspark      -> IngramSpark ebook or print
-/speckit.cover --platform d2d              -> Draft2Digital (1600Ã—2400 RGB)
+/speckit.cover --platform d2d              -> Draft2Digital (1600x2400 RGB)
 /speckit.cover --platform social           -> social media crops (1:1 and 9:16)
 /speckit.cover --platform all              -> all platforms, one brief with variant notes
 /speckit.cover --style photorealistic      -> photo composite (thriller, crime, romance)
@@ -568,15 +568,15 @@ All sub-commands and arguments for every command.
 /speckit.bio                               -> list existing bios (or draft if none set)
 /speckit.bio draft                         -> interactive: answer prompts to build canonical short + long bio
 /speckit.bio refine                        -> improve existing bio stored in constitution.md
-/speckit.bio variant agent                 -> 3rd person â‰¤50w for query-letter bio paragraph
-/speckit.bio variant reader                -> 3rd person 100â€“150w for "About the Author" back matter
-/speckit.bio variant platform              -> â‰¤25w for KDP/D2D Author Central profile
-/speckit.bio variant social                -> â‰¤160 chars for X/Instagram/Bluesky bio field
-/speckit.bio variant first-person          -> 80â€“120w 1st person for website/newsletter
-/speckit.bio variant long                  -> 200â€“300w 3rd person for press kit / festival programme
+/speckit.bio variant agent                 -> 3rd person for query-letter bio paragraph
+/speckit.bio variant reader                -> 3rd person 100-150w for "About the Author" back matter
+/speckit.bio variant platform              -> for KDP/D2D Author Central profile
+/speckit.bio variant social                -> 160 chars for X/Instagram/Bluesky bio field
+/speckit.bio variant first-person          -> 80-120w 1st person for website/newsletter
+/speckit.bio variant long                  -> 200-300w 3rd person for press kit / festival programme
 /speckit.bio list                          -> display short and long bios from constitution.md
-/speckit.bio set short [text]              -> save short bio to constitution.md Â§ VII
-/speckit.bio set long [text]               -> save long bio to constitution.md Â§ VII
+/speckit.bio set short [text]              -> save short bio to constitution.md # VII
+/speckit.bio set long [text]               -> save long bio to constitution.md # VII
 ```
 
 ---
@@ -596,7 +596,7 @@ All sub-commands and arguments for every command.
 | `pov-structure-template.md` | POV architecture: mode, schedule, voice differentiation, information asymmetry map |
 | `agent-file-template.md` | Living context: active characters, world state, open threads, recent chapters |
 | `series-bible-template.md` | Series canon: world rules, character state registry per book, series arc |
-| `synopsis-template.md` | One-page (250â€“350 words) and full (1,000â€“2,000 words) synopsis in present tense |
+| `synopsis-template.md` | One-page (250-350 words) and full (1,000-2,000 words) synopsis in present tense |
 | `glossary-template.md` | Invented terms, proper nouns, capitalization rules, consistency log |
 | `subplots-template.md` | Subplot beat sheets: inciting incident through resolution, main plot intersection map, Convergence Map, Arc Absence Log - managed by `speckit.subplot` |
 | `research-template.md` | Open questions, source notes, world-building facts, resolved findings |
@@ -625,7 +625,7 @@ A single POV novel uses one viewpoint character throughout. This is the simplest
 
 Choose your **style mode**:
 
-- **`author-sample`** - Paste 500â€“2,000 words from a book or story you've written (or want to emulate). The AI extracts 8 voice markers: POV, tense, rhythm, vocabulary register, sensory density, tone, dialogue style, and anti-patterns.
+- **`author-sample`** - Paste 500-2,000 words from a book or story you've written (or want to emulate). The AI extracts 8 voice markers: POV, tense, rhythm, vocabulary register, sensory density, tone, dialogue style, and anti-patterns.
 - **`humanized-ai`** - Use the built-in anti-AI craft ruleset: sensory grounding, character-in-body principles, dialogue subtext rules, filter-word purge.
 
 Choose your **plot structure**: Three-Act Structure, Save the Cat, Hero's Journey, Story Circle, Fichtean Curve, or custom.
@@ -786,12 +786,12 @@ Reads `series/series-bible.md` and pre-fills series title, book position, and op
 ```
 Step 3 - speckit.plan
 ```
-Reads both `spec.md` and `constitution.md` (both required). Generates all supporting documents in Phase 0, then builds the beat sheet and scene outline in Phases 1â€“3. Verifies `series/series-bible.md` and adds the new book entry automatically.
+Reads both `spec.md` and `constitution.md` (both required). Generates all supporting documents in Phase 0, then builds the beat sheet and scene outline in Phases 1-3. Verifies `series/series-bible.md` and adds the new book entry automatically.
 
 ```
 Step 4 - speckit.analyze
 ```
-Pre-draft structural alignment check - confirms spec â†” plan â†” tasks consistency before any prose is written. Read-only.
+Pre-draft structural alignment check - confirms spec, plan, tasks consistency before any prose is written. Read-only.
 
 Then follow the standard [drafting loop](#drafting-scenes-with-tasks): `outline : implement : checklist : revise : polish`.
 
@@ -952,7 +952,7 @@ After drafting, `speckit.continuity` is especially important in multi-POV narrat
 Optionally scope to specific chapters:
 
 ```
-/speckit.continuity JO3.201â€“JO3.203
+/speckit.continuity JO3.201-JO3.203
 ```
 
 ---
@@ -1056,7 +1056,7 @@ Validates the *craft layer* of the scene (not plot logic):
 
 | Gate | Description |
 |---|---|
-| Triple Purpose | Does every scene serve â‰¥3 narrative functions simultaneously? |
+| Triple Purpose | Does every scene serve V3 narrative functions simultaneously? |
 | Off-Balance Ending | Does the scene end in a new instability, not resolution? |
 | Embodied Emotion | Are emotions shown through physical reactions, not named? |
 | Dialogue Subtext | Does every dialogue exchange carry at least one deflection or misunderstanding? |
@@ -1110,7 +1110,7 @@ Beta-reader, critique-partner, and editorial feedback enters the workflow throug
 
 ```
 /speckit.feedback feedback-notes.txt --reader-type beta
-/speckit.feedback "The pacing in chapters 8â€“12 dragged and I lost interest in Marcus entirely." "Jane Doe" --reader-type cp
+/speckit.feedback "The pacing in chapters 8-12 dragged and I lost interest in Marcus entirely." "Jane Doe" --reader-type cp
 ```
 
 The command:
@@ -1215,7 +1215,7 @@ You can configure your backend preference and path in the **Tooling** section of
 
 #### Managing Draft Versions
 
-Each `speckit.revise` and `speckit.polish` run produces a versioned file (`_v2.md`, `_v3.md`, â€¦). Use `speckit.versions` to navigate the history:
+Each `speckit.revise` and `speckit.polish` run produces a versioned file (`_v2.md`, `_v3.md`, ...). Use `speckit.versions` to navigate the history:
 
 ```
 /speckit.versions list A1.101           -> version timeline for one chapter
@@ -1261,14 +1261,14 @@ Run `speckit.synopsis` after `speckit.plan` to get an outline-based synopsis, or
 
 Produces `synopsis.md` with two formats:
 
-- **One-page synopsis** (250â€“350 words) - the compressed arc, present tense, third person, ending revealed. Required in most query packages.
-- **Full synopsis** (1,000â€“2,000 words) - beat-by-beat account of every major plot turn and character arc resolution. Required on partial/full manuscript requests.
+- **One-page synopsis** (250-350 words) - the compressed arc, present tense, third person, ending revealed. Required in most query packages.
+- **Full synopsis** (1,000-2,000 words) - beat-by-beat account of every major plot turn and character arc resolution. Required on partial/full manuscript requests.
 
 Both formats explicitly reveal the ending. A synopsis is not a blurb.
 
 ```
-/speckit.synopsis one-page        -> regenerate only the 250â€“350 word version
-/speckit.synopsis full            -> regenerate only the full 1,000â€“2,000 word version
+/speckit.synopsis one-page        -> regenerate only the 250-350 word version
+/speckit.synopsis full            -> regenerate only the full 1,000-2,000 word version
 /speckit.synopsis update          -> regenerate from current draft (post-draft accuracy)
 /speckit.synopsis check           -> validate existing synopsis.md against spec.md and plan.md
 ```
@@ -1281,10 +1281,10 @@ Run `speckit.synopsis` first - `speckit.query` reads `synopsis.md` as its story 
 /speckit.query draft
 ```
 
-Produces a `query-letter.md` in 250â€“350 words following the industry-standard four-section format:
+Produces a `query-letter.md` in 250-350 words following the industry-standard four-section format:
 
 1. **Personalization** - why this specific agent (left blank, add manually per submission)
-2. **Hook** - protagonist + inciting incident + stakes (â‰¤50 words)
+2. **Hook** - protagonist + inciting incident + stakes (:¤50 words)
 3. **Body** - setup, escalation, central dramatic question (~200 words)
 4. **Housekeeping** - word count, genre, comp titles, bio, credentials
 
@@ -1316,13 +1316,13 @@ Chapter assembly logic:
 
 #### Metadata Resolution
 
-All export metadata is read automatically from `constitution.md Â§ VII` - no manual flags needed unless you want to override:
+All export metadata is read automatically from `constitution.md # VII` - no manual flags needed unless you want to override:
 
 | Metadata | Source in constitution.md | CLI override |
 |---|---|---|
 | Author byline | `Author Name` | `--author "Jane Smith"` |
 | Language (`dc:language`) | `Language` (BCP-47 code) | `--lang de` |
-| Copyright (`dc:rights`) | `Copyright` | `--rights "Â© 2026 Jane Smith"` |
+| Copyright (`dc:rights`) | `Copyright` | `--rights "(c) 2026 Jane Smith"` |
 | "About the Author" | `Author Bio (Long)` | `--author-bio "..."` / `--no-author-bio` |
 
 If `Language` is not set, the export defaults to `en`. Run `speckit.bio draft` to generate the canonical author bio before exporting if you want an "About the Author" section appended.
@@ -1336,10 +1336,48 @@ If `Language` is not set, the export defaults to `en`. Run `speckit.bio draft` t
 | `--platform kdp` | EPUB | Amazon KDP (cover required for listing) |
 | `--platform ingramspark` | EPUB | IngramSpark + accessibility + optional ISBN |
 | `--platform d2d` | EPUB | Draft2Digital (no embedded cover) |
-| `--platform kdp-print-6x9` | LaTeX | KDP Print 6"Ã—9" |
-| `--platform ingramspark-6x9` | LaTeX | IngramSpark 6"Ã—9" (PDF/X-1a notes) |
+| `--platform kdp-print-6x9` | LaTeX | KDP Print 6"x9" |
+| `--platform ingramspark-6x9` | LaTeX | IngramSpark 6"x9" (PDF/X-1a notes) |
 
 
+
+---
+
+### Illustrations in Export
+
+The export system embeds both cover images and interior illustrations in all output formats (DOCX, EPUB, LaTeX).
+
+#### Cover Images
+
+Place your cover image in the project root with one of these naming patterns:
+- `cover.png`
+- `cover.jpg` or `cover.jpeg`
+
+The cover is automatically detected and embedded at the beginning of the manuscript for all formats.
+
+#### Interior Illustrations
+
+Interior illustrations are embedded based on your `Illustration Automation` setting in `constitution.md § XI`:
+
+| Mode | How illustrations are embedded |
+|---|---|
+| `per-chapter` | Scans `illustrations/` for files matching `<CHAPTER_ID>.*.{png,jpg,jpeg}` and embeds them at chapter boundaries |
+| `manual` | Scans draft files for `<!-- illustration: <filename>.{png,jpg,jpeg} -->` comments and embeds images at those locations |
+
+**File naming requirements:**
+- Cover: `cover*.{png,jpg,jpeg}` (any extension, auto-detected)
+- Per-chapter: `<CHAPTER_ID>.*.{png,jpg,jpeg}` (e.g., `A1.101.png`, `A2.201.jpg`)
+- Manual: Any filename referenced in `<!-- illustration: filename.png -->` comments
+
+**Supported image formats:** PNG, JPG, JPEG
+
+**Illustration placement in drafts:**
+When using `manual` mode, add illustration markers in your draft files:
+```markdown
+<!-- illustration: my-scene-image.png -->
+```
+
+The export script will replace these markers with properly formatted image embeds for the target format.
 
 ---
 
@@ -1348,7 +1386,7 @@ If `Language` is not set, the export defaults to `en`. Run `speckit.bio draft` t
 | Mode | POV Count | Rotation Pattern | When to Use |
 |---|---|---|---|
 | **Single POV** | 1 | N/A | Best for intimate, psychological narratives |
-| **Alternating** | 2â€“4 | Strict rotation between chapters | Parallel storylines converging toward a common climax |
+| **Alternating** | 2-4 | Strict rotation between chapters | Parallel storylines converging toward a common climax |
 | **Dual** | 2 | Equal weight, chapter by chapter | Dual protagonists with equal narrative importance |
 | **Braided** | 3+ | Interdependent, convergence-driven | Complex ensemble with significant plot intersection |
 | **Ensemble** | 4+ | Roughly equal weight | Community or group narratives |
@@ -1379,7 +1417,7 @@ The preset supports any plot structure. Configure in `speckit.constitution`. The
 
 ### Author Voice Sample (`author-sample`)
 
-Paste 500â€“2,000 words from your own writing or a target author. `speckit.constitution` extracts 8 style markers automatically:
+Paste 500-2,000 words from your own writing or a target author. `speckit.constitution` extracts 8 style markers automatically:
 
 1. **POV & Tense** - narrative distance and temporal mode
 2. **Rhythm** - typical sentence length and cadence patterns
@@ -1401,7 +1439,7 @@ Uses the built-in craft ruleset for AI-generated prose that reads as human-craft
 | Dialogue subtext | Deflection or misunderstanding in every exchange |
 | Filter word purge | No `she noticed`, `he felt`, `she saw`, `he heard` |
 | Off-balance ending | Every scene ends in a new instability |
-| Triple purpose | Every scene serves â‰¥3 narrative functions simultaneously |
+| Triple purpose | Every scene serves V3 narrative functions simultaneously |
 | Dirt Rule | Every environment has at least one flaw or imperfection |
 | Anti-AI Filter | Prohibited phrases list (universal + profile-specific) |
 
@@ -1413,17 +1451,17 @@ When using `humanized-ai`, choose a **Prose Profile** to set how the universal p
 |---|---|---|---|---|---|
 | **`commercial`** | General fiction, fantasy, romance | Alternating short/long | Medium | Balanced | Scene = Sequel |
 | **`literary`** | Literary fiction, character studies | Long-dominant; fragments under rupture | High (texture) | Deep, contradictory | Reflection-forward |
-| **`thriller`** | Thrillers, crime, horror | Short-dominant (1â€“2 clauses) | Low-medium, functional | Minimal; act-before-reflect | Action-forward |
+| **`thriller`** | Thrillers, crime, horror | Short-dominant (1-2 clauses) | Low-medium, functional | Minimal; act-before-reflect | Action-forward |
 | **`atmospheric`** | Gothic, horror, weird fiction | Long, winding, syntactically embedded | Maximum; environment as character | Deep; inner/outer blur permitted | Atmosphere as plot |
 | **`dark-realist`** | Noir, social realism, gritty literary | Clipped, declarative, no ornament | Medium; decay and failure bias | Cold, selective; rationalisation visible | Consequence-forward |
 
 Each profile also adds its own genre-specific Anti-AI filter entries. Examples:
 
-- **`commercial`** adds: `"a world turned upside down"` Â· `"everything changes when"`
-- **`literary`** adds: `"liminal"` Â· `"ineffable"` Â· `"the weight of"` Â· `"something shifted inside her"`
-- **`thriller`** adds: `"heart pounding"` Â· `"adrenaline surged"` Â· `"every instinct screamed"`
-- **`atmospheric`** adds: `"an oppressive silence"` Â· `"the darkness seemed alive"` Â· `"she could feel the history"`
-- **`dark-realist`** adds: `"broken but not beaten"` Â· `"found her strength"` Â· `"at the end of the day"`
+- **`commercial`** adds: `"a world turned upside down"` -> `"everything changes when"`
+- **`literary`** adds: `"liminal"` -> `"ineffable"` -> `"the weight of"` -> `"something shifted inside her"`
+- **`thriller`** adds: `"heart pounding"` -> `"adrenaline surged"` -> `"every instinct screamed"`
+- **`atmospheric`** adds: `"an oppressive silence"` -> `"the darkness seemed alive"` -> `"she could feel the history"`
+- **`dark-realist`** adds: `"broken but not beaten"` -> `"found her strength"` -> `"at the end of the day"`
 
 Set the profile using `speckit.constitution` - it will prompt for the choice when initialising `humanized-ai` mode.
 
@@ -1433,21 +1471,21 @@ Set the profile using `speckit.constitution` - it will prompt for the choice whe
 
 | Format | Use Case | Requirements |
 |---|---|---|
-| **DOCX** | Publisher/agent submissions, Word compatibility | pandoc â‰¥ 2.11 |
-| **EPUB** | KDP, Draft2Digital, IngramSpark, Kobo | pandoc â‰¥ 2.11 |
-| **LaTeX** | Professional typesetting, print-on-demand | pandoc â‰¥ 2.11 + LaTeX distribution |
+| **DOCX** | Publisher/agent submissions, Word compatibility | pandoc V 2.11 |
+| **EPUB** | KDP, Draft2Digital, IngramSpark, Kobo | pandoc V 2.11 |
+| **LaTeX** | Professional typesetting, print-on-demand | pandoc V 2.11 + LaTeX distribution |
 
 Install pandoc: [pandoc.org/installing.html](https://pandoc.org/installing.html)
 
-All export metadata (author byline, language, copyright, "About the Author" back matter) is read automatically from `constitution.md Â§ VII`. No manual configuration is required for standard exports. See the [Export tutorial](#export) for the full metadata resolution table and CLI overrides.
+All export metadata (author byline, language, copyright, "About the Author" back matter) is read automatically from `constitution.md # VII`. No manual configuration is required for standard exports. See the [Export tutorial](#export) for the full metadata resolution table and CLI overrides.
 
-**Language support**: Set `Language` in `constitution.md Â§ VII` to a BCP-47 code (`en`, `de`, `fr`, `es`, `it`, `pt`, `nl`, `ja`, `zh`, `fi`, `hu`, `tr`). The code is passed as `dc:language` to EPUB, as `lang` metadata to DOCX/LaTeX, and gates English-only prose checks in `speckit.polish` and `speckit.statistics`. See [Language Support](#language-support) for full details.
+**Language support**: Set `Language` in `constitution.md # VII` to a BCP-47 code (`en`, `de`, `fr`, `es`, `it`, `pt`, `nl`, `ja`, `zh`, `fi`, `hu`, `tr`). The code is passed as `dc:language` to EPUB, as `lang` metadata to DOCX/LaTeX, and gates English-only prose checks in `speckit.polish` and `speckit.statistics`. See [Language Support](#language-support) for full details.
 
 ---
 
 ## Language Support
 
-Set `Language` in `constitution.md Â§ VII` to a [BCP-47](https://www.rfc-editor.org/rfc/bcp/bcp47.txt) language code. This single field propagates through the entire pipeline:
+Set `Language` in `constitution.md # VII` to a [BCP-47](https://www.rfc-editor.org/rfc/bcp/bcp47.txt) language code. This single field propagates through the entire pipeline:
 
 | BCP-47 Code | Language |
 |---|---|
@@ -1470,11 +1508,11 @@ Set `Language` in `constitution.md Â§ VII` to a [BCP-47](https://www.rfc-edito
 |---|---|
 | `speckit.implement` | All drafted prose is written in the set language |
 | `speckit.outline` | Scene outlines are written in the set language |
-| `speckit.polish` | English-only rules (WR-001, WR-004, DI-001, DI-002) are suppressed when Language â‰  `en`; a note explains which checks were skipped |
-| `speckit.statistics` | Fleschâ€“Kincaid readability score is suppressed when Language â‰  `en` (not valid for non-English prose) |
+| `speckit.polish` | English-only rules (WR-001, WR-004, DI-001, DI-002) are suppressed when Language :  `en`; a note explains which checks were skipped |
+| `speckit.statistics` | Flesch-Kincaid readability score is suppressed when Language :  `en` (not valid for non-English prose) |
 | `speckit.audiobook` | `xml:lang` attribute set on `<speak>` and `<lexicon>` SSML elements; warning issued if TTS voice model may not support the language |
-| `speckit.cover` | Tagline length target: â‰¤8 words for analytic languages; â‰¤4 compound words for agglutinative languages (de, nl, fi, hu, tr) |
-| `speckit.query` | If Language = `de`: generates German ExposÃ© format (Anschreiben + ExposÃ© body + Leseprobe) instead of English query letter |
+| `speckit.cover` | Tagline length target: :¤8 words for analytic languages; :¤4 compound words for agglutinative languages (de, nl, fi, hu, tr) |
+| `speckit.query` | If Language = `de`: generates German ExposÃ© format (Anschreiben + Expose + body + Leseprobe) instead of English query letter |
 | `speckit.export` (EPUB) | Passed as `dc:language` metadata; sets pandoc `--metadata lang=<code>` |
 | `speckit.export` (DOCX/LaTeX) | Passed as pandoc `lang` metadata |
 | `audiobook-draft-template.md` | `xml:lang` placeholder pre-filled from Language |
@@ -1521,7 +1559,7 @@ Planning tools, not AI writers. Plottr is excellent for outlining. This preset's
 
 **The honest gap vs. Sudowrite specifically**
 
-Sudowrite's "Shrink Ray", "Describe", and "Brainstorm" features are genuinely better at in-the-moment creative assistance - the micro-level stuff. If you're stuck on one paragraph, Sudowrite is faster. This preset is better when the problem is the whole book - consistency, structure, arc tracking, series management across 80,000â€“300,000 words.
+Sudowrite's "Shrink Ray", "Describe", and "Brainstorm" features are genuinely better at in-the-moment creative assistance - the micro-level stuff. If you're stuck on one paragraph, Sudowrite is faster. This preset is better when the problem is the whole book - consistency, structure, arc tracking, series management across 80,000-300,000 words.
 
 **The positioning in one sentence**
 

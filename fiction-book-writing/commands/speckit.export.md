@@ -91,8 +91,11 @@ If no reference doc is found, pandoc uses its built-in defaults (functional but 
      (overridden by `--output` in `$ARGUMENTS` if present).
    - **Reference doc** (DOCX only): If `FEATURE_DIR/manuscript-template.docx` exists,
      pass it as `--reference-doc` for Shunn manuscript formatting.
-   - **Cover image** (EPUB only): If `FEATURE_DIR/cover.jpg` or `cover.png` exists,
-     pass it as `--cover-image`. If not auto-detected and format is EPUB, note it in the output.
+   - **Cover image** (all formats): If `FEATURE_DIR/cover*.{png,jpg,jpeg}` exists,
+     pass it as `--cover-image`. The cover is embedded at the beginning of the manuscript.
+   - **Illustration images** (all formats): Read `Illustration Automation` from `constitution.md § XI Illustration Guidelines`:
+     - `per-chapter` — scan `illustrations/` for `<CHAPTER_ID>.*.{png,jpg,jpeg}` files and embed at chapter boundaries
+     - `manual` — scan draft files for `<!-- illustration: <filename>.{png,jpg,jpeg} -->` comments and embed at those locations
    - **CSS** (EPUB only): If `FEATURE_DIR/epub.css` or `style.css` exists, pass as `--epub-css`.
    - **Blurb** (EPUB only): If `FEATURE_DIR/blurb.md` exists, read the first 150-word block as
      the back-cover description. If the file does not exist, generate a blurb (see Step 4b) and
@@ -121,13 +124,13 @@ If no reference doc is found, pandoc uses its built-in defaults (functional but 
 
    If `FEATURE_DIR/blurb.md` already exists, read the first non-comment paragraph as the description text. Validate it is 100–150 words; warn if outside that range but proceed.
 
-5. **Process illustrations** (EPUB and DOCX only):
+5. **Process illustrations** (EPUB, DOCX, and LaTeX):
    - Read `constitution.md § XI Illustration Guidelines` for `Illustration Automation`:
-     - `per-chapter` — scan `illustrations/` for PNG files matching chapter IDs (`<CHAPTER_ID>.png`)
+     - `per-chapter` — scan `illustrations/` for PNG/JPG/JPEG files matching chapter IDs (`<CHAPTER_ID>.*`)
        - For EPUB: embed images at chapter boundaries using HTML `<img>` tags with `width="100%"`
        - For DOCX: insert images at chapter boundaries using pandoc raw blocks
        - For LaTeX: insert images using `\includegraphics` at chapter boundaries
-     - `manual` — scan draft files for `<!-- illustration: <filename>.png -->` comments
+     - `manual` — scan draft files for `<!-- illustration: <filename>.{png,jpg,jpeg} -->` comments
        - Replace with appropriate image insertion syntax for the target format
        - If no illustration comments found, emit: "⚠️ No illustration references found in draft files. Add `<!-- illustration: <filename>.png -->` comments where images should appear."
 
@@ -139,7 +142,7 @@ If no reference doc is found, pandoc uses its built-in defaults (functional but 
      --title "<title>" \
      --author "<author>" \
      [--reference-doc FEATURE_DIR/manuscript-template.docx]  # DOCX only
-     [--cover-image FEATURE_DIR/cover.jpg]                   # EPUB only
+     [--cover-image FEATURE_DIR/cover.jpg]                   # all formats
      [--epub-css FEATURE_DIR/epub.css]                       # EPUB only
      [--epub-description FEATURE_DIR/blurb.md]               # EPUB only
    ```
@@ -164,12 +167,15 @@ If no reference doc is found, pandoc uses its built-in defaults (functional but 
    > double-spaced, 1-inch margins, running header), place a `manuscript-template.docx`
    > in `FEATURE_DIR/` configured with those styles. Pandoc will apply its styles on
    > the next export run. See: https://pandoc.org/MANUAL.html#option--reference-doc
+   > - **Cover image**: place `cover.jpg` or `cover.png` in the project root for auto-detection
+   > - **Illustrations**: place `<CHAPTER_ID>.png` files in `illustrations/` (per-chapter mode) or add `<!-- illustration: filename.png -->` comments in drafts (manual mode)
 
    If format is **EPUB**, add:
    > **EPUB distribution notes**:
    > - **Validate**: run `epubcheck manuscript.epub` or upload to https://www.epubcheck.org/ before distributing
    > - **KDP**: upload `.epub` directly on the manuscript upload step
    > - **Cover image**: place `cover.jpg` or `cover.png` next to `draft/` for auto-detection on the next run
+   > - **Illustrations**: place `<CHAPTER_ID>.png` files in `illustrations/` (per-chapter mode) or add `<!-- illustration: filename.png -->` comments in drafts (manual mode)
    > - **Custom styling**: place `epub.css` next to `draft/` to control font, spacing, and indentation
    > - **Blurb**: edit `blurb.md` and re-run export to update the back-cover description embedded in the EPUB metadata
    > - **Draft2Digital / IngramSpark**: accepted as-is; D2D reformats automatically
@@ -178,6 +184,8 @@ If no reference doc is found, pandoc uses its built-in defaults (functional but 
    > **Compilation note**: Open `manuscript.tex` in your editor and compile with
    > `pdflatex manuscript.tex` (or `xelatex` for full Unicode/font support).
    > For Overleaf, upload the `.tex` file directly.
+   > - **Cover image**: place `cover.jpg` or `cover.png` in the project root for auto-detection
+   > - **Illustrations**: place `<CHAPTER_ID>.png` files in `illustrations/` (per-chapter mode) or add `<!-- illustration: filename.png -->` comments in drafts (manual mode)
 
 8. **Optional — export polished chapters only**:
    If the user passes `polished` or `--polished-only` in `$ARGUMENTS`, add the

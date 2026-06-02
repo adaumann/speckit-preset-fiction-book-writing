@@ -1,5 +1,5 @@
 ---
-description: Generate scene-by-scene writing tasks ordered by act and character arc, with research phase, critical checkpoint, and polish pass.
+description: Generate scene-by-scene writing tasks ordered by act and character arc, with research phase, critical checkpoint, polish pass, and optional audiobook/illustration tasks.
 handoffs:
   - label: Analyze Structure
     agent: speckit.analyze
@@ -13,6 +13,10 @@ handoffs:
     agent: speckit.implement
     prompt: Begin drafting scenes in phase order
     send: true
+  - label: Generate Illustrations
+    agent: speckit.illustrate
+    prompt: Generate illustration briefs for drafted chapters
+    send: false
 ---
 
 ## User Input
@@ -33,7 +37,7 @@ You **MUST** consider the user input before proceeding (if not empty).
 ## Outline
 ## Goal
 
-Generate a complete, ordered list of **scene‑by‑scene writing tasks** that drives the drafting process. The tasks include research, character profile creation, world‑building, timeline work, prose drafting, optional audiobook drafting, and final polish passes. They are grouped by phases (research, drafting, polish) and respect character‑arc priorities and parallelism constraints.
+Generate a complete, ordered list of **scene‑by‑scene writing tasks** that drives the drafting process. The tasks include research, character profile creation, world‑building, timeline work, prose drafting, optional audiobook drafting, optional illustration generation, and final polish passes. They are grouped by phases (research, drafting, polish) and respect character‑arc priorities and parallelism constraints.
 
 ## Command
 
@@ -50,7 +54,8 @@ When the `speckit.tasks` command is invoked, the LLM should:
   - Insert a critical checkpoint task after Phase 1 research and before any drafting.
   - Add polish pass tasks based on constitution compliance requirements.
   - If the story bible specifies `OUTPUT_MODE` of `audiobook` or `both`, generate corresponding audiobook setup, audiodraft, and polish tasks as described.
-7. **Write** the resulting `tasks.md` using `templates/tasks-template.md`, filling in the correct story title, feature directory, scene names, character‑arc labels, file paths, and task statistics (total tasks, arc distribution, parallel vs sequential counts, audiobook task count).
+  - If the story bible specifies `Illustrations: yes` in § XI, generate corresponding illustration setup, illustration brief, and polish tasks as described.
+7. **Write** the resulting `tasks.md` using `templates/tasks-template.md`, filling in the correct story title, feature directory, scene names, character‑arc labels, file paths, and task statistics (total tasks, arc distribution, parallel vs sequential counts, audiobook task count, illustration task count).
 8. **Report** a summary header with task counts and any remaining `[BLOCKED]` or `[NEEDS CLARIFICATION]` markers.
 9. **Process** any post‑task extension hooks.
 
@@ -62,6 +67,7 @@ The LLM must follow this sequence exactly and must not modify any files outside 
    - **Optional**: `characters.md` (index) and `characters/` profiles (voice signatures, micro-obsessions), `world-building.md`, `timeline.md`, `research.md`
    - Note which optional documents are missing — some tasks may be marked `[BLOCKED: needs <document>]`
    - Read `constitution.md ## X. Audiobook Production` and extract `OUTPUT_MODE` (`book`, `audiobook`, or `both`). If absent or `[NEEDS CLARIFICATION]`, treat as `book`.
+   - Read `constitution.md ## XI. Illustration Guidelines` and extract `Illustrations` (`yes` or `no`) and `Illustration Automation` (`per-chapter` or `manual`). If absent or `[NEEDS CLARIFICATION]`, treat as `no`.
 
 3. **Execute task generation workflow**:
    - Extract the chosen plot structure from `plan.md`
@@ -107,6 +113,18 @@ The LLM must follow this sequence exactly and must not modify any files outside 
      - `T___ Audiodraft: Review all SSML files for pronunciation, break timing, and delivery hints against constitution.md ## X`
    - Update the task statistics header to include: `Audiodraft Tasks: NN`
 
+5c. **Generate illustration tasks** (only when `Illustrations` is `yes` in constitution.md § XI):
+   - Add a **Phase 1 illustration setup block** (before the critical checkpoint) with this task:
+     - `T___ [P] Illustration: Configure illustration defaults (style, color range, aspect ratio) → update constitution.md § XI`
+   - For **every prose draft task** in every phase, insert a paired illustration task immediately after it:
+     - Format: `T___ Illustration: Generate illustration brief — [SCENE_SHORT_NAME] → illustrations/{CHAPTER_ID}-brief.md`
+     - The illustration task is sequential (no `[P]` marker) and depends on the prose draft task completing first
+     - Output path: `illustrations/{CHAPTER_ID}-brief.md` (e.g., `illustrations/A1.101_Opening-brief.md`)
+     - If `Illustration Automation` is `per-chapter`: add `T___ [P] Illustration: Generate PNG placeholder → illustrations/{CHAPTER_ID}.png`
+   - Add an **illustration polish task** in the Polish Pass phase:
+     - `T___ Illustration: Review all illustration briefs for visual consistency against constitution.md § XI`
+   - Update the task statistics header to include: `Illustration Tasks: NN`
+
 6. **Task generation rules**:
    - Every scene beat from spec.md Key Scenes MUST have at least one draft task
    - Research tasks (Phase 1) are generated from `research.md` R-items — never copied from tasks-template.md boilerplate
@@ -115,7 +133,10 @@ The LLM must follow this sequence exactly and must not modify any files outside 
    - Polish tasks are always sequential, never parallel
    - Audiodraft tasks are only generated when `OUTPUT_MODE` is `audiobook` or `both` — never when `OUTPUT_MODE` is `book`
    - Each audiodraft task is always paired with its prose draft task and is never `[P]` (it depends on the prose draft being complete)
-   - Total task count, arc distribution, parallel opportunity count, and audiodraft task count (if applicable) are reported in the task file header
+   - Illustration tasks are only generated when `Illustrations` is `yes` in constitution.md § XI
+   - Each illustration task is always paired with its prose draft task and is never `[P]` (it depends on the prose draft being complete)
+   - If `Illustration Automation` is `per-chapter`, add a parallel PNG placeholder task after each illustration brief task
+   - Total task count, arc distribution, parallel opportunity count, audiodraft task count (if applicable), and illustration task count (if applicable) are reported in the task file header
 
-7. **Report**: Total tasks, tasks per arc (P1/P2/P3), parallel vs. sequential ratio, number of story-specific research tasks generated, recommended MVP scope (minimum scenes to complete Act I).
+7. **Report**: Total tasks, tasks per arc (P1/P2/P3), parallel vs. sequential ratio, number of story-specific research tasks generated, number of illustration tasks generated (if applicable), recommended MVP scope (minimum scenes to complete Act I).
 
