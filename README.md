@@ -40,7 +40,7 @@ See **[fiction-book-writing/README.md](fiction-book-writing/README.md)** for:
 Requires [Spec Kit](https://github.com/github/spec-kit) >= 0.5.0.
 
 ```bash
-specify preset add --from https://github.com/adaumann/speckit-preset-fiction-book-writing/archive/refs/tags/v1.9.0.zip
+specify preset add --from https://github.com/adaumann/speckit-preset-fiction-book-writing/releases/download/v1.9.0/V1.9.0-import.zip
 ```
 
 Or for local development:
