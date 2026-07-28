@@ -9,7 +9,7 @@ Here you find a free sci-fi ebook generated with Spec Kit Fiction Book Writing.
 
 In 2186, 1,844 colonists land on Nexis and survive their first year. This is the story of what surviving costs them.
 
-[Nexis Book 1](https://fleischgemuese.itch.io/nexus-book-1-listening)
+[Nexis Book 1](https://fleischgemuese.itch.io/nexis-book-1-listening)
 
 ---
 
