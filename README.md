@@ -4,6 +4,13 @@ A [Spec Kit](https://github.com/github/spec-kit) preset for novel and long-form 
 
 It adapts the Spec-Driven Development workflow for storytelling: features become story elements, specs become story briefs, plans become story structures, and tasks become scene-by-scene writing tasks. Supports single and multi-POV, all major plot structure frameworks, and two style modes — author voice sample or humanized AI prose.
 
+# Sample Novel
+Here you find a free sci-fi ebook generated with Spec Kit Fiction Book Writing.
+
+In 2186, 1,844 colonists land on Nexis and survive their first year. This is the story of what surviving costs them.
+
+[Nexis Book 1](https://fleischgemuese.itch.io/nexus-book-1-listening)
+
 ---
 
 ## Contents
